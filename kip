@@ -1,0 +1,146 @@
+[33md71767e[m[33m ([m[1;36mHEAD -> [m[1;32mhoangcm[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m Merge pull request #61 from hoangcmite/dungnd
+[33m9efc5f8[m[33m ([m[1;31morigin/dungnd[m[33m)[m milestone management version 2
+[33mc9a1196[m Merge pull request #60 from hoangcmite/dungnd
+[33m5899a76[m Milestone Management Version 1
+[33m14ad159[m Merge pull request #59 from hoangcmite/tunghx
+[33mbe90d6a[m Merge pull request #58 from hoangcmite/hoangcm
+[33m31a59bf[m[33m ([m[1;31morigin/tunghx[m[33m)[m Update Drive Controller
+[33mb7bac2d[m Update Upload Image function in CKEditor
+[33m261fd2f[m Update Blog Image Upload
+[33m13d289b[m Edit front end
+[33m31e2f80[m[33m ([m[1;31morigin/hoangcm[m[33m)[m Update dashboard layout
+[33m695e80a[m Update farm adminitrator
+[33maa33e7c[m Update farm adminitrator frontend
+[33mf604107[m Merge pull request #57 from hoangcmite/kientt
+[33m3083fea[m[33m ([m[1;31morigin/kientt[m[33m)[m update code for about us and farm screen
+[33m942dc40[m Merge pull request #56 from hoangcmite/dungnd
+[33m12f7f8f[m update file link
+[33m4944a4d[m Merge pull request #55 from hoangcmite/kientt
+[33m7c3eaa9[m up code for farm detail screen in homepage
+[33m94ea661[m Merge pull request #54 from hoangcmite/kientt
+[33m866640f[m up code for farm list in homepage feature
+[33m7ee225b[m Merge pull request #53 from hoangcmite/minhnd
+[33me7d6d5f[m[33m ([m[1;31morigin/minhnd[m[33m)[m Merge branch 'master' into minhnd
+[33m378f0fa[m Update Logout function
+[33m4853783[m Merge pull request #52 from hoangcmite/kientt
+[33mea7ecdc[m fix code for farm page
+[33m93f266f[m Merge pull request #51 from hoangcmite/minhnd
+[33m1a2d072[m Update Identity Setting and Context
+[33mfde1adf[m Update AuthenticationController
+[33mfe2431b[m Create UserViewModel, Update Login
+[33mf4e6fbf[m Merge pull request #50 from hoangcmite/kientt
+[33m1942634[m update code for farm page
+[33m2daddb3[m Merge pull request #49 from hoangcmite/tunghx
+[33me73db15[m Update waiting blog list, blog list
+[33mde65409[m BlogList View Updated
+[33m1ae5743[m Merge pull request #48 from hoangcmite/kientt
+[33m7cb54c7[m update code for farm list screen
+[33m8524898[m Merge pull request #47 from hoangcmite/minhnd
+[33m28e7e96[m Test image upload using Drive
+[33maccb8c8[m Merge pull request #46 from hoangcmite/dungnd
+[33m80d2fcf[m update file json token
+[33m183a3e7[m Merge pull request #45 from hoangcmite/dungnd
+[33m20e7686[m Update DriveController
+[33m61e7143[m Merge pull request #44 from hoangcmite/tunghx
+[33m97560d8[m Delete Blog (BlogImage, BlogTag) API
+[33m4504b80[m Merge pull request #43 from hoangcmite/minhnd
+[33md597434[m Merge branch 'master' into minhnd
+[33m8857e9d[m Merge pull request #42 from hoangcmite/dungnd
+[33m0bffc37[m Update Driver Controller
+[33m03d5aee[m Merge pull request #41 from hoangcmite/tunghx
+[33mfc659cd[m Create blog API
+[33md802ab5[m Identity Conf & Register
+[33mc949be4[m Merge pull request #40 from hoangcmite/kientt
+[33ma201daf[m up code api farm details
+[33m0c12065[m Update Identity Configurations
+[33m9502eae[m Merge pull request #39 from hoangcmite/tunghx
+[33m4b5264c[m Resolve conflict
+[33m22b9b00[m Blog repositories
+[33ma0f5647[m Merge pull request #38 from hoangcmite/kientt
+[33md286de0[m update code api for farm list
+[33m5c4ca44[m Merge pull request #37 from hoangcmite/kientt
+[33m04b4f7f[m Update code for farm list api
+[33mbb8db1f[m Merge pull request #36 from hoangcmite/hoangcm
+[33m0520075[m Update login layout
+[33m5d38fc7[m Midified farm controller
+[33mf192ba4[m Merge pull request #35 from hoangcmite/minhnd
+[33m92180e0[m Create ProfileController.cs
+[33m13ca30d[m Update functions for Authentication
+[33m5918c3a[m Merge pull request #34 from hoangcmite/kientt
+[33m8b73728[m add repositories for farm homepage
+[33mf1b096f[m Merge pull request #33 from hoangcmite/hoangcm
+[33mab3b235[m Config profile
+[33mba6333d[m Merge pull request #32 from hoangcmite/hoangcm
+[33m8110f1c[m Add farm repo and farm service
+[33m4650bca[m Merge pull request #31 from hoangcmite/hoangcm
+[33ma71d03a[m Add migration and Update database
+[33m4773dc9[m Update farm adminitrator front-end
+[33ma531886[m Update layout
+[33mcbdb073[m Merge pull request #30 from hoangcmite/kientt
+[33m261eb9f[m update code for address filter in farm screen
+[33m7aed10c[m Merge pull request #29 from hoangcmite/kientt
+[33m275eaaf[m Up code front-end for farm details screen
+[33m333f102[m Merge pull request #28 from hoangcmite/tunghx
+[33mc584b7a[m jquery for create blog
+[33m8f7bc19[m Merge pull request #27 from hoangcmite/minhnd
+[33m7950d7c[m Update RAFSInitializer.cs
+[33mff27119[m Update ChangelogConfig and EmployeeConfig
+[33m0317d5e[m Merge pull request #26 from hoangcmite/kientt
+[33md2ecac8[m update farm screen front-end and about us front-end
+[33m8c520be[m Merge pull request #25 from hoangcmite/minhnd
+[33maf6d084[m Update User Seed in RAFSInitializer
+[33m1b499f1[m Merge pull request #24 from hoangcmite/minhnd
+[33mdc433c1[m Merge branch 'master' into minhnd
+[33m110cb4f[m Update UserConfig & RAFSInitializer
+[33m873fcb7[m Merge pull request #23 from hoangcmite/tunghx
+[33ma4ead68[m front-end create blog using ckeditor
+[33m866f42c[m Merge pull request #22 from hoangcmite/dungnd
+[33m189119b[m Update Milestone Management Font-end
+[33mf3faed2[m Merge pull request #21 from hoangcmite/hoangcm
+[33m90c2f28[m update layout
+[33m0e90587[m Merge pull request #20 from hoangcmite/dungnd
+[33m568c0e6[m Update RAFSInitializer, Update header for Dashboard
+[33md4ccdd4[m Merge pull request #19 from hoangcmite/tunghx
+[33m91a3da3[m no message
+[33maccbccd[m Merge pull request #18 from hoangcmite/kientt
+[33me87f4a8[m update about us and farm screens front-end code
+[33m28ee401[m Merge pull request #17 from hoangcmite/kientt
+[33mf308fd8[m up code homepage header
+[33m5cef8e9[m Merge pull request #16 from hoangcmite/hoangcm
+[33m2f007cb[m Add files in controller folder
+[33m27d6a66[m Merge pull request #15 from hoangcmite/dungnd
+[33mb1e6358[m Update RAFSInitializer.cs
+[33m1947c44[m Merge pull request #14 from hoangcmite/tunghx
+[33m2b23b11[m no message
+[33meb4b80b[m Merge pull request #13 from hoangcmite/hoangcm
+[33m8d06418[m Add Home Page layout and Dashboard layout
+[33m85eedce[m Merge pull request #12 from hoangcmite/kientt
+[33me13e2be[m update QuestionFormConfig class
+[33m13d78c9[m Merge pull request #11 from hoangcmite/tunghx
+[33m5d48d94[m no message
+[33m3c3bccd[m Merge pull request #10 from hoangcmite/kientt
+[33m202d3a8[m add questionForm confiq
+[33mbd99830[m Merge pull request #9 from hoangcmite/dungnd
+[33mc50257c[m Update Config
+[33mfbc9d52[m Merge pull request #8 from hoangcmite/dungnd
+[33m4acdda1[m Delete dungnd-test.txt
+[33m37e0cdb[m dungnd test
+[33m01502c1[m Delete dungnd-test.txt
+[33md1a4d83[m dungnd test
+[33m3aa1a46[m Merge pull request #7 from hoangcmite/hoangcm
+[33m36282eb[m Add and update files in Configs folder
+[33me99cf47[m Merge pull request #6 from hoangcmite/hoangcm
+[33m412b901[m Add template libraries into Assets folders
+[33m44546b6[m Merge pull request #5 from hoangcmite/hoangcm
+[33mb8e3c86[m Update and Add RAFS.Core
+[33m5f835d1[m Merge pull request #4 from hoangcmite/hoangcm
+[33m317b90e[m Update RAFS.Web
+[33mbe6f7dd[m Merge pull request #3 from hoangcmite/hoangcm
+[33md8c56d1[m Add Repisitories and Services folder
+[33m9d9bfd3[m Add Mapper folder
+[33m1917644[m Add Initializers folder
+[33mb0106f1[m Add Context folder
+[33m9717ac8[m Merge pull request #2 from hoangcmite/hoangcm
+[33m1dc124b[m add 3 project
+[33m6253d20[m Add project files.
+[33mb9b2d78[m Add .gitattributes, .gitignore, and README.md.

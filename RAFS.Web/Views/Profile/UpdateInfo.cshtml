@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using RAFS.Core.Models
+
+@{
+    var profile = (AspUser)ViewBag.Profile;
+}
+
+@model UpdateInfoModel
+<head>
+    <script src="~/js/javascrip.js"></script>
+</head>
+
+<table class="table table-borderless table-sm">
+    <tbody>
+        <tr>
+            <td>Họ và tên:</td>
+            <td>
+                <input type="text" class="form-control" asp-for="FullName" id="FullName" name="FullName" placeholder="Họ và tên" value="@profile.FullName">
+            </td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>
+                <input type="email" class="form-control" asp-for="Email" id="Email" name="Email" placeholder="Địa chỉ Email" value="@profile.Email">
+            </td>
+        </tr>
+        <tr>
+            <td>Số điện thoại:</td>
+            <td>
+                <input type="text" class="form-control" asp-for="PhoneNumber" id="PhoneNumber" name="PhoneNumber" placeholder="Số điện thoại" value="@profile.PhoneNumber">
+            </td>
+        </tr>
+        <tr>
+            <td>Địa chỉ:</td>
+            <td>
+                <input type="text" class="form-control" asp-for="Address" id="Address" name="Address" placeholder="Địa chỉ" value="@profile.Address">
+            </td>
+        </tr>
+        <tr>
+            <td>Mô tả:</td>
+            <td>
+                <input type="text" class="form-control" asp-for="Description" id="Description" name="Description" placeholder="Mô tả" value="@profile.Description">
+            </td>
+        </tr>
+    </tbody>
+</table>
+

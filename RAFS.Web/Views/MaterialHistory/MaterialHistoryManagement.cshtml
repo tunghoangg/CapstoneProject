@@ -1,0 +1,306 @@
+﻿@{
+    Layout = "_DashboardLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CodePen - II just another Css tabs (:checked)</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="./css/MaterialHistoryCss.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+  
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   <style>
+        article {
+            background-image: url('./Assets/Images/background.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        section {
+            background-image: url('./Assets/Images/649095.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .table-responsive {
+            z-index: 9999;
+            max-height: 70%;
+            /* Limiting maximum height */
+            overflow-y: auto;
+        }
+
+            .table-responsive thead {
+                position: sticky;
+                top: 0; /* Đặt vị trí của phần <thead> ở trên cùng của bảng */
+                z-index: 1; /* Đảm bảo phần <thead> nằm trên cùng */
+                background-color: #60f542; /* Tùy chỉnh màu nền của phần <thead> */
+            }
+
+        article {
+            position: absolute;
+            left: 0;
+            top: 5rem;
+            right: 0;
+            bottom: 0;
+            transition: .7s;
+            transform: scale(0);
+            transform-origin: center right;
+            transition-delay: .1s;
+        }
+   </style>
+    <script src="~/js/javascrip.js"></script>
+</head>
+<body>
+    
+                
+    <!-- partial:index.partial.html -->
+    <section>
+        <input type="radio" id="profile" value="1" name="tractor" checked='checked' />
+        <input type="radio" id="settings" value="2" name="tractor" />
+        <input type="radio" id="posts" value="3" name="tractor" />
+        <input type="radio" id="books" value="4" name="tractor" />
+
+        <nav>
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="profile" id="profile2" class='fa fa-plus'></label>
+                </div>
+                <div class="col-md-4">
+                    <label for="settings" id="settings2" class='fa  fa-flask'></label>
+                </div>
+                <div class="col-md-4">
+                    <label for="posts" id="posts2" class='fa  fa-truck'></label>
+                </div>
+            </div>
+
+        </nav>
+        <input id="checkload" value="0"/>
+        <article class='uno'>
+            <div style="display:grid">
+                <a href="#popup" style="display: inline-block;">
+                    <button id="createbtn" class="button3 pure2">Tạo mới</button>
+                </a>
+                <h2 style="display: inline-block; vertical-align: middle;">
+                    <img alt='' src='https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png' />
+                </h2>
+            </div>
+            <div class="table-responsive">
+                <table id="table1" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>InventoryName</th>
+                            <th>PlantName</th>
+                            <th>Quality</th>
+                            <th>LastUpdate</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+@* 
+            <footer>
+                <ul>
+                    <li class='fa fa-link'></li>
+                    <li class='fa fa-bar-chart'></li>
+                    <li class='fa fa-sitemap'></li>
+                    <li class='fa fa-wrench'></li>
+                    <li class='fa fa-magic'></li>
+                </ul>
+            </footer> *@
+        </article>
+        <div class="popup" id="popup2">
+            <div class="popup__content">
+                <div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Tạo nhóm mới</h4>
+
+                            <form class="forms-sample">
+                                <div class="form-group row">
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Id</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" id="Id2" class="form-control" id="Id2" placeholder="Tên nhóm">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Inventory Name</label>
+                                    <div class="col-sm-9">
+                                        <select id="InventoryId2">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Plant Name</label>
+                                    <div class="col-sm-9">
+                                        <select id="PlantId2">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Quality</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" id="Quality2" class="form-control" id="Quality" placeholder="Tên nhóm">
+                                    </div>
+                                </div>
+
+                                <button type="submit" id="update" style="background-color:greenyellow" class="btn btn-primary mr-2">Save</button>
+                                <a href="#" class="btn btn-light">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="popup" id="popup">
+            <div class="popup__content">
+                <div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Tạo nhóm mới</h4>
+
+                            <form class="forms-sample">
+                                
+                                <div class="form-group row">
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Inventory Name</label>
+                                    <div class="col-sm-9">
+                                        <select id="InventoryId">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Plant Name</label>
+                                    <div class="col-sm-9">
+                                        <select id="PlantId">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Quality</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" id="Quality" class="form-control" id="Quality" placeholder="Tên nhóm">
+                                    </div>
+                                </div>
+
+                                <button type="submit" id="add" style="background-color:greenyellow" class="btn btn-primary mr-2">Add</button>
+                                <a href="#" class="btn btn-light">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <article class='dos fa fa-wrench'>
+            <a href="#popup" style="display: inline-block;">
+                <button id="createbtn2" class="button3 pure2">Tạo mới</button>
+            </a>
+            <h2>
+                <img alt='' src='https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png' />
+            </h2>
+            <div class="table-responsive">
+                <table id="table2" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>InventoryName</th>
+                            <th>PlantName</th>
+                            <th>Quality</th>
+                            <th>LastUpdate</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                </table>
+            </div>
+            @*
+            <footer>
+            <ul>
+            <li class='fa fa-link'></li>
+            <li class='fa fa-bar-chart'></li>
+            <li class='fa fa-sitemap'></li>
+            <li class='fa fa-wrench'></li>
+            <li class='fa fa-magic'></li>
+            </ul>
+            </footer> *@
+        </article>
+
+        <article class='tres fa fa-beer'>
+            <a href="#popup" style="display: inline-block;">
+                <button id="createbtn3" class="button3 pure2">Tạo mới</button>
+            </a>
+            <h2>
+                <img alt='' src='https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png' />
+
+            </h2>
+            <div class="table-responsive">
+                <table id="table3" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>InventoryName</th>
+                            <th>PlantName</th>
+                            <th>Quality</th>
+                            <th>LastUpdate</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            @*
+            <footer>
+            <ul>
+            <li class='fa fa-link'></li>
+            <li class='fa fa-bar-chart'></li>
+            <li class='fa fa-sitemap'></li>
+            <li class='fa fa-wrench'></li>
+            <li class='fa fa-magic'></li>
+            </ul>
+            </footer> *@
+        </article>
+       
+    </section> 
+    <div style="margin-top: 10px">
+        <nav aria-label="Page navigation example">
+            <ul id="pagi-pages" class="pagination">
+            </ul>
+        </nav>
+    </div>
+    <!-- partial -->
+    <script src="./js/MaterialHistory.js"></script>
+    <script src="~/js/javascrip.js"></script>
+    <script src="~/js/materialhistorymanagement/api.js"></script>
+    <script src="~/js/materialhistorymanagement/action.js"></script>
+    <script>
+
+         baseUrlClient = "";
+         baseUrl = "https://localhost:7043/api/";
+         farmid = 1;
+        let typeid = 0;
+        //const userId = "8f06393e-e93f-4e99-af51-aac0182350e3";//Tạo
+         userId = "8f06393e-e93f-4e99-af51-aac0182350e4";//Không được tạo
+
+        var stringArray10 = [];
+        var stringArray12 = [];
+        var stringArray18 = [];
+        var currentpage = 1;
+        var totalPages1 = 0;
+        var totalPages2 = 0;
+        var totalPages3 = 0;
+    </script>
+</body>
+</html>
+

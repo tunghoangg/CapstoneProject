@@ -1,0 +1,511 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using RAFS.Core.Models
+@{
+    Layout = "_DashboardLayout";
+    var profile = (AspUser)ViewBag.Profile;
+    var farms = (List<Farm>)ViewBag.Farms;
+}
+@model ChangePasswordModel
+
+<html>
+
+<head>
+    <script src="~/js/javascrip.js"></script>
+    <style>
+        input[type="file"] {
+            display: none;
+        }
+
+        #avatar-img {
+            width: 100%;
+            max-width: 300px;
+            height: 100%;
+            max-height: 300px;
+        }
+
+    </style>
+    <script>
+        function displaySelectedImage(event, elementId, UserId) {
+            const selectedImage = document.getElementById(elementId);
+            const fileInput = event.target;
+            const button = document.getElementById('changeAvatarBtn');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    selectedImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+
+            button.textContent = "Đang cập nhật..."
+            updateLogoFarm(fileInput.files[0], UserId);
+
+        };
+
+        const updateLogoFarm = (file, UserId) => {
+            var formData = new FormData();
+            formData.append('Avatar', file);
+            formData.append('UserId', UserId);
+            $.ajax({
+                url: baseUrl + "Profile/UpdateAvatar",
+                type: "POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Thay đổi thành công.');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Thay đổi thất bại.');
+                }
+            });
+
+        };
+    </script>
+</head>
+<style>
+    .detail-farm {
+        padding: 10px 0 5px 0 !important;
+        margin: 0;
+    }
+
+    #user-custom-button {
+        background-color: transparent; /* Nền trong suốt */
+        border: none; /* Không có border */
+        padding: 5px; /* Thu nhỏ padding để button chỉ bao gồm icon */
+        cursor: pointer;
+    }
+
+    .user-icon {
+        font-size: 24px; /* Kích thước icon */
+        color: blue; /* Màu sắc của icon */
+    }
+
+    .form-check {
+        position: relative;
+        display: flex;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding-left: 0;
+    }
+
+    .label-with-star::after {
+        content: "*";
+        color: red;
+        margin-left: 5px;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .label-with-star::after:hover::before {
+            content: attr(title);
+            background-color: #f8f9fa;
+            color: #000;
+            border: 1px solid #ced4da;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            top: 0;
+            left: calc(100% + 5px);
+            width: max-content;
+            white-space: nowrap;
+            z-index: 1;
+        }
+
+</style>
+<body>
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Thông tin tài khoản</h4>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Tên:</td>
+                                            <td>@profile.FullName</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Địa chỉ:</td>
+                                            <td>@profile.Address</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Email:</td>
+                                            <td>@profile.Email</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Số điện thoại:</td>
+                                            <td>@profile.PhoneNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tên tài khoản:</td>
+                                            <td>@profile.UserName</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mật khẩu:</td>
+                                            <td>
+                                                @if (profile.PasswordHash == null)
+                                                {
+                                                    <a href="#" hidden data-toggle="modal" data-target="#changePasswordModal">Đổi mật khẩu</a>
+                                                    <a href="#" data-toggle="modal" data-target="#addPasswordModal">Tạo mật khẩu</a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" data-toggle="modal" data-target="#changePasswordModal">Đổi mật khẩu</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ghi chú:</td>
+                                            <td>@profile.Description</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cập nhật:</td>
+                                            <td>@profile.LastUpdated</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <button class="btn btn-primary" id="btnUpdateInfo" data-toggle="modal" data-target="#updateInfoModal">Cập nhật thông tin</button>
+
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <div>
+                                    <img src="@profile.Avatar" id="avatar-img" alt="Profile Picture" class="profile-picture mb-3">
+                                </div>
+
+                                <div>
+                                    <label for="file-upload" id="changeAvatarBtn" class="btn btn-primary">
+                                        Thay đổi ảnh đại diện
+                                    </label>
+                                    <input type="file" id="file-upload" accept="image/*" onchange="displaySelectedImage(event, 'avatar-img', '@profile.Id')"></input>
+                                </div>
+
+                            </div>
+                            <div style="margin-top: 50px" class="notifications">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            Danh sách trang trại
+                        </h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Tên trang trại</th>
+                                        <th>Địa chỉ</th>
+                                        <th>SĐT</th>
+                                        <th>Diện tích</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Ngày khánh thành</th>
+                                        <th>Trạng thái</th>
+                                        <th>Mô tả</th>
+                                        <th>Cập nhật</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var farm in farms)
+                                    {
+                                        <tr>
+                                            <td>@farm.Code</td>
+                                            <td>@farm.Name</td>
+                                            <td>@farm.Address</td>
+                                            <td>@farm.Phone</td>
+                                            <td>@farm.Area</td>
+                                            <td>@farm.CreatedDate</td>
+                                            <td>@farm.EstablishedDate</td>
+                                            <td>@farm.Status</td>
+                                            <td>@farm.Description</td>
+                                            <td>@farm.LastUpdate</td>
+                                            <td>
+                                                <button class="btn btn-info btn-sm">Xem chi tiết</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Thay đổi trạng thái trang trại-->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm mt-7 pl-3" style="max-width:500px">
+            <form id="form">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Đổi mật khẩu</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" class="form-control" id="userId" name="userId" value="@profile.Id">
+                        <div class="form-group">
+                            <label asp-for="currentPassword">
+                                <strong>Mật khẩu hiện tại:</strong>
+                            </label>
+                            <input type="password" class="form-control" asp-for="currentPassword" id="currentPassword" name="currentPassword" placeholder="Mật khẩu hiện tại">
+                            @* <span asp-validation-for="currentPassword" class="text-danger"></span> *@
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="newPassword">
+                                <strong>Mật khẩu mới:</strong>
+                            </label>
+                            <input type="password" class="form-control" asp-for="newPassword" id="newPassword" name="newPassword" placeholder="Mật khẩu mới">
+                            @* <span asp-validation-for="newPassword" class="text-danger"></span> *@
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="newPasswordConfirm">
+                                <strong>Nhập lại mật khẩu mới:</strong>
+                            </label>
+                            <input type="password" class="form-control" asp-for="newPasswordConfirm" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Nhập lại mật khẩu mới">
+                            @* <span asp-validation-for="newPasswordConfirm" class="text-danger"></span> *@
+                        </div>
+                        <div class="form-group">
+                            <span class="text-danger" id="ChangePassword_ErrMsg"> </span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" id="btnChangePasswordConfirm" class="btn btn-primary confirm-change-status-farm">Đổi mật khẩu</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="updateInfoModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cập nhật thông tin tài khoản</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        @Html.Partial("UpdateInfo")
+                        <span class="text-danger" id="UpdateInfo_ErrMsg"> </span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnUpdateInfoConfirm" class="btn btn-primary confirm-change-status-farm">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="addPasswordModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tạo mật khẩu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        @Html.Partial("AddPassword")
+                        <span class="text-danger" id="addPasswordMsg"> </span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnAddPasswordConfirm" class="btn btn-primary confirm-change-status-farm">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('#btnChangePasswordConfirm').click(function () {
+                var userId = $('#userId').val();
+                var currentPassword = $('#currentPassword').val();
+                var newPassword = $('#newPassword').val();
+                var newPasswordConfirm = $('#newPasswordConfirm').val();
+
+                // Perform validation, if needed
+
+                // Create an object with the data to send
+                var data = {
+                    userId: userId,
+                    currentPassword: currentPassword,
+                    newPassword: newPassword,
+                    newPasswordConfirm: newPasswordConfirm
+                };
+
+                // Make an AJAX call
+                $.ajax({
+                    url: "https://localhost:7043/api/Profile/ChangePassword/", // Replace with your API
+
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        // Handle success response
+                        // You can show a success message or perform any action needed
+                        console.log(response);
+                        $('#changePasswordModal').modal('hide'); // Close the modal
+                        createToast('success', 'fa-solid fa-circle-check', 'Success', 'Thay đổi thành công.');
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        // Handle error response
+                        // You can show an error message or perform any action needed
+                        console.error(xhr.responseText);
+                        var errors = JSON.parse(xhr.responseText).errors;
+                        var errorMessage = '';
+                        for (var key in errors) {
+                            if (errors[key].description == null) {
+                                errorMessage += errors[key] + '<br>';
+                            } else {
+                                errorMessage += errors[key].description + '<br>';
+                            }
+
+                        }
+                        $('#ChangePassword_ErrMsg').html(errorMessage);
+                    }
+                });
+            });
+
+            $('#btnUpdateInfoConfirm').click(function () {
+                var UserId = $('#userId').val();
+                var Email = $('#Email').val();
+                var PhoneNumber = $('#PhoneNumber').val();
+                var FullName = $('#FullName').val();
+                var Address = $('#Address').val();
+                var Description = $('#Description').val();
+
+                // Perform validation, if needed
+
+                // Create an object with the data to send
+                var data = {
+                    UserId: UserId,
+                    Email: Email,
+                    PhoneNumber: PhoneNumber,
+                    FullName: FullName,
+                    Address: Address,
+                    Description: Description
+                };
+
+                // Make an AJAX call
+                $.ajax({
+                    url: "https://localhost:7043/api/Profile/UpdateInfo", // Replace with your API endpoint
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        // Handle success response
+                        // You can show a success message or perform any action needed
+                        console.log(response);
+                        $('#updateInfoModal').modal('hide'); // Close the modal
+                        location.reload();
+                        createToast('success', 'fa-solid fa-circle-check', 'Success', 'Thay đổi thành công.');
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        // Handle error response
+                        // You can show an error message or perform any action needed
+                        console.error(xhr.responseText);
+                        var errors = JSON.parse(xhr.responseText).errors;
+                        var errorMessage = '';
+                        for (var key in errors) {
+                            if (errors[key].description == null) {
+                                errorMessage += errors[key] + '<br>';
+                            } else {
+                                errorMessage += errors[key].description + '<br>';
+                            }
+
+                        }
+                        $('#UpdateInfo_ErrMsg').html(errorMessage);
+                    }
+                });
+            });
+
+            $('#btnAddPasswordConfirm').click(function () {
+                var userId = $('#UserId').val();
+                var newPassword = $('#addPassword').val();
+                var newPasswordConfirm = $('#addPasswordConfirm').val();
+
+                // Perform validation, if needed
+
+                // Create an object with the data to send
+                var data = {
+                    userId: userId,
+                    newPassword: newPassword,
+                    newPasswordConfirm: newPasswordConfirm
+                };
+
+                // Make an AJAX call
+                $.ajax({
+                    url: "https://localhost:7043/api/Profile/AddPassword/", // Replace with your API
+
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        // Handle success response
+                        // You can show a success message or perform any action needed
+                        console.log(response);
+                        $('#addPasswordModal').modal('hide'); // Close the modal
+                        createToast('success', 'fa-solid fa-circle-check', 'Success', 'Thay đổi thành công.');
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        // Handle error response
+                        // You can show an error message or perform any action needed
+                        console.error(xhr.responseText);
+                        var errors = JSON.parse(xhr.responseText).errors;
+                        var errorMessage = '';
+                        for (var key in errors) {
+                            if (errors[key].description == null) {
+                                errorMessage += errors[key] + '<br>';
+                            } else {
+                                errorMessage += errors[key].description + '<br>';
+                            }
+
+                        }
+                        $('#addPasswordMsg').html(errorMessage);
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

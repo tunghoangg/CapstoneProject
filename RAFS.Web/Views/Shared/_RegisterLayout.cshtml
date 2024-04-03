@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Favicon -->
+    <link rel="icon" href="~/Assets/HomePage/img/core-img/rafs.ico">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Skydash Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/feather/feather.css">
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="~/Assets/Dashboard/css/vertical-layout-light/style.css">
+    <!-- endinject -->
+</head>
+
+<body>
+    @RenderBody()
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="~/Assets/Dashboard/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="~/Assets/Dashboard/js/off-canvas.js"></script>
+    <script src="~/Assets/Dashboard/js/hoverable-collapse.js"></script>
+    <script src="~/Assets/Dashboard/js/template.js"></script>
+    <script src="~/Assets/Dashboard/js/settings.js"></script>
+    <script src="~/Assets/Dashboard/js/todolist.js"></script>
+    <!-- endinject -->
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

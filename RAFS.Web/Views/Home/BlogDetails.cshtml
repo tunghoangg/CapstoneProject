@@ -1,0 +1,259 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+<style>
+    .image img {
+        width: 100%;
+        height: auto;
+    }
+
+    .image-style-side {
+        float: right;
+        max-width: 50%;
+    }
+
+</style>
+@* <div style="margin-top: 50px" class="notifications">
+</div> *@
+    <!-- ##### Breadcrumb Area Start ##### -->
+    <div class="breadcrumb-area">
+        <!-- Top Breadcrumb Area -->
+        <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(/Assets/HomePage/img/bg-img/farm-bg3.jpg);">
+            <div id="farm-detail-header">
+                @* <h2>Chi tiết trang trại</h2> *@
+            <h2>Nội Dung Bài Viết</h2>
+        </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb" id="breadcrumb-farm-data">
+                            <li class="breadcrumb-item"><a href="/Home"><i class="fa fa-home"></i> Trang chủ</a></li>
+                            <li class="breadcrumb-item"><a href="/Home/Blog">Bài đăng</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Chi tiết bài đăng</li> 
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Breadcrumb Area End ##### -->
+    <!-- ##### Blog Content Area Start ##### -->
+    <section class="blog-content-area section-padding-0-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- Blog Posts Area -->
+                <div class="col-12 col-md-8">
+                    <div class="blog-posts-area">
+
+                        <!-- Post Details Area -->
+                        <div class="single-post-details-area">
+                        <div id="blogDetail" class="post-content">
+                                <h4 class="post-title" id="title">Garden designers across the country forecast ideas shaping the gardening world in 2018</h4>
+                                <div class="post-meta mb-30">
+                                    <a href="#"><i id="blogCreateDate" class="fa fa-clock-o" aria-hidden="true"></i> </a>
+                                    <a href="#"><i class="fa fa-user userName" aria-hidden="true"></i></a>
+                                </div>
+                            
+                            </div>
+                        </div>
+
+                        <!-- Post Tags & Share -->
+                        <div class="post-tags-share d-flex justify-content-between align-items-center">
+                            <!-- Tags -->
+                            <ol id="tagDetailBlog" class="popular-tags d-flex align-items-center flex-wrap">
+                                <li><span>Tag:</span></li>
+                                @* <li><a href="#">PLANTS</a></li>
+                                <li><a href="#">CACTUS</a></li> *@
+                            </ol>
+                           
+                        </div>
+
+                        <!-- Comment Area Start -->
+                  
+                        <!-- Leave A Comment -->
+                      
+
+                    </div>
+                </div>
+
+                <!-- Blog Sidebar Area -->
+                <div class="col-12 col-sm-9 col-md-4">
+                    <div class="post-sidebar-area">
+
+                        <!-- ##### Single Widget Area ##### -->
+                       @*  <div class="single-widget-area">
+                            <form action="#" method="get" class="search-form">
+                                <input type="search" name="search" id="widgetSearch" placeholder="Search...">
+                                <button type="submit"><i class="icon_search"></i></button>
+                            </form>
+                        </div> *@
+
+                        <!-- ##### Single Widget Area ##### -->
+                        <div class="single-widget-area">
+                            <!-- Author Widget -->
+                           
+                        </div>
+
+                    <!-- ##### Single Widget Area ##### -->
+                    <div class="single-widget-area">
+                        <!-- Title -->
+                        <div class="widget-title">
+                            <h4>Recent post</h4>
+                        </div>
+                        <div style="margin-left: 4px;" class="row " id="content-recentBlog">
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+
+                <!-- ##### Single Widget Area ##### -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ##### Blog Content Area End ##### -->
+    <!-- ##### Footer Area Start ##### -->
+   
+    @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var id = @ViewData["id"];
+            
+            $.ajax({
+                url: `https://localhost:7043/api/Blog/GetBlogById/${id}`,
+                method: 'GET',
+                data: {
+                },
+                contentType: 'application/json',
+                success: (data) => {
+                    var createDate = new Date(data.createDate);
+                    $('#title').html('');
+                    if (data) {
+                        $('#title').html(data.title);
+                        $('.userName').html(" "+data.authorName)
+                        $('#blogCreateDate').html(createDate.toLocaleDateString('en-GB'))
+                        $('#blogDetail').append(data.body)
+                        data.tag.forEach(element => {
+                            console.log(element);
+                            $('#tagDetailBlog').append(`<li><a href="#">` + element + `</a></li>`)
+                        });
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+            $.ajax({
+                url: `https://localhost:7043/api/HomePage/GetFilteredBlog/1`,
+                method: 'GET',
+               data: {
+                        sort: "asc",
+                    pageResults: 4,
+                    },
+                contentType: 'application/json',
+                success: (data) => {
+                    $('#content-recentBlog').html('');
+                    if (data && data.blogs.length > 0) {
+                        $('#content-recentBlog').html(generateHtmlRecentBlog(data.blogs));
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+            
+        });
+        const generateHtmlRecentBlog = (data) => {
+            let dataGrid = '';
+
+            var now = new Date(); // Lấy ngày giờ hiện tại
+            data.forEach(element => {
+                var createDate = new Date(element.createDate);
+                if (Array.isArray(element.imageURL) && element.imageURL.length >= 1) {
+                    dataGrid +=
+                        `
+                                <div class="single-latest-post d-flex align-items-center">
+                                        <div class="post-thumb">
+                                                          <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}"><img style="border-radius: 10px; width: 70px; height: 70px; object-fit: cover;" src="${element.imageURL[0]}" alt="logo farm"></a>
+                                        </div>
+                                        <div  class="post-content">
+                                                    <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}" class="post-title">
+                                                        <h6>${element.title}</h6>
+                                            </a>
+                                                     `;
+                    if (createDate !== undefined && createDate instanceof Date) {
+                        if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear() &&
+                            now.getHours() == createDate.getHours()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + (now.getMinutes() - createDate.getMinutes()) + ' phút trước' + '</a>' + '</div>';
+                        } else if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + (now.getHours() - createDate.getHours()) + ' giờ trước' + '</a>' + '</div>';
+                        } else if (now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + (now.getDate() - createDate.getDate()) + ' ngày trước ' + '</a>' + '</div>';
+                        } else {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + createDate.toLocaleDateString('en-GB') + '</div>';
+                        }
+                    }
+                    else {
+
+                        console.log(item.createDate + "Error Create Date"); // Thử truy cập thuộc tính createDate hoặc CreateDate
+                    }
+
+                }
+                else {
+                    dataGrid +=
+                        `
+                                        <div class="single-latest-post d-flex align-items-center">
+                                                <div class="post-thumb">
+                                                                                  <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}"><img style="border-radius: 10px; width: 70px; height: 70px; object-fit: cover;" src="../assets/blog/images/tải xuống.png" alt="logo farm"></a>
+                                                </div>
+                                                <div class="post-content">
+                                                            <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}" class="post-title">
+                                                                <h6>${element.title}</h6>
+                                                    </a>
+                                                             `;
+                    if (createDate !== undefined && createDate instanceof Date) {
+                        if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear() &&
+                            now.getHours() == createDate.getHours()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + (now.getMinutes() - createDate.getMinutes()) + ' phút trước' + '</a>' + '</div>';
+                        } else if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + (now.getHours() - createDate.getHours()) + ' giờ trước' + '</a>' + '</div>';
+                        } else if (now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + (now.getDate() - createDate.getDate()) + ' ngày trước ' + '</a>' + '</div>';
+                        } else {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + createDate.toLocaleDateString('en-GB') + '</a>' + '</div>';
+                        }
+                    }
+                    else {
+
+                        console.log(item.createDate + "Error Create Date"); // Thử truy cập thuộc tính createDate hoặc CreateDate
+                    }
+
+                }
+                dataGrid += '</div>'
+            });
+            return dataGrid;
+        };
+        
+    </script>
+    }

@@ -1,0 +1,427 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using RAFS.Core.Models
+@inject SignInManager<AspUser> SignInManager
+@inject UserManager<AspUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>RAFS Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/feather/feather.css">
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" type="text/css" href="~/Assets/Dashboard/js/select.dataTables.min.css">
+    <!--mdi icon-->
+    <link rel="stylesheet" href="~/Assets/Dashboard/vendors/mdi/css/materialdesignicons.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="~/Assets/Dashboard/css/vertical-layout-light/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="~/Assets/Dashboard/images/rafs.ico" />
+    <style>
+        .logoutbtn {
+            background: none !important;
+            border: none;
+            padding: 2 !important;
+            /*optional*/
+            font-family: arial, sans-serif;
+            /*input has OS specific font-family*/
+            color: #069;
+            cursor: pointer;
+        }
+    </style>
+    <link href="~/css/styletoast.css" rel="stylesheet" />
+</head>
+<body>
+    
+
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo mr-5" href="index.html"><img src="/Assets/Dashboard/images/demo2.png" class="mr-2" alt="logo" /></a>
+                <a class="navbar-brand brand-logo-mini" href="index.html"><img src="/Assets/Dashboard/images/RAFSIcon.png" alt="logo" /></a>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="icon-menu" style="margin-left:-15px"></span>
+                </button>
+                <ul class="navbar-nav mr-lg-2">
+                </ul>
+                <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                            <i class="icon-bell mx-0"></i>
+                            <span class="count"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                            <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                            <a class="dropdown-item preview-item">
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon bg-success">
+                                        <i class="ti-info-alt mx-0"></i>
+                                    </div>
+                                </div>
+                                <div class="preview-item-content">
+                                    <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                                    <p class="font-weight-light small-text mb-0 text-muted">
+                                        Just now
+                                    </p>
+                                </div>
+                            </a>
+                            <a class="dropdown-item preview-item">
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon bg-warning">
+                                        <i class="ti-settings mx-0"></i>
+                                    </div>
+                                </div>
+                                <div class="preview-item-content">
+                                    <h6 class="preview-subject font-weight-normal">Settings</h6>
+                                    <p class="font-weight-light small-text mb-0 text-muted">
+                                        Private message
+                                    </p>
+                                </div>
+                            </a>
+                            <a class="dropdown-item preview-item">
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon bg-info">
+                                        <i class="ti-user mx-0"></i>
+                                    </div>
+                                </div>
+                                <div class="preview-item-content">
+                                    <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                                    <p class="font-weight-light small-text mb-0 text-muted">
+                                        2 days ago
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item nav-profile dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                            <img src="~/Assets/Dashboard/images/faces/face28.jpg" id="smallAvatar" alt="profile" />
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                            <a class="dropdown-item" asp-action="ViewProfile" asp-controller="Profile">
+                                <i class="ti-settings text-primary"></i>
+                                Thông tin cá nhân
+                            </a>
+                            <form id="logoutForm" asp-controller="Authentication" asp-action="Logout" method="post">
+                                @Html.AntiForgeryToken()
+                                <a class="dropdown-item">
+                                    <i class="ti-power-off text-primary"></i>
+                                    <button type="submit" class="logoutbtn">
+                                        Đăng xuất
+                                    </button>
+                                </a>
+                            </form>
+
+                        </div>
+                    </li>
+                    @*  <li class="nav-item nav-settings d-none d-lg-flex">
+                    <a class="nav-link" href="#">
+                    <i class="icon-ellipsis"></i>
+                    </a>
+                    </li> *@
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                    <span class="icon-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_settings-panel.html -->
+            <div class="theme-setting-wrapper">
+                <div id="settings-trigger"><i class="ti-settings"></i></div>
+                <div id="theme-settings" class="settings-panel">
+                    <i class="settings-close ti-close"></i>
+                    <p class="settings-heading">SIDEBAR SKINS</p>
+                    <div class="sidebar-bg-options selected" id="sidebar-light-theme"><div class="img-ss rounded-circle bg-light border mr-3"></div>Light</div>
+                    <div class="sidebar-bg-options" id="sidebar-dark-theme"><div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark</div>
+                    <p class="settings-heading mt-2">HEADER SKINS</p>
+                    <div class="color-tiles mx-0 px-4">
+                        <div class="tiles success"></div>
+                        <div class="tiles warning"></div>
+                        <div class="tiles danger"></div>
+                        <div class="tiles info"></div>
+                        <div class="tiles dark"></div>
+                        <div class="tiles default"></div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <!-- partial -->
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Statistics")">
+                            <i class="mdi mdi-chart-areaspline menu-icon"></i>
+                            <span class="menu-title">Thống kê</span>
+                        </a>
+                    </li>
+                    @if (User.IsInRole("Owner"))
+                    {
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Farm")">
+                                <i class="mdi mdi-leaf menu-icon menu-icon"></i>
+                                <span class="menu-title">Trang trại</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("BlogList", "Blog")">
+                                <i class="mdi mdi-newspaper menu-icon"></i>
+                                <span class="menu-title">Bài đăng</span>
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Staff"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("BlogList", "Blog")">
+                                <i class="mdi mdi-newspaper menu-icon"></i>
+                                <span class="menu-title">Bài đăng</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("QuestionFormPage", "Guest")">
+                                <i class="mdi mdi-shape-plus menu-icon"></i>
+                                <span class="menu-title">CSKH</span>
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="pages/documentation/documentation.html">
+                                <i class="mdi mdi-shape-plus menu-icon"></i>
+                                <span class="menu-title">Người dùng</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="pages/documentation/documentation.html">
+                                <i class="mdi mdi-shape-plus menu-icon"></i>
+                                <span class="menu-title">Truy cập</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="pages/documentation/documentation.html">
+                                <i class="mdi mdi-shape-plus menu-icon"></i>
+                                <span class="menu-title">Nhân viên</span>
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Technician"))
+                    {
+                        @* for (int i = 0; i < length; i++)
+                        {
+                            
+                        } *@
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Plant")">
+                                <i class="mdi mdi-timetable menu-icon"></i>
+                                <span class="menu-title">Sổ nhật ký</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Milestone")">
+                                <i class="mdi mdi-timetable menu-icon"></i>
+                                <span class="menu-title">Quản lý các nhóm</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "FundDiary")">
+                                <i class="mdi mdi-cash-multiple menu-icon"></i>
+                                <span class="menu-title">Nhật ký quỹ</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Materials")">
+                                <i class="mdi mdi-cube-send menu-icon"></i>
+                                <span class="menu-title">Kho chứa</span>
+                            </a>
+                        </li>
+                        @* <li class="nav-item">
+                            <a class="nav-link" href="pages/documentation/documentation.html">
+                                <i class="mdi mdi-nature-people menu-icon"></i>
+                                <span class="menu-title">Nhân công</span>
+                            </a>
+                        </li> *@
+                    }
+                    
+                </ul>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <!-- content-wrapper begins -->
+                @RenderBody()
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 - RAFS </span>
+                        @* <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved. *@
+                        @* <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span> *@
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="~/Assets/Dashboard/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="~/Assets/Dashboard/vendors/chart.js/Chart.min.js"></script>
+    <script src="~/Assets/Dashboard/vendors/datatables.net/jquery.dataTables.js"></script>
+    <script src="~/Assets/Dashboard/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+    <script src="~/Assets/Dashboard/js/dataTables.select.min.js"></script>
+
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="~/Assets/Dashboard/js/off-canvas.js"></script>
+    <script src="~/Assets/Dashboard/js/hoverable-collapse.js"></script>
+    <script src="~/Assets/Dashboard/js/template.js"></script>
+    <script src="~/Assets/Dashboard/js/settings.js"></script>
+    <script src="~/Assets/Dashboard/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <script src="~/Assets/Dashboard/js/dashboard.js"></script>
+    <script src="~/Assets/Dashboard/js/Chart.roundedBarCharts.js"></script>
+    <!-- Validation -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <!-- End custom variable-->
+    @* <script>
+        const baseUrlClient = "";
+        const baseUrl = "https://localhost:7043/api/";
+        const userId = "2bac5d95-a07d-4eac-9fd7-f6a59b43d001";
+        const farmId = 5;
+    </script> *@
+    <script>
+        const baseUrl = "https://localhost:7043/api/";
+        let userId = getCurrentUserId();
+        let farmId = getCurrentUserFarmId();
+        let userRoles;
+        let userFuncs;
+        let avatarLink;
+        
+        function getCurrentUserId() {
+            var id = 0;
+            $.ajax({
+                url: baseUrl + 'Authentication/GetUserId',
+                type: 'GET',
+                async: false,
+                success: function (txtBack) {
+                    // Assuming txtBack contains the user ID
+                    id = txtBack;
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching user ID:', error);
+                }
+            });
+
+            return id;
+        }
+
+        function getCurrentUserFarmId() {
+            var id = 0;
+            $.ajax({
+                url: baseUrl + 'Authentication/GetUserFarmId',
+                type: 'GET',
+                async: false,
+                success: function (txtBack) {
+                    // Assuming txtBack contains the user ID
+                    id = txtBack;
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching user ID:', error);
+                }
+            });
+
+            return id;
+        }
+
+        async function getUserRoles() {
+            try {
+                const response = await fetch(baseUrl + 'Authentication/GetUserRoles');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user roles');
+                }
+                userRoles = await response.json();
+            } catch (error) {
+                console.error('Error fetching user roles:', error);
+            }
+        }
+
+        async function getUserFuncs() {
+            try {
+                console.log('Fetching user funcs...');
+                const response = await fetch(baseUrl + 'Authentication/GetUserFuncs');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user funcs');
+                }
+                userFuncs = await response.json();
+                console.log('User roles:', userFuncs);
+            } catch (error) {
+                console.error('Error fetching user funcs:', error);
+            }
+        }
+
+        async function getUserAvatar() {
+            try {
+                const response = await fetch(baseUrl + 'Profile/GetAvatar', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch avatar');
+                }
+
+                avatarLink = await response.text();
+            } catch (error) {
+                console.error('Error fetching avatar:', error);
+            }
+        }
+
+        window.onload = async function () {
+            await getUserAvatar();
+            await getUserRoles();
+            await getUserFuncs();
+
+            // Update the image src after all data is fetched
+            document.getElementById('smallAvatar').src = avatarLink;
+        };
+
+        
+    </script>
+
+    <!-- End custom js for this page-->
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/app.js"></script>
+</body>
+
+</html>
+

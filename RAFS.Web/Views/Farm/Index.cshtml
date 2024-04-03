@@ -1,0 +1,505 @@
+﻿@{
+    Layout = "_DashboardLayout";
+    string formattedDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+}
+
+<style>
+    .detail-farm {
+        padding: 10px 0 5px 0 !important;
+        margin: 0;
+    }
+
+    #user-custom-button {
+        background-color: transparent; /* Nền trong suốt */
+        border: none; /* Không có border */
+        padding: 5px; /* Thu nhỏ padding để button chỉ bao gồm icon */
+        cursor: pointer;
+    }
+
+    .user-icon {
+        font-size: 24px; /* Kích thước icon */
+        color: blue; /* Màu sắc của icon */
+    }
+
+    .form-check {
+        position: relative;
+        display: flex;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding-left: 0;
+    }
+
+    .label-with-star::after {
+        content: "*";
+        color: red;
+        margin-left: 5px;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .label-with-star::after:hover::before {
+            content: attr(title);
+            background-color: #f8f9fa;
+            color: #000;
+            border: 1px solid #ced4da;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            top: 0;
+            left: calc(100% + 5px);
+            width: max-content;
+            white-space: nowrap;
+            z-index: 1;
+        }
+
+</style>
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body" id="farm-detail">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div style="margin-top: 50px" class="notifications">
+                    </div>
+                    <h4 class="card-title">DANH SÁCH - <button id="buttonAddFarm" type="button" class="btn btn-primary btn-sm">Tạo mới</button></h4>
+                    @* data-toggle="modal" data-target=".createFarmModel"*@
+
+                    <div class="table-responsive" id="farm-list">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        NHÂN VIÊN
+                    </h4>
+                    <div class="table-responsive" id="user-list">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Thêm trang trại-->
+<div class="modal fade createFarmModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg mt-2 pl-3">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px 26px">
+                <h5 class="modal-title" id="exampleModalLabel">Tạo mới trang trại</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="padding:10px 26px">
+
+
+                <div class="row mt-3">
+                    <div class="col">
+                        <label for="addFarmName" class="label-with-star" title="Tên trang trại ít nhất 3 ký tự, nhiều nhất 50 ký tự">
+                            <strong>Tên</strong>
+                            @* <span style="display:none" class="red-star" title="Tên trang trại ít nhất 3 ký tự, nhiều nhất 50 ký tự"></span> *@
+                        </label>
+                        <input type="text" class="form-control" id="addFarmName" placeholder="Nhập tên trang trại">
+                        <div id="message-addFarmName"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="addFarmEstablishDate" class="label-with-star" title="Ngày thành lập không được vượt qua ngày hiện tại"><strong>Ngày thành lập</strong></label>
+                        <input type="date" class="form-control" id="addFarmEstablishDate" value="@formattedDate">
+                        <div id="message-addFarmEstablishDate"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="addFarmArea" class="label-with-star" title="Diện tích phải từ 0.036ha đến 20ha"><strong>Diện tích</strong></label>
+                        <input type="number" class="form-control" id="addFarmArea" value="0">
+                        <div id="message-addFarmArea"></div>
+                    </div>
+
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="addFarmPhone" class="label-with-star" title="Số điện thoại 10 số phải bắt đầu bằng: 09|08|07|05|03"><strong>Số điện thoại</strong></label>
+                        <input type="text" class="form-control" id="addFarmPhone" placeholder="Nhập số điện thoại">
+                        <div id="message-addFarmPhone"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="addFarmWebsite"><strong>Website</strong></label>
+                        <input type="text" class="form-control" id="addFarmWebsite" placeholder="Nhập link website">
+                        <div id="message-addFarmWebsite"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">
+                        @* //for="addFarmAddress" *@
+                        <label class="label-with-star" title="Phải chọn các địa chỉ tương ứng"><strong>Địa chỉ</strong></label>
+                        <div id="message-addFarmAddress"></div>
+                        
+                    </div>
+                    <div class="col-10">
+                        @*style="border-radius: 5px; width: 150px; margin:0px 40px" class="custom-select widget-title"*@
+                        <select id="cityFarm" >
+                            <option value="" selected>Tỉnh / Thành</option>
+                        </select>
+                        <select id="districtFarm" >
+                            <option value="" selected>Quận / Huyện</option>
+                        </select>
+                        <select id="wardFarm" >
+                            <option value="" selected>Phường / Xã</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <label for="addFarmDescription" class="label-with-star" title="Viết mô tả trang trại ít nhất 20 ký tự"><strong>Mô tả</strong></label>
+                        <textarea class="form-control" id="addFarmDescription" rows="5"></textarea>
+                        <div id="message-addFarmDescription"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="padding:10px 26px">
+                <div id="message-btn-create-new-farm"></div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ẩn</button>
+                <button type="button" class="btn btn-primary" id="btn-create-new-farm">Tạo</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cập nhật trang trại-->
+<div class="modal fade updateFarmModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg mt-2 pl-3">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px 26px">
+                @* - ${e.code} *@
+                <h5 class="modal-title" id="exampleModalLabel">Cập nhật</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:10px 26px">
+                <div class="row mt-0">
+                    <div class="col">
+                        @* value="${e.name}" *@
+                        <label for="update-farm-name" class="label-with-star" title="Tên trang trại ít nhất 3 ký tự, nhiều nhất 50 ký tự"><strong>Tên</strong></label>
+                        <input type="text" class="form-control" id="update-farm-name" placeholder="Nhập tên trang trại" >
+                        <div id="message-update-farm-name"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        @* value="${formatDate(new Date(e.establishedDate))}" *@
+                        <label for="update-farm-establishedDate" class="label-with-star" title="Ngày thành lập không được vượt qua ngày hiện tại"><strong>Ngày thành lập</strong></label>
+                        <input type="date" class="form-control" id="update-farm-establishedDate" >
+                        <div id="message-update-farm-establishedDate"></div>
+                    </div>
+                    <div class="col-md-6">
+                        @* value="${e.area}" *@
+                        <label for="update-farm-area" class="label-with-star" title="Diện tích phải từ 0.036ha đến 20ha"><strong>Diện tích</strong></label>
+                        <input type="number" class="form-control" id="update-farm-area" >
+                        <div id="message-update-farm-area"></div>
+                    </div>
+
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        @* value="${e.phone}" *@
+                        <label for="update-farm-phone" class="label-with-star" title="Số điện thoại 10 số phải bắt đầu bằng: 09|08|07|05|03"><strong>Số điện thoại</strong></label>
+                        <input type="text" class="form-control" id="update-farm-phone" placeholder="Nhập số điện thoại" >
+                        <div id="message-update-farm-phone"></div>
+                    </div>
+                    <div class="col-md-6">
+                        @* value="${e.pageLink}" *@
+                        <label for="update-farm-website"><strong>Website</strong></label>
+                        <input type="text" class="form-control" id="update-farm-website" placeholder="Nhập link website" >
+                        <div id="message-update-farm-website"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">
+
+                        <label class="label-with-star" title="Phải chọn các địa chỉ tương ứng"><strong>Địa chỉ</strong></label>
+                        <div id="message-update-farm-address"></div>
+                    </div>
+                    <div class="col-10">
+                        @*style="border-radius: 5px; width: 150px; margin-right:40px" class="custom-select widget-title"*@
+                        <select id="update-cityFarm" >
+                            <option value="" selected>Tỉnh / Thành</option>
+                        </select>
+                        <select id="update-districtFarm" >
+                            <option value="" >Quận / Huyện</option>
+                        </select>
+                        <select id="update-wardFarm" >
+                            <option value="" >Phường / Xã</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        @* ${e.description} *@
+                        <label for="update-farm-description" class="label-with-star" title="Viết mô tả trang trại ít nhất 20 ký tự"><strong>Mô tả</strong></label>
+                        <textarea class="form-control" id="update-farm-description" rows="5"></textarea>
+                        <div id="message-update-farm-description"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:10px 26px">
+                <div id="message-btn-update-farm-admin"></div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btn-update-farm-admin">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Thay đổi trạng thái trang trại-->
+<div class="modal fade modal-soft-delete-farm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-7 pl-3" style="max-width:500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Lưu trữ trang trại</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p><strong>Điều này có thể khiến trang trại của bạn không còn hoạt động!</strong></p>
+                    <p><strong>Bạn chắc chắn muốn lưu trữ trang trại này?</strong></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary confirm-change-status-farm">Lưu trữ</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Chi tiết technician-->
+<div id="detail-user-farm" class="modal fade detail-technician-model" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-2 pl-3" style="max-width:600px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="examplemodallabel">Chi tiết kỹ thuật viên</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mt-0">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Tên tài khoản:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="uff-user-name"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Tên người dùng:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="uff-full-name"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Số điện thoại:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="uff-user-phone"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Email:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="uff-user-email"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Chức năng:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="uff-user-function"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Địa chỉ:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="uff-user-address"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Mô tả:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="uff-user-description"></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button id="btn-move-update-user" type="button" class="btn btn-primary move-update-function" data-toggle="modal" data-target="#update-user-farm">Cập nhật chức năng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cập nhật technician-->
+<div id="update-user-farm" class="modal fade update-user-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-7 pl-3" style="max-width:300px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thay đổi chức năng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="uff-so-nhat-ky" value="option1">
+                    <label class="form-check-label" for="uff-so-nhat-ky">Sổ nhật ký</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="uff-dong-tien" value="option1">
+                    <label class="form-check-label" for="uff-dong-tien">Nhật ký quỹ</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="uff-kho-chua" value="option1">
+                    <label class="form-check-label" for="uff-kho-chua">Kho chứa</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="uff-nhan-cong" value="option1">
+                    <label class="form-check-label" for="uff-nhan-cong">Quản lý các nhóm</label>
+                </div>
+                @* <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="uff-san-xuat" value="option2">
+                    <label class="form-check-label" for="uff-san-xuat">Sản xuất</label>
+                </div> *@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button id="update-user-function-farm" type="button" class="btn btn-primary">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Thay đổi trạng thái techinician-->
+<div class="modal fade modal-change-status-techinician" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-7 pl-3" style="max-width:500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thay đổi trạng thái kỹ thuật viên</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p><strong>Điều này có thể làm thay đổi trạng thái kỹ thuật viên của bạn!</strong></p>
+                    <p><strong>Bạn chắc chắn muốn thay đổi chứ?</strong></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button id="change-status-user-confirm" type="button" class="btn btn-primary">Thay đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Phản hồi mật khẩu mới cho nkyx thuật viên-->
+<div class="modal fade modal-response-status-techinician" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-7 pl-3" style="max-width:500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mật khẩu thay đổi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p id="mat-khau-moi"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Mẫu: <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Cập nhật</button>-->
+@* <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg mt-2 pl-3">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Recipient:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div> *@
+@* ~/assets/images/RAFSIcon.png *@
+@* <!-- Đoạn code chọn hình ảnh -->
+                <div class="row justify-content-center align-items-center mt-0" style="position: relative;">
+                <div style="position: relative; display: inline-block;">
+                <img id="selectedAvatar" src="~/assets/images/RAFSIcon.png"
+                class="rounded-circle" style="width: 140px; height: 140px; object-fit: cover;" alt="null" />
+
+                <label class="form-label m-1" for="customFile"
+                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+                <i class="mdi mdi-file-image" style="display: block;"></i>
+                </label>
+
+                <input type="file" class="form-control d-none" id="customFile" onchange="displaySelectedImage(event, 'selectedAvatar')" />
+                </div>
+                </div> *@
+@* <div class="col">
+    <label for="update-farm-address" class="label-with-star" title="Phải chọn các địa chỉ tương ứng"><strong>Địa chỉ</strong></label>
+    <input type="text" class="form-control" id="update-farm-address" placeholder="Nhập địa chỉ" value="${e.address}">
+</div> *@
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="~/js/farmadmin.js"></script>
+    @* <script src="~/js/validate/validatefarmadminitrator.js"></script> *@
+}

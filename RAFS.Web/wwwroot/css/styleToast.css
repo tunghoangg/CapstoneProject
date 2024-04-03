@@ -1,0 +1,116 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+
+.notifications {
+    position: fixed;
+    top: 30px;
+    right: 20px;
+    z-index: 9999; /* Đảm bảo rằng .notifications hiển thị trên cùng */
+}
+
+
+/*.toastNoti {
+    position: relative;
+    padding: 10px;
+    margin-bottom: 10px;
+    color: #fff;
+    width: 400px;
+    display: grid;
+    grid-template-columns: 70px 1fr 70px;
+    border-radius: 5px;
+    --color: #0abf30;
+    background-image: linear-gradient(to right, #0abf3055, #22242F 30%);
+    animation: show_toast 0.3s ease forwards;
+}*/
+
+.toastNoti {
+    position: relative;
+    padding: 8px;
+    margin-bottom: 10px;
+    color: #fff;
+    width: 300px; /* Điều chỉnh kích thước của thông báo */
+    display: grid;
+    grid-template-columns: 50px 1fr 50px;
+    border-radius: 5px;
+    --color: #0abf30;
+    background-image: linear-gradient(to right, #0abf3055, #22242F 30%);
+    animation: show_toast 0.3s ease forwards;
+}
+
+    .toastNoti i {
+        color: var(--color);
+    }
+
+    .toastNoti .title {
+        font-size: large;
+        font-weight: bold;
+    }
+
+    .toastNoti i {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: large;
+    }
+
+    .toastNoti span,
+    .toastNoti .close {
+        opacity: 0.6;
+        color: #fff;
+        font-size: small;
+    }
+
+@keyframes show_toast {
+    0% {
+        transform: translateX(100%);
+    }
+
+    40% {
+        transform: translateX(-5%);
+    }
+
+    80% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-10%);
+    }
+}
+
+.toastNoti::before {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: var(--color);
+    box-shadow: 0 0 10px var(--color);
+    content: '';
+    width: 100%;
+    height: 3px;
+    animation: timeOut 5s linear 1 forwards;
+}
+
+@keyframes timeOut {
+    to {
+        width: 0%;
+    }
+}
+/* error */
+.toastNoti.error {
+    --color: #f24d4c;
+    background-image: linear-gradient(to right, #f24d4c55, #22242F 30%);
+}
+/* warning */
+.toastNoti.warning {
+    --color: #e9bd0c;
+    background-image: linear-gradient(to right, #e9bd0c55, #22242F 30%);
+}
+/* info */
+.toastNoti.info {
+    --color: #3498db;
+    background-image: linear-gradient(to right, #3498db55, #22242F 30%);
+}
+
+.toastNoti:not(.show) {
+    display: grid;
+}

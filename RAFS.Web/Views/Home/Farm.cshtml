@@ -1,0 +1,332 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+}
+
+<style>
+    .truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px; /* Adjust the max-width according to your needs */
+    }
+</style>
+
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(/Assets/HomePage/img/bg-img/farm-bg3.jpg);">
+        <h2>Trang trại</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/Home"><i class="fa fa-home"></i> Trang chủ</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Trang trại</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ##### Shop Area Start ##### -->
+<section class="shop-page section-padding-0-100">
+    <div class="container">
+
+        <div class="row">
+            <!-- Shop Sorting Data -->
+            <div class="col-12">
+                <div class="shop-sorting-data d-flex flex-wrap align-items-center justify-content-between">
+                    <div class="shop-page-count">
+                        <p>CÁC TRANG TRẠI TRONG HỆ THỐNG</p>
+                    </div>
+                    <!-- Search by Terms -->
+                    <div>
+                        <div class="search_by_terms">
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Area -->
+            <div class="col-12 col-md-4 col-lg-2">
+                <div class="shop-sidebar-area">
+                    <form action="#" method="post">
+                        <!-- Shop Widget -->
+                        <div class="shop-widget sort-by mb-50">
+                            <h4 class="widget-title">Bộ lọc</h4>
+                            <div class="widget-desc">
+                                <input id="searchString" type="search" style="margin-bottom: 20px;width: 150px" class="form-control rounded" placeholder="Tìm tên trang trại" aria-label="Search" aria-describedby="search-addon" />
+                            </div>
+                            <div class="widget-desc">
+                                <select id="city" style="border-radius: 5px; width: 150px" class="custom-select widget-title">
+                                    <option value="" selected>Tỉnh / Thành</option>
+                                </select>
+                            </div>
+                            <div class="widget-desc">
+                                <select id="district" style="border-radius: 5px; width: 150px" class="custom-select widget-title">
+                                    <option value="" selected>Quận / Huyện</option>
+                                </select>
+                            </div>
+                            <div class="widget-desc">
+                                <select id="ward" style="border-radius: 5px; width: 150px" class="custom-select widget-title">
+                                    <option value="" selected>Phường / Xã</option>
+                                </select>
+                            </div>
+                            <div class="widget-desc">
+                                <select id="sort" style="border-radius: 5px; width: 150px" class="custom-select widget-title">
+                                    <option value="" selected>Sắp xếp</option>
+                                    <option value="asc">Sắp xếp A - Z</option>
+                                    <option value="des">Sắp xếp Z - A</option>
+                                    <option value="new">Sắp xếp mới - cũ</option>
+                                    <option value="old">Sắp xếp cũ - mới</option>
+                                </select>
+                            </div>
+                            <div class="widget-desc">
+                                <select id="farmArea" style="border-radius: 5px; width: 150px" class="custom-select widget-title">
+                                    <option value="" selected>Diện tích</option>
+                                    <option value="< 5ha">Dưới 5 Ha</option>
+                                    <option value="> 5ha">Từ 5 đến 15 ha</option>
+                                    <option value="> 15ha">Trên 15 ha</option>
+                                </select>
+                            </div>
+                            <div class="widget-desc">
+                                <button id="filterFarm" style="width: 150px; height: 40px" class="btn btn-success fa fa-search" type="button"></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- All Products Area -->
+            <div class="col-12 col-md-8 col-lg-10">
+                <div class="shop-products-area">
+                    <div class="row" id="content-farm">
+
+                        
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav style="margin-top: 20px" aria-label="Page navigation">
+                        <ul class="pagination" id="pages">
+                            @* <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li> *@
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        var page = 1;
+        var totalPages = 0;
+
+        $('#filterFarm').click(function() {
+            var page = 1;
+            var totalPages = 0;
+            console.log($('#city').val());
+            fetchFarms(page);
+        });
+
+        // Function to fetch farms based on page number
+        const fetchFarms = (page) => {
+            var searchString = $('#searchString').val();
+            var province = $('#city').val();
+            var district = $('#district').val();
+            var ward = $('#ward').val();
+            var sort = $('#sort').val();
+            var area = $('#farmArea').val();
+            $.ajax({
+                url: `https://localhost:7043/api/HomePage/GetFilteredFarm/${page}`,
+                method: 'GET',
+                data: {
+                    search: searchString,
+                    province: province,
+                    district: district,
+                    ward: ward,
+                    sort: sort,
+                    area: area
+                },
+                contentType: 'application/json',
+                success: (data) => {
+                    $('#content-farm').html('');
+                        if (data && data.farms.length > 0) {
+                            $('#content-farm').html(generateHtmlFarm(data.farms));
+                            totalPages = data.pages;
+                            updatePaginationButtons(page);
+                        } else {
+                            $('#content-farm').html('<h1>Không tìm thấy trang trại</h1>');
+                            $('#pages').html('');
+                        }
+            },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+        };
+
+
+
+        // Initial fetch
+        fetchFarms(page);
+
+        // Function to update pagination buttons
+        const updatePaginationButtons = (currentPage) => {
+        $('#pages').html('');
+        $('#pages').html('');
+        if (totalPages > 1) {
+            if (currentPage > 1) {
+                $('#pages').append(`<li class="page-item"><a class="page-link" id="prevPage" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>`);
+            }
+        let startPage = 1;
+        let endPage = totalPages;
+        if (totalPages > 3) {
+            startPage = Math.max(1, currentPage - 1);
+            endPage = Math.min(totalPages, currentPage + 1);
+            if (startPage === 1) {
+                endPage = 3;
+            }
+            if (endPage === totalPages) {
+                startPage = totalPages - 2;
+            }
+        }
+        for (let i = startPage; i <= endPage; i++) {
+            $('#pages').append(`<li class="page-item"><a class="page-link" id="page${i}" href="#">${i}</a></li>`);
+        }
+        if (currentPage < totalPages) {
+            $('#pages').append(`<li class="page-item"><a class="page-link" id="nextPage" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>`);
+        }
+        }
+        $(`#page${currentPage}`).addClass('active');
+
+        
+    };
+
+    // Event delegation for pagination click
+    $('#pages').on('click', 'a.page-link', function () {
+        if ($(this).attr('id') === 'prevPage') {
+            if (page > 1) {
+                page--;
+            }
+        } else if ($(this).attr('id') === 'nextPage') {
+            if (page < totalPages) {
+                page++;
+            }
+        } else {
+            page = parseInt($(this).text());
+        }
+        fetchFarms(page);
+    });
+
+});
+
+        const generateHtmlFarm = (data) => {
+        let dataGrid = '';
+        data.forEach(element => {
+        dataGrid +=
+            `
+            <div style="margin-bottom: 30px" class="col-md-6 d-flex ftco-animate">
+                <div class="blog-entry align-self-stretch d-md-flex">
+                    <a data-id="${element.id}" href="/Home/FarmDetails?id=${element.id}"><img style="border-radius: 10px; width: 130px; height: 130px; object-fit: cover;" src="${element.logo}" alt="logo farm"></a>
+                    <div class="text d-block pl-md-4">
+                        <h3><a style="font-size: 20px" href="/Home/FarmDetails?id=${element.id}">${element.name}</a></h3>
+                        <p class="truncate" id="mytext">${element.description}</p>
+                        <a href="/Home/FarmDetails?id=${element.id}">
+                            <button style="border-radius: 10px" type="button" class="btn btn-success">Chi tiết</button>
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            `;
+        });
+        return dataGrid;
+        };
+
+
+    </script>
+
+    <script>
+        var text = document.getElementById('myText').innerText;
+        var maxLength = 100; // Set your desired maximum length
+        var truncated = text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        document.getElementById('myText').innerText = truncated;
+    </script>
+
+    @* --- code address api --- *@
+
+    <script>
+        var citis = document.getElementById("city");
+        var districts = document.getElementById("district");
+        var wards = document.getElementById("ward");
+        var Parameter = {
+            url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+            method: "GET",
+            responseType: "application/json",
+        };
+        var promise = axios(Parameter);
+        promise.then(function (result) {
+            renderCity(result.data);
+        });
+
+        function renderCity(data) {
+            for (const x of data) {
+                var opt = document.createElement('option');
+                opt.value = x.Name;
+                opt.text = x.Name;
+                opt.setAttribute('data-id', x.Id);
+                citis.options.add(opt);
+            }
+
+            citis.onchange = function () {
+                district.length = 1;
+                ward.length = 1;
+                if (this.options[this.selectedIndex].dataset.id != "") {
+                    const result = data.filter(n => n.Id === this.options[this.selectedIndex].dataset.id);
+
+                    for (const k of result[0].Districts) {
+                        var opt = document.createElement('option');
+                        opt.value = k.Name;
+                        opt.text = k.Name;
+                        opt.setAttribute('data-id', k.Id);
+                        district.options.add(opt);
+                    }
+                }
+            };
+
+            district.onchange = function () {
+                ward.length = 1;
+                const dataCity = data.filter((n) => n.Id === citis.options[citis.selectedIndex].dataset.id);
+                if (this.options[this.selectedIndex].dataset.id != "") {
+                    const dataWards = dataCity[0].Districts.filter(n => n.Id === this.options[this.selectedIndex].dataset.id)[0].Wards;
+
+                    for (const w of dataWards) {
+                        var opt = document.createElement('option');
+                        opt.value = w.Name;
+                        opt.text = w.Name;
+                        opt.setAttribute('data-id', w.Id);
+                        wards.options.add(opt);
+                    }
+                }
+            };
+        }
+    </script> 
+}

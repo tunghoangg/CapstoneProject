@@ -1,0 +1,378 @@
+﻿@{
+    Layout = "_DashboardLayout";
+    string formattedDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+}
+
+<style>
+    .modal-open {
+        overflow: hidden;
+    }
+
+    .modal {
+        overflow-y: auto;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">SẢN PHẨM - <button id="btn-modal-create=item" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#create-model-item">Thêm sản phẩm</button></p>
+                    <div class="filter-item">
+                        <div class="filter-item-col">
+                            <label for="filter-item-by-type">
+                                <strong>Phân loại: </strong>
+                            </label>
+                            <select style="margin-bottom:15px" id="filter-item-by-type">
+                                <option value="0" selected>-------Tất cả-------</option>
+                                <option value="18">Sản phẩm nông sản</option>
+                                <option value="10">Thuốc hóa học</option>
+                                <option value="12">Phân bón hóa học</option>
+                                <option value="17">Chế phẩm sinh học</option>
+                                <option value="15">Máy móc</option>
+                                <option value="16">Công cụ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-top: 50px" class="notifications">
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">       
+                                <table id="data-table-farm-item" class="display expandable-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Tên</th>
+                                            <th>Số lượng</th>
+                                            <th>Giá trị</th>
+                                            <th>Ngày nhập kho</th>
+                                            <th>Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Thêm item-->
+<div class="modal fade " id="create-model-item" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg mt-2 pl-3">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px 26px">
+                <h5 class="modal-title" id="exampleModalLabel">Tạo mới sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form" id="form-create-item" method="post">
+                <div class="modal-body" style="padding:10px 26px">
+                    @* <div class="form-group">
+                       
+                    </div> *@
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="add-model-item-name" class="label-with-star" title="">
+                                <strong>Tên sản phẩm</strong>
+                            </label>
+                            <input type="text" class="form-control" id="add-model-item-name" name="inputName" placeholder="Nhập tên sản phẩm">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="add-model-item-type" title=""><strong>Kiểu</strong></label>
+                            <select id="add-model-item-type" class="form-control" name="inputType">
+                                <option value="18" selected>Sản phẩm nông sản</option>
+                                <option value="10" >Thuốc hóa học</option>
+                                <option value="12" >Phân bón hóa học</option>
+                                <option value="17" >Chế phẩm sinh học</option>
+                                <option value="15" >Máy móc</option>
+                                <option value="16" >Công cụ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="add-model-item-quantity" class="label-with-star" title=""><strong>Số lượng</strong></label>
+                            <input type="number" class="form-control" id="add-model-item-quantity" name="inputQuantity" value="0">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="add-model-item-unit" title=""><strong>Đơn vị</strong></label>
+                            <select id="add-model-item-unit" class="form-control" name="inputUnit">
+                                <option value="1" selected>Kilogram</option>
+                                <option value="2">Mét</option>
+                                <option value="3">Cái</option>
+                                <option value="4">Gói</option>
+                                <option value="5">Lít</option>
+                                <option value="6">Chiếc</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="add-model-item-value" class="label-with-star" title=""><strong>Tổng giá trị (VNĐ)</strong></label>
+                            <input type="number" class="form-control" id="add-model-item-value" name="inputItemValue" value="0">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="add-model-item-created-date" class="label-with-star" title="Ngày nhập kho không được vượt qua ngày hiện tại"><strong>Ngày nhập kho</strong></label>
+                            <input type="date" class="form-control" id="add-model-item-created-date" name="inputCreatedDate" value="@formattedDate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-model-item-description" class="label-with-star" title=""><strong>Mô tả</strong></label>
+                        <textarea class="form-control" id="add-model-item-description" name="inputDescription" rows="5"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:10px 26px">
+                    @* <div id="message-btn-create-new-item"></div> *@
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary" id="btn-create-new-item">Tạo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Cập nhật item-->
+<div class="modal fade " id="update-model-item" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg mt-2 pl-3">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px 26px">
+                <h5 class="modal-title" id="exampleModalLabel">Cập nhật sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form" id="form-update-item" method="post">
+                <div class="modal-body" style="padding:10px 26px">
+                    @* <div class="form-group">
+                        <label for="update-model-item-name" class="label-with-star" title="">
+                            <strong>Tên sản phẩm</strong>
+                        </label>
+                        <input type="text" class="form-control" id="update-model-item-name" name="inputName" placeholder="Nhập tên sản phẩm">
+                    </div> *@
+                    <input id="update-model-item-id" style="display:none">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="update-model-item-name" class="label-with-star" title="">
+                                <strong>Tên sản phẩm</strong>
+                            </label>
+                            <input type="text" class="form-control" id="update-model-item-name" name="inputName" placeholder="Nhập tên sản phẩm">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="update-model-item-type" title=""><strong>Kiểu</strong></label>
+                            <select id="update-model-item-type" class="form-control" name="inputType">
+                                <option value="18">Sản phẩm nông sản</option>
+                                <option value="10">Thuốc hóa học</option>
+                                <option value="12">Phân bón hóa học</option>
+                                <option value="17">Chế phẩm sinh học</option>
+                                <option value="15">Máy móc</option>
+                                <option value="16">Công cụ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="update-model-item-quantity" class="label-with-star" title=""><strong>Số lượng</strong></label>
+                            <input type="number" class="form-control" id="update-model-item-quantity" name="inputQuantity" value="0">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="update-model-item-unit" title=""><strong>Đơn vị</strong></label>
+                            <select id="update-model-item-unit" class="form-control" name="inputUnit">
+                                <option value="1" >Kilogram</option>
+                                <option value="2">Mét</option>
+                                <option value="3">Cái</option>
+                                <option value="4">Gói</option>
+                                <option value="5">Lít</option>
+                                <option value="6">Chiếc</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="update-model-item-value" class="label-with-star" title=""><strong>Tổng giá trị (VNĐ)</strong></label>
+                            <input type="number" class="form-control" id="update-model-item-value" name="inputItemValue" value="0">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="form-group col-md-6">
+                                <label for="update-model-item-created-date" class="label-with-star" title=""><strong>Ngày nhập kho</strong></label>
+                                <input type="date" class="form-control" id="update-model-item-created-date" name="inputCreatedDate" value="@formattedDate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-model-item-description" class="label-with-star" title=""><strong>Mô tả</strong></label>
+                        <textarea class="form-control" id="update-model-item-description" name="inputDescription" rows="5"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:10px 26px">
+                    @* <div id="message-btn-create-new-item"></div> *@
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary" id="btn-update-item">Cập nhật</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Chi tiết item-->
+<div id="modal-detail-item" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-2 pl-3" style="max-width:600px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="examplemodallabel">Chi tiết sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mt-0">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Trang trại:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-item-farm"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Tên sản phẩm:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-item-name"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Loại:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-item-type"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Số lượng:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-item-quantity"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Giá trị:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-item-value"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Ngày nhập kho:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-item-created-date"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Sửa đổi lần cuối:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-item-lasted-update"></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Mô tả:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-item-description"></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button id="btn-move-update-item" type="button" class="btn btn-primary move-update-item" data-toggle="modal" data-target="#update-model-item">Cập nhật sản phẩm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Xóa ỉtem-->
+<div class="modal fade" id="modal-soft-delete-item" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-7 pl-3" style="max-width:500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p><strong>Điều này có thể khiến sản phẩm này bị xóa!</strong></p>
+                    <p><strong>Bạn chắc chắn muốn xóa sản phẩm này?</strong></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="request-delete-item">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/materials.js"></script>
+}
+
+
+@*  <div class="row mt-3">
+                    <div class="col">
+
+                        <div id="message-model-item-name"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+
+                        <div id="message-model-item-quantity"></div>
+                    </div>
+                    <div class="col-6">
+
+                        <div id="message-model-item-unit"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+
+                        <div id="message-model-item-value"></div>
+                    </div>
+                    <div class="col-6">
+
+                        <div id="message-model-item-type"></div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+
+                        <div id="message-model-item-description"></div>
+                    </div>
+                </div> *@

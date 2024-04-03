@@ -1,0 +1,248 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(/Assets/HomePage/img/bg-img/farm-bg3.jpg);">
+        <div id="farm-detail-header">
+            @* <h2>Chi tiết trang trại</h2> *@
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" id="breadcrumb-farm-data">
+                        @* <li class="breadcrumb-item"><a href="/Home"><i class="fa fa-home"></i> Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="/Home/Farm">Trang trại</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Tên trang trại</li> *@
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcrumb Area End ##### -->
+<!-- ##### Single Product Details Area Start ##### -->
+<section class="single_product_details_area mb-50">
+    <div class="produts-details--content mb-50">
+        <div class="container">
+            <div class="row justify-content-center">
+
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <div @* style="width: 1000px; height: 500px" *@ class="carousel-inner" id="farm-img-data">
+                        
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="product_details_tab clearfix">
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs" role="tablist" id="product-details-tab">
+                        <li class="nav-item">
+                            <a href="#description" class="nav-link active" data-toggle="tab" role="tab">Mô tả về trang trại</a>
+                        </li>
+                    </ul>
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade show active" id="description">
+                            <div class="description_area" id="farm-info-data">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Single Product Details Area End ##### -->
+<!-- ##### Related Product Area Start ##### -->
+<div class="related-products-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Section Heading -->
+                <div class="section-heading text-center">
+                    <h2>Sản phẩm của trang trại</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="farm-plant">
+            <!-- Single Product Area -->
+            
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var id = @ViewData["id"];
+
+        $(document).ready(function () {
+            $.ajax({
+                url: `https://localhost:7043/api/HomePage/GetFarmDetails/${id}`,
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                    if (data) {
+                        $('#farm-detail-header').html(generateHtmlFarmDetailHeader(data));
+                        $('#breadcrumb-farm-data').html(generateHtmlBreadcrumbData(data));
+                        $('#farm-info-data').html(generateHtmlFarmInfoData(data));
+                        $('#farm-plant').html(generateHtmlFarmPlantData(data.plants));
+                        $('#farm-img-data').html(generateHtmlFarmImgData(data.imageURL));
+                    }
+                },
+                error: (data) => {
+
+                }
+            })
+
+            const generateHtmlFarmDetailHeader = (data) => {
+                return `<h2>${data.name}</h2>`
+
+            }
+
+            const generateHtmlBreadcrumbData = (data) => {
+                return `<li class="breadcrumb-item"><a href="/Home"><i class="fa fa-home"></i> Trang chủ</a></li>
+                                <li class="breadcrumb-item"><a href="/Home/Farm">Trang trại</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">${data.name}</li>`
+            }
+
+            const generateHtmlFarmInfoData = (data) => {
+                var dateString = data.establishedDate;
+                var date = new Date(dateString);
+
+                // Lấy ngày, tháng và năm từ đối tượng ngày
+                var day = date.getDate();
+                var month = date.getMonth() + 1; // Tháng bắt đầu từ 0 nên cần cộng thêm 1
+                var year = date.getFullYear();
+
+                // Định dạng lại chuỗi ngày theo định dạng mong muốn
+                var formattedDate = "Ngày " + day + " Tháng " + month + " Năm " + year;
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    var pageLink = "${data.pageLink}";
+                    if (!pageLink) {
+                        var element = document.querySelector("tr");
+                        element.style.display = "none";
+                    }
+                });
+
+                return `
+                <p>${data.description}</p>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Tên trang trại</th>
+                            <td>${data.name}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Ngày thành lập</th>
+                            <td>${formattedDate}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Địa chỉ</th>
+                            <td>${data.address}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Số điện thoại</th>
+                            <td>${data.phone}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Diện tích</th>
+                            <td>${data.area} héc-ta</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Mã trang trại</th>
+                            <td>${data.code}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Website</th>
+                            <td>${data.pageLink ? `<a href="${data.pageLink}"><i class="fa fa-globe"></i></a>` : 'không có website'}</td>
+                        </tr>
+                    </tbody>
+                </table>`
+            }
+
+            const generateHtmlFarmPlantData = (data) => {
+                if (data.length === 0) {
+                    return '<h1 style="text-align: center;">Trang trại chưa có cây trồng</h1>';
+                }
+                let dataGrid = '';
+                data.forEach(element => {
+                dataGrid += 
+                    `
+                     <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="single-product-area mb-100">
+                            <!-- Product Image -->
+                            <div class="product-img">
+                                <a href="shop-details.html"><img style="width: 250px; height: 320px; object-fit: cover;" src="${element.image}" alt=""></a>
+
+                                <div style="justify-content:center" class="product-meta d-flex">
+                                   <a href="https://localhost:7043/qr?plantid=${element.id}" class="add-to-cart-btn">Xem thêm</a>
+                                </div>
+                            </div>
+                            <!-- Product Info -->
+                            <div class="product-info mt-15 text-center">
+                                <a href="shop-details.html">
+                                    <p>${element.name}</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    `
+                });
+                return dataGrid;
+            }
+
+            const generateHtmlFarmImgData = (data) => {
+                if (data.length === 0) {
+                    return '<h1 style="text-align: center;">Trang trại không có ảnh</h1>';
+                }
+
+                let dataGrid = '';
+                data.forEach((element, index) => {
+                    if (index === 0) {
+                        dataGrid += `
+                        <div class="carousel-item active">
+                            <img style="width: 1000px; height: 500px; object-fit: cover;" class="d-block w-100" src="${element.url}" alt="ảnh trang trại">
+                        </div>
+                    `;
+                    } else {
+                        dataGrid += `
+                        <div class="carousel-item">
+                            <img style="width: 1000px; height: 500px; object-fit: cover;" class="d-block w-100" src="${element.url}" alt="ảnh trang trại">
+                        </div>
+                    `;
+                    }
+                });
+                return dataGrid;
+            }
+        });
+
+        
+    </script>
+
+    
+}

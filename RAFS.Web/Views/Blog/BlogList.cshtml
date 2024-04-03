@@ -1,0 +1,995 @@
+﻿@using RAFS.Core.DTO
+@using Microsoft.AspNetCore.Identity
+@using RAFS.Core.Models
+@inject SignInManager<AspUser> SignInManager
+@inject UserManager<AspUser> UserManager
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_DashboardLayout";
+    List<BlogDTO> blogList = (List<BlogDTO>)ViewData["blogList"];
+    List<BlogDTO> waitingBlogList = (List<BlogDTO>)ViewData["waitingBlogList"];
+    List<String> tagList = (List<String>)ViewData["listAllTags"];
+    List<String> imageUrl = ViewData["imageUrl"] as List<string>;
+    List<String> tags = new List<string>();
+    tags = (List<string>)ViewData["listAllTags"];
+    string tagsHTML = "";
+
+    foreach (var item in tags)
+    {
+        tagsHTML += "<button class=" + """tag""" + ">" + item + "</button>";
+    }
+
+}
+<link href="~/ckeditor5-build-classic/css/content-styles.css" rel="stylesheet" />
+<style>
+    .ck-editor__editable_inline {
+        min-height: 320px;
+    }
+
+    button.dropbtn {
+        height: 40px;
+        text-align: center;
+        line-height: 1px;
+        border-radius: 20px;
+    }
+
+    .dropbtn {
+        padding: 16px;
+        font-size: 16px;
+        width: 89%;
+    }
+
+    .dropdownt {
+        position: relative;
+        height: 70px;
+        margin-top: 20px;
+    }
+
+    .dropdownt-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        top: 46px;
+    }
+
+    .tag {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        border: none;
+        width: 100%;
+    }
+
+        .tag:hover {
+            background-color: #ddd;
+        }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: rgba(0,0,0,0.1);
+    }
+
+    .dropdown button:hover {
+        background-color: #ddd;
+    }
+
+    .show {
+        display: block;
+    }
+
+</style>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/ckeditor5-build-classic/ckeditor.js"></script>
+<div style="margin-top: 50px;z-index: 9999;" class="notifications">
+</div>
+
+<div class="container" style="background-color:whitesmoke;height:auto;overflow: auto;">
+
+    <div class="row">
+        <div class="col-3">
+            <h1 style="padding-left:40px; margin-top:20px">Blogs</h1>
+        </div>
+        <div class="col-9">
+            <input id="createBlogbtn" type="button" class="btn btn-info" style="float:right;margin-top:20px" value="Tạo Bài Đăng" />
+
+
+        </div>
+    </div>
+    <div class="row" style="margin-top:50px;margin-left:50px;margin-bottom:20px">
+        @if (User.IsInRole("Staff"))
+        {
+            <div class="col-3">
+                <input type="hidden" id="isOwner" value='false' />
+                <button id="blogList" type="button" class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px">Bài đăng</button>
+
+            </div>
+            <div class="col-3">
+                <button id="waitingList" type="button" class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px">Đang chờ</button>
+            </div>
+        }
+        else if (User.IsInRole("Owner"))
+        {
+            <div class="col-3">
+                <input type="hidden" id="isOwner" value='true' />
+                <button id="blogList" type="button" class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px" value="owner">Bài đăng</button>
+
+            </div>
+            <div class="col-3">
+                <button id="waitingList" type="button" class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px" value="owner">Đang chờ</button>
+            </div>
+        }
+
+        <div class="col-3">
+                        @if (User.IsInRole("Staff"))
+                    {
+                        <button id="tagList" type="button" class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px">Thẻ</button>
+                    }
+            
+        </div>
+
+    </div>
+    <div id="box" class="row" style="   min-width: 500px;max-width: 1060px;position: relative;margin-left:40px;border:solid;height:auto;background-color:white;min-height: 500px;border-radius: 7px;overflow: auto;">
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        if ($('#blogList').val() == "owner") {
+            var userId = "ffce777b-ea98-4c1f-8695-dca40c2fb5b1";
+            $.ajax({
+                url: 'https://localhost:7043/api/Blog/GetBlogList?userId=' + userId,
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                    if (data && data.length > 0) {
+                        $('#box').html(generateHtmlBlog(data));
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+        }
+        else {
+            $.ajax({
+                url: `https://localhost:7043/api/Blog/GetBlogList`,
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                    if (data && data.length > 0) {
+                        $('#box').html(generateHtmlBlog(data));
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+        }
+
+
+        class MyUploadAdapter {
+            constructor(loader) {
+                // The file loader instance to use during the upload. It sounds scary but do not
+                // worry — the loader will be passed into the adapter later on in this guide.
+                this.loader = loader;
+            }
+
+            // Starts the upload process.
+            upload() {
+                return this.loader.file
+                    .then(file => new Promise((resolve, reject) => {
+                        this._initRequest();
+                        this._initListeners(resolve, reject, file);
+                        this._sendRequest(file);
+                    }));
+            }
+
+            // Aborts the upload process.
+            abort() {
+                if (this.xhr) {
+                    this.xhr.abort();
+                }
+            }
+            // Initializes the XMLHttpRequest object using the URL passed to the constructor.
+            _initRequest() {
+                const xhr = this.xhr = new XMLHttpRequest();
+
+                // Note that your request may look different. It is up to you and your editor
+                // integration to choose the right communication channel. This example uses
+                // a POST request with JSON as a data structure but your configuration
+                // could be different.
+                xhr.open('POST', '@Url.Action("UploadImage", "Blog")', true);
+                xhr.responseType = 'json';
+                console.log(xhr.response);
+            }
+            // Initializes XMLHttpRequest listeners.
+            _initListeners(resolve, reject, file) {
+                const xhr = this.xhr;
+                const loader = this.loader;
+                const genericErrorText = `Couldn't upload file: ${file.name}.`;
+
+                xhr.addEventListener('error', () => reject(genericErrorText));
+                xhr.addEventListener('abort', () => reject());
+                xhr.addEventListener('load', () => {
+                    const response = xhr.response;
+
+                    // This example assumes the XHR server's "response" object will come with
+                    // an "error" which has its own "message" that can be passed to reject()
+                    // in the upload promise.
+                    //
+                    // Your integration may handle upload errors in a different way so make sure
+                    // it is done properly. The reject() function must be called when the upload fails.
+                    if (!response || response.error) {
+                        return reject(response && response.error ? response.error.message : genericErrorText);
+                    }
+
+                    // If the upload is successful, resolve the upload promise with an object containing
+                    // at least the "default" URL, pointing to the image on the server.
+                    // This URL will be used to display the image in the content. Learn more in the
+                    // UploadAdapter#upload documentation.
+                    resolve({
+                        default: response.url
+                    });
+                });
+
+                // Upload progress when it is supported. The file loader has the #uploadTotal and #uploaded
+                // properties which are used e.g. to display the upload progress bar in the editor
+                // user interface.
+                if (xhr.upload) {
+                    xhr.upload.addEventListener('progress', evt => {
+                        if (evt.lengthComputable) {
+                            loader.uploadTotal = evt.total;
+                            loader.uploaded = evt.loaded;
+                        }
+                    });
+                }
+            }
+            // Prepares the data and sends the request.
+            _sendRequest(file) {
+                // Prepare the form data.
+                const data = new FormData();
+
+                data.append('upload', file);
+
+                // Important note: This is the right place to implement security mechanisms
+                // like authentication and CSRF protection. For instance, you can use
+                // XMLHttpRequest.setRequestHeader() to set the request headers containing
+                // the CSRF token generated earlier by your application.
+
+                // Send the request.
+                this.xhr.send(data);
+            }
+        }
+        function MyCustomUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                // Configure the URL to the upload script in your backend here!
+                return new MyUploadAdapter(loader);
+            };
+        }
+
+
+        $("#createBlogbtn").click(function () {
+            var tagsHTML = "";
+            $.ajax({
+                url: `https://localhost:7043/api/Blog/GetAllTag`,
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                    data.forEach(function (item) {
+                        tagsHTML += '<button class="tag">' + item.name + '</button>';
+                    });
+                    $("#box").html(' <div id="createBlog" class="col">' +
+
+                        '<div>' +
+                        '<label style="padding-top:12px">Tiêu Đề</label>' +
+                        '<input type="text" class="form-control" id="title" placeholder="Nhập tiêu đề" />' +
+                        '</div>' +
+                        '<div id="labelContainer">' +
+                        '<label style="padding-top:12px">Thẻ</label>' +
+                        '</div>' +
+                        '<div class="dropdownt">' +
+                        '<button onclick="showTagList()" style="height: 45px; width:150px" type="text" id="tagInput"class="dropbtn form-control">Chọn Thẻ</button>' +
+                        '<div id="tagDropdown" class="dropdownt-content">' +
+                        tagsHTML +
+                        '</div>' +
+                        '<div>' +
+                        '<label>Nội dung</label>' +
+                        '<textarea id="body" placeholder="Nhập nội dung" style="min-height: 450px"></textarea>' +
+                        '</div>' +
+                        '<button type="button" id="savebtn" class="btn btn-primary" style="margin-bottom:20px;margin-top:10px">Đăng bài</button>' +
+
+                        '</div>');
+                    class MyUploadAdapter {
+                        constructor(loader) {
+                            // The file loader instance to use during the upload. It sounds scary but do not
+                            // worry — the loader will be passed into the adapter later on in this guide.
+                            this.loader = loader;
+                        }
+
+                        // Starts the upload process.
+                        upload() {
+                            return this.loader.file
+                                .then(file => new Promise((resolve, reject) => {
+                                    this._initRequest();
+                                    this._initListeners(resolve, reject, file);
+                                    this._sendRequest(file);
+                                }));
+                        }
+
+                        // Aborts the upload process.
+                        abort() {
+                            if (this.xhr) {
+                                this.xhr.abort();
+                            }
+                        }
+                        // Initializes the XMLHttpRequest object using the URL passed to the constructor.
+                        _initRequest() {
+                            const xhr = this.xhr = new XMLHttpRequest();
+
+                            // Note that your request may look different. It is up to you and your editor
+                            // integration to choose the right communication channel. This example uses
+                            // a POST request with JSON as a data structure but your configuration
+                            // could be different.
+                            xhr.open('POST', '@Url.Action("UploadImage", "Blog")', true);
+                            xhr.responseType = 'json';
+                            console.log(xhr.response);
+                        }
+                        // Initializes XMLHttpRequest listeners.
+                        _initListeners(resolve, reject, file) {
+                            const xhr = this.xhr;
+                            const loader = this.loader;
+                            const genericErrorText = `Couldn't upload file: ${file.name}.`;
+
+                            xhr.addEventListener('error', () => reject(genericErrorText));
+                            xhr.addEventListener('abort', () => reject());
+                            xhr.addEventListener('load', () => {
+                                const response = xhr.response;
+
+                                // This example assumes the XHR server's "response" object will come with
+                                // an "error" which has its own "message" that can be passed to reject()
+                                // in the upload promise.
+                                //
+                                // Your integration may handle upload errors in a different way so make sure
+                                // it is done properly. The reject() function must be called when the upload fails.
+                                if (!response || response.error) {
+                                    return reject(response && response.error ? response.error.message : genericErrorText);
+                                }
+
+                                // If the upload is successful, resolve the upload promise with an object containing
+                                // at least the "default" URL, pointing to the image on the server.
+                                // This URL will be used to display the image in the content. Learn more in the
+                                // UploadAdapter#upload documentation.
+                                resolve({
+                                    default: response.url
+                                });
+                            });
+
+                            // Upload progress when it is supported. The file loader has the #uploadTotal and #uploaded
+                            // properties which are used e.g. to display the upload progress bar in the editor
+                            // user interface.
+                            if (xhr.upload) {
+                                xhr.upload.addEventListener('progress', evt => {
+                                    if (evt.lengthComputable) {
+                                        loader.uploadTotal = evt.total;
+                                        loader.uploaded = evt.loaded;
+                                    }
+                                });
+                            }
+                        }
+                        // Prepares the data and sends the request.
+                        _sendRequest(file) {
+                            // Prepare the form data.
+                            const data = new FormData();
+
+                            data.append('upload', file);
+
+                            // Important note: This is the right place to implement security mechanisms
+                            // like authentication and CSRF protection. For instance, you can use
+                            // XMLHttpRequest.setRequestHeader() to set the request headers containing
+                            // the CSRF token generated earlier by your application.
+
+                            // Send the request.
+                            this.xhr.send(data);
+                        }
+                    }
+                    function MyCustomUploadAdapterPlugin(editor) {
+                        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                            // Configure the URL to the upload script in your backend here!
+                            return new MyUploadAdapter(loader);
+                        };
+                    }
+                    ClassicEditor
+                        .create(document.querySelector('#body'), {
+                            extraPlugins: [MyCustomUploadAdapterPlugin]
+                        })
+                        .then(editor => {
+                            window.editor = editor;
+                        })
+                        .catch(err => {
+                            console.error(err.stack);
+                        });
+                    var tagList = [];
+                    $('.tag').click(function () {
+                        var newLabel = document.createElement("label");
+                        newLabel.classList.add("newTag");
+                        var labelContainer = document.getElementById("labelContainer");
+                        var removeBtn = document.createElement("button");
+                        removeBtn.id = "removeTag";
+                        removeBtn.classList.add("btn");
+                        removeBtn.classList.add("btn-danger");
+                        if ($('#removeTag').length === 0) {
+                            // Phần tử không tồn tại trong DOM
+                            removeBtn.style.float = "right"
+                            removeBtn.textContent = "Xóa Thẻ"
+                            removeBtn.style.marginTop = "12px";
+                            labelContainer.appendChild(removeBtn);
+                        }
+                        if (!tagList.includes($(this).text())) {
+                            newLabel.textContent = $(this).text();
+                            newLabel.style.paddingTop = "12px";
+                            newLabel.style.marginLeft = "15px";
+                            newLabel.style.marginTop = "12px";
+                            newLabel.style.padding = "10px";
+                            newLabel.style.backgroundColor = "#F9F9F9"
+                            newLabel.style.color = "#837984"
+                            newLabel.style.borderRadius = "3px"
+                            labelContainer.appendChild(newLabel);
+                            tagList.push($(this).text())
+                        }
+
+
+                    });
+
+                    $(document).on('click', '#removeTag', function () {
+                        tagList = [];
+                        var elementsToRemove = document.querySelectorAll('.newTag');
+
+                        elementsToRemove.forEach(function (element) {
+                            element.remove();
+                        });
+                        var removeBtn = document.getElementById("removeTag");
+                        removeBtn.remove();
+                 
+                    });
+                    $('#savebtn').click(() => {
+                        if ($('#title').val() == "" || window.editor.getData() == "" || tagList == "") {
+                            let type = 'error';
+                            let icon = 'fa-solid fa-circle-exclamation';
+                            let title = 'Lỗi';
+                            let text = 'Các ô không được để trống';
+                            createToast(type, icon, title, text);
+                        }
+                        else {
+                            if ($('#title').val().length > 60) {
+                                let type = 'error';
+                                let icon = 'fa-solid fa-circle-exclamation';
+                                let title = 'Lỗi';
+                                let text = 'Tiêu đề không được quá 60 kí tự';
+                                createToast(type, icon, title, text);
+                            } else {
+                                var title = $('#title').val(),
+                                    body = window.editor.getData(),
+                                    listTag = tagList,
+                                    AuthorId = "ffce777b-ea98-4c1f-8695-dca40c2fb5b1";
+                                var inputString = body;
+                                // Biểu thức chính quy để tìm các liên kết ảnh trong chuỗi
+                                var regex = /<img.*?src="(.*?)"/g;
+
+                                // Mảng chứa các liên kết ảnh
+                                var imageLinks = [];
+                                var match;
+
+                                // Lặp qua các kết quả của biểu thức chính quy
+                                while ((match = regex.exec(inputString)) !== null) {
+                                    // match[1] chứa liên kết ảnh, match[0] chứa toàn bộ thẻ img
+                                    imageLinks.push(match[1]);
+                                }
+                                
+                                var url = '@Url.Action("BlogList", "Blog")';
+                                $.ajax({
+                                    url: `https://localhost:7043/api/Blog/CreateBlog`,
+                                    method: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({
+                                        "title": title,
+                                        "body": body,
+                                        "listTag": listTag,
+                                        "urlImage": imageLinks,
+                                        "authorId": AuthorId
+                                    }),
+                                    success: function (data) {
+                                        let type = 'success';
+                                        let icon = 'fa-solid fa-circle-check';
+                                        let title = 'Tạo thành công';
+                                        let text = 'Bài đăng của bạn được tạo thành công và đang trong trạng thái chờ duyệt';
+                                        createToast(type, icon, title, text);
+                                        
+                                        handleWaitingListClick();
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log("error");
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+            error: function () {
+                console.error('Failed to fetch data.');
+            }
+                });
+    
+   
+   
+
+ 
+            });
+
+
+    $('#blogList').click(handleBlogListClick);
+    $('#waitingList').click(handleWaitingListClick);
+    $('#tagList').click(loadTagList);
+    $(document).on('click', '.editBlogbtn', function (event) {
+            var blogId = $(this).data('id');
+            var isOwner = $('#isOwner').val() === "true";
+        $.ajax({
+            url: `https://localhost:7043/api/Blog/GetBlogById/${blogId}`,
+            method: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                var htmlContent = '';
+                htmlContent += ' <div id="createBlog" class="col">';
+                htmlContent += '<div>';
+                htmlContent += '<label style="padding-top:12px">Tiêu Đề</label>';
+                htmlContent += '<input readonly type="text" class="form-control" id="title" value="' + data.title + '" />';
+                htmlContent += '</div>';
+                htmlContent += '<div id="labelContainer">';
+                htmlContent += '<label style="padding-top:12px">Thẻ</label>';
+                for (var i = 0; i < data.tag.length; i++) {
+                    htmlContent += '<label class="newTag" style="padding: 10px; margin-left: 15px; margin-top: 12px; background-color: rgb(249, 249, 249); color: rgb(131, 121, 132); border-radius: 3px;">' + data.tag[i] + '</label>';
+                }
+                htmlContent += '</div>';
+                htmlContent += '<div>';
+                htmlContent += '<label>Nội dung</label>';
+                htmlContent += '<textarea id="Updatebody" style="min-height: 450px">' + data.body + '</textarea>';
+                htmlContent += '</div>';
+                htmlContent += '<div>';
+
+                htmlContent += '<button onclick="saveUpdate(\'' + data.id + '\')" type="button" id="updatebtn" class="btn btn-primary" style="margin-bottom:20px;margin-top:10px">Cập nhật</button>';
+                if (data.status == false) {
+                        if (isOwner==false) {
+                            
+                            htmlContent += '<button type="button" onclick="approveBlog(\'' + data.id + '\')" id="approvebtn" class="btn btn-success" style="margin-left:10px;margin-bottom:20px;margin-top:10px">Duyệt</button>'
+                    }
+                    
+                    htmlContent += '<button onclick="deleteBlog(\'' + data.id + '\')" type="button" id="denybtn" class="btn btn-danger" style="margin-left:10px;margin-bottom:20px;margin-top:10px">Xóa</button>'
+                }
+                htmlContent += '</div>';
+                htmlContent += '</div>';
+                $('#box').html(htmlContent);
+                ClassicEditor
+                    .create(document.querySelector('#Updatebody'), {
+                        extraPlugins: [MyCustomUploadAdapterPlugin]
+                    })
+                    .then(editor => {
+                        window.editor = editor;
+                    })
+                    .catch(err => {
+                        console.error(err.stack);
+                    });
+            },
+            error: function () {
+                console.error('Failed to fetch blog data.');
+            }
+        });
+
+    });
+    window.saveUpdate = function (id) {
+        var url = '@Url.Action("BlogList", "Blog")';
+        var body = window.editor.getData();
+        if (window.editor.getData() == "") {
+            let type = 'error';
+            let icon = 'fa-solid fa-circle-exclamation';
+            let title = 'Lỗi';
+            let text = 'Các ô không được để trống';
+            createToast(type, icon, title, text);
+        }
+        else {
+            $.ajax({
+                url: `https://localhost:7043/api/Blog/Update/${id}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(body),
+                success: (data) => {
+                    let type = 'success';
+                    let icon = 'fa-solid fa-circle-check';
+                    let title = 'Cập nhật thành công';
+                    let text = 'Bài đăng đã được cập nhật';
+                    createToast(type, icon, title, text);
+                    if (data)
+                        handleBlogListClick();
+                    else
+                        handleWaitingListClick();
+                },
+                error: function () {
+                    console.error('Failed to fetch data.')
+                }
+            });
+        }
+    };
+        });
+</script>
+<script>
+    function deleteBlog(blogId) {
+        // Hiển thị hộp thoại xác nhận
+        var result = confirm("Bạn có chắc chắn muốn xóa không?");
+       
+        // Kiểm tra kết quả xác nhận
+        if (result) {
+            var url = '@Url.Action("BlogList", "Blog")';
+            $.ajax({
+                url: `https://localhost:7043/api/Blog/Delete/${blogId}`, // Sửa lỗi cú pháp ở đây
+                method: 'Delete',
+                contentType: 'application/json',
+                success: (data) => {
+                    let type = 'success';
+                    let icon = 'fa-solid fa-circle-check';
+                    let title = 'Xóa thành công';
+                    let text = 'Bài đăng đã bị xóa';
+                    createToast(type, icon, title, text);
+                    if (data)
+                        handleBlogListClick();
+                    else
+                        handleWaitingListClick();
+                },
+                error: function () {
+                    console.error('Failed to fetch data.')
+                }
+            });
+        }
+    }
+    function deleteTag(tagId) {
+        // Hiển thị hộp thoại xác nhận
+        var result = confirm("Bạn có chắc chắn muốn xóa không?");
+        // Kiểm tra kết quả xác nhận
+        if (result) {
+            var url = '@Url.Action("BlogList", "Blog")';
+            $.ajax({
+                url: `https://localhost:7043/api/Blog/DeleteTag/${tagId}`, // Sửa lỗi cú pháp ở đây
+                method: 'Delete',
+                contentType: 'application/json',
+                success: (data) => {
+                    if (data) {
+                        let type = 'success';
+                        let icon = 'fa-solid fa-circle-check';
+                        let title = 'Xóa thành công';
+                        let text = 'Thẻ đã được xóa';
+                        createToast(type, icon, title, text);
+
+                        loadTagList();
+                    }
+                    else {
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-exclamation';
+                        let title = 'Xóa không thành công';
+                        let text = 'Thẻ đang được dùng ở trong bài đăng';
+                        createToast(type, icon, title, text);
+                    }
+
+
+                },
+                error: function () {
+                    console.error('Failed to fetch data.')
+                }
+            });
+        }
+    }
+    function approveBlog(blogId) {
+        var url = '@Url.Action("BlogList", "Blog")';
+        $.ajax({
+            url: `https://localhost:7043/api/Blog/Approveblog/${blogId}`, // Sửa lỗi cú pháp ở đây
+            method: 'PUT',
+            contentType: 'application/json',
+            success: (data) => {
+                let type = 'success';
+                let icon = 'fa-solid fa-circle-check';
+                let title = 'Duyệt thành công';
+                let text = 'Bài đăng đã được duyệt';
+                createToast(type, icon, title, text);
+                handleBlogListClick();
+            },
+            error: function () {
+                console.error('Failed to fetch data.')
+            }
+        });
+    }
+    const generateHtmlBlog = (data) => {
+        var htmlContent = '';
+        var now = new Date(); // Lấy ngày giờ hiện tại
+        var count = 0;
+        data.forEach(item => {
+            count += 1;
+            var createDate = new Date(item.createDate);
+            if (count == 1) {
+                htmlContent += '<table style=" max-height:124px;min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
+            }
+            else {
+                htmlContent += '<table style="max-height:124px; min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
+            }
+            if (item.imageURL != null && item.imageURL.length > 0) {
+
+                htmlContent += ' <th style="max-height: 92px;max-width: 112px;min-width: 92px;padding-left:20px; padding-top:20px""><img src="' + item.imageURL[0] + '" style="width: 120px;height: 100px;border-radius: 25%;margin-top: -11px;" class="img-rounded" alt="Load img fail"></th>';
+            }
+            else {
+
+                htmlContent += ' <th style="max-height: 92px;max-width: 112px;min-width: 92px;padding-left:20px; padding-top:20px""><img src="' + '../assets/blog/images/tải xuống.png' + '" style="width: 120px;height: 100px;border-radius: 25%;margin-top: -11px;" class="img-rounded" alt="Load img fail"></th>';
+            }
+            htmlContent += '  <th style="width: 85%;"><div  style="min-width: 500px;max-width: 916px;height:109.4px;padding-left:20px;padding-top:13px; white-space: nowrap;" ><h3 style="font-size: 20px;display: inline-block; vertical-align: top;margin-top: 17px;text-overflow: ellipsis; overflow: hidden; white - space: nowrap;" >' + item.title + '</h3>';
+            htmlContent += '<button id="deletebtn" onclick="deleteBlog(\'' + item.id + '\')" style="float:right; border:none; width:103px; height:70px; background-color:none; appearance: none; background-color: inherit; display: flex; justify-content: center; align-items: center;">'
+            htmlContent += '<img src="../assets/blog/images/images-removebg-preview.png" style="width:103px; height:70px; display:inline-block;" class="img-rounded" alt="Load img fail"></button>';
+            htmlContent += '<input data-id="' + item.id + '" type = "button" class="btn btn-info editBlogbtn" style = "float: inline-end;display:inline-block;vertical-align:top; margin-top:15px;" value = "Chỉnh sửa" />'
+            htmlContent += ' <p style="margin-top: -2px;">';
+            if (createDate !== undefined && createDate instanceof Date) {
+                if (now.getDate() == createDate.getDate() &&
+                    now.getMonth() == createDate.getMonth() &&
+                    now.getFullYear() == createDate.getFullYear() &&
+                    now.getHours() == createDate.getHours()) {
+                    htmlContent += (now.getMinutes() - createDate.getMinutes()) + ' phút trước';
+                } else if (now.getDate() == createDate.getDate() &&
+                    now.getMonth() == createDate.getMonth() &&
+                    now.getFullYear() == createDate.getFullYear()) {
+                    htmlContent += (now.getHours() - createDate.getHours()) + ' giờ trước';
+                } else if (now.getMonth() == createDate.getMonth() &&
+                    now.getFullYear() == createDate.getFullYear()) {
+                    htmlContent += (now.getDate() - createDate.getDate()) + ' ngày trước';
+                } else {
+                    htmlContent += 'Đăng tại ' + createDate.toLocaleDateString('en-GB');
+                }
+            }
+            else {
+
+                console.log(item.createDate + "Error Create Date"); // Thử truy cập thuộc tính createDate hoặc CreateDate
+            }
+
+
+            htmlContent += '</p></th></div></tr></table>';
+        });
+        return htmlContent;
+    };
+    const generateHtmlWaitingBlog = (data) => {
+        var htmlContent = '';
+        var now = new Date(); // Lấy ngày giờ hiện tại
+        var count = 0;
+        data.forEach(function (item) {
+            count += 1;
+            var createDate = new Date(item.createDate);
+            if (count == 1) {
+                htmlContent += '<table style=" style=" max-height:124px;min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
+            }
+            else {
+                htmlContent += '<table style=" style=" max-height:124px;min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
+            }
+            if (item.imageURL != null && item.imageURL.length > 0) {
+
+                htmlContent += ' <th style="height: 92px;min-width: 112px;padding-left:20px; padding-top:20px""><img src="' + item.imageURL[0] + '" style="width: 120px;height: 100px;border-radius: 25%;margin-top: -11px;" class="img-rounded" alt="Load img fail"></th>';
+            }
+            else {
+
+                htmlContent += ' <th style="height: 92px;min-width: 112px;padding-left:20px; padding-top:20px""><img src="' + '../assets/blog/images/tải xuống.png' + '" style="width: 120px;height: 100px;border-radius: 25%;margin-top: -11px;" class="img-rounded" alt="Load img fail"></th>';
+            }
+            htmlContent += '  <th style="width: 85%;"><div  style="min-width: 500px;max-width: 916px;height:109.4px;padding-left:20px;padding-top:13px; white-space: nowrap;" ><h3 style="display: inline-block; vertical-align: top;margin-top: 17px;text-overflow: ellipsis; overflow: hidden; white - space: nowrap;" >' + item.title + '</h3>';
+            htmlContent += '<button onclick="deleteBlog(\'' + item.id + '\')" id="deletebtn" style="float:right; border:none; width:103px; height:70px; background-color:none; appearance: none; background-color: inherit; display: flex; justify-content: center; align-items: center;">'
+            htmlContent += '<img src="../assets/blog/images/images-removebg-preview.png" style="width:103px; height:70px; display:inline-block;" class="img-rounded" alt="Load img fail"></button>';
+            htmlContent += '<input data-id="' + item.id + '"  type = "button" class="btn btn-info editBlogbtn" style = "float: inline-end;display:inline-block;vertical-align:top; margin-top:15px;" value = "Chỉnh sửa" />'
+            htmlContent += ' <p style="margin-top: -2px;">';
+            if (createDate !== undefined && createDate instanceof Date) {
+                if (now.getDate() == createDate.getDate() &&
+                    now.getMonth() == createDate.getMonth() &&
+                    now.getFullYear() == createDate.getFullYear() &&
+                    now.getHours() == createDate.getHours()) {
+                    htmlContent += (now.getMinutes() - createDate.getMinutes()) + ' phút trước';
+                } else if (now.getDate() == createDate.getDate() &&
+                    now.getMonth() == createDate.getMonth() &&
+                    now.getFullYear() == createDate.getFullYear()) {
+                    htmlContent += (now.getHours() - createDate.getHours()) + ' giờ trước';
+                } else if (now.getMonth() == createDate.getMonth() &&
+                    now.getFullYear() == createDate.getFullYear()) {
+                    htmlContent += (now.getDate() - createDate.getDate()) + ' ngày trước';
+                } else {
+                    htmlContent += 'Đăng tại ' + createDate.toLocaleDateString('en-GB');
+                }
+            }
+            else {
+
+                console.log(item.createDate + "Error Create Date"); // Thử truy cập thuộc tính createDate hoặc CreateDate
+            }
+
+
+            htmlContent += '</p></th></div></tr></table>';
+        });
+        $('#box').html(htmlContent);
+    };
+    function showTagList() {
+        document.getElementById("tagDropdown").classList.toggle("show");
+    };
+    window.onclick = function (event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    };
+    function handleWaitingListClick() {
+        if ($('#blogList').val() == "owner") {
+            var userId = "ffce777b-ea98-4c1f-8695-dca40c2fb5b1";
+            $.ajax({
+                url: 'https://localhost:7043/api/Blog/GetWaitingBlogList?userId=' + userId,
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                        $('#box').html(generateHtmlWaitingBlog(data));
+                    
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+        }
+        else {
+            $.ajax({
+                url: 'https://localhost:7043/api/Blog/GetWaitingBlogList',
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                    $('#box').html(generateHtmlWaitingBlog(data));
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+        }
+      
+    };
+    function handleBlogListClick() {
+        if ($('#blogList').val() == "owner") {
+            var userId = "ffce777b-ea98-4c1f-8695-dca40c2fb5b1";
+            $.ajax({
+                url: 'https://localhost:7043/api/Blog/GetBlogList?userId='+userId,
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                        $('#box').html(generateHtmlBlog(data));
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+        }
+        else {
+            $.ajax({
+                url: `https://localhost:7043/api/Blog/GetBlogList`,
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                    if (data && data.length > 0) {
+                        $('#box').html(generateHtmlBlog(data));
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+        }
+       
+    };
+    function loadTagList() {
+        var count = 0;
+        $.ajax({
+            url: `https://localhost:7043/api/Blog/GetAllTag`,
+            method: 'GET',
+            contentType: 'application/json',
+            success: (data) => {
+
+                var htmlContent = '<table id="listTag" style=" margin-bottom: 20px;height:119.4px;min-width: 500px;width: 1100px; ">';
+                data.forEach(function (item) {
+                    if (count == 0) {
+                        htmlContent += '<tr>';
+                        htmlContent += '<td style="padding-left:20px;font-size: 20px;"> <div style="width: 100%;height:70px"></div></td>';
+                        htmlContent += '<td><div style="width: 100%;height:70px"></div>'
+                        htmlContent += '</td></tr>';
+                        count = 1;
+                    }
+                    htmlContent += '<tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
+                    htmlContent += '<td style="padding-left:20px;font-size: 20px;">' + item.name + '</td>';
+                    htmlContent += '<td>'
+                    htmlContent += '<button id="deletebtn" onclick="deleteTag(\'' + item.id + '\')" style="float:right; border:none; width:103px; height:70px; background-color:none; appearance: none; background-color: inherit; display: flex; justify-content: center; align-items: center;">'
+                    htmlContent += '<img src="../assets/blog/images/images-removebg-preview.png" style="width:103px; height:70px; display:inline-block;" class="img-rounded" alt="Load img fail"></button>';
+
+                    htmlContent += '</td></tr>';
+                });
+                htmlContent += '</table>';
+                htmlContent += '<input id="tagName"  type="text"  style=" position: absolute;top: 0;left: 0;margin: 20px; height: 50px;width: 85%; border: 1px solid #000;" placeholder="Nhập Thẻ" />'
+                htmlContent += '<input id="createTagbtn" type="button" class="btn btn-info" style="border-radius:0px; position: absolute;top: 0;right: 0;margin: 20px; height: 50px; " value="Tạo Thẻ" />'
+                $('#box').html(htmlContent);
+
+                $('#createTagbtn').click(() => {
+                    var tagName = $('#tagName').val();
+                  
+                    if (tagName.length > 20) {
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-check';
+                        let title = 'Tạo thất bại';
+                        let text = 'Tên thẻ không được lớn hơn 20 kí tự';
+                        createToast(type, icon, title, text);
+                    }
+                    else if (tagName == "") {
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-check';
+                        let title = 'Tạo thất bại';
+                        let text = 'Tên thẻ không được để trống';
+                        createToast(type, icon, title, text);
+                    }
+                    else {
+                        $.ajax({
+                            url: `https://localhost:7043/api/Blog/CreateTag`,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(tagName),
+                            success: (data) => {
+                                if (data != null) {
+                                    let type = 'success';
+                                    let icon = 'fa-solid fa-circle-check';
+                                    let title = 'Tạo thành công';
+                                    let text = 'Thẻ mới đã được thêm';
+                                    createToast(type, icon, title, text);
+                                    $('#listTag').append(`
+                                                    <tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">
+                                                        <td style="padding-left:20px;font-size: 20px;"> `+ data.name + ` </td>
+                                                        <td>
+                                                            <button id="deletebtn" onclick="deleteTag(' `+ data.id + ` ')" style="float:right; border:none; width:103px; height:70px; background-color:none; appearance: none; background-color: inherit; display: flex; justify-content: center; align-items: center;">
+                                                                    <img src="../assets/blog/images/images-removebg-preview.png" style="width:103px; height:70px; display:inline-block;" class="img-rounded" alt="Load img fail">
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                `);
+                                }
+                                else {
+                                    let type = 'error';
+                                    let icon = 'fa-solid fa-circle-check';
+                                    let title = 'Tạo thất bại';
+                                    let text = 'Thẻ đã tồn tại';
+                                    createToast(type, icon, title, text);
+                                }
+                            },
+                            error: function () {
+                                console.error('Failed to fetch data.');
+                            }
+                        });
+                    }
+                });
+            },
+            error: function () {
+                console.error('Failed to fetch data.');
+            }
+        });
+    };
+</script>
+<script>
+
+</script>

@@ -1,0 +1,270 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_DashboardLayout";
+}
+<link rel="stylesheet" href="~/Assets/Dashboard/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="~/css/style.css" rel="stylesheet" />
+<style>
+    .container {
+        display: flex;
+        align-items: center;
+    }
+
+    .card-title,
+    .form-control {
+        margin: 0;
+    }
+
+    .card-title {
+        margin-right: 10px; /* Điều chỉnh khoảng cách giữa các phần tử */
+    }
+
+    td {
+        width: 10%;
+    }
+
+    #plantlist img{
+        width:100%;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div style="margin-top: 50px" class="notifications">
+                    </div>
+                    <div class="container" style="justify-content: space-between">
+                        
+                        <div>
+                            <h4 class="card-title">
+                                Danh sách các nhóm cây trong trang trại
+                            </h4>
+                        </div>
+              
+                        <div style="display: flex;">
+                            
+                            <select id="filterForm" style="width:200px; margin-right:10px; border-radius: 10px" class="form-control form-control-sm">
+                                <option value="none" selected>Tất cả</option>
+                                <option value="not read">Chưa đọc</option>
+                                <option value="read">Đã trả lời</option>
+                            </select>
+                            <button id="sortBtn" type="button" class="btn btn-primary">Lọc</button>
+                            <a href="#popup">
+                                <button class="button3 pure2">
+                                    Tạo mới
+                                </button>
+                            </a>
+                            @* <div class="buttons">
+                                <button type="button" class="btn btn-primary" id="success">Show live toast</button>
+                            </div> *@
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Tên nhóm</th>
+                                    <th>Mô tả</th>
+                                    <th>Thời điểm cập nhật</th>
+                                    <th>Số lượng cây </th>
+                                    <th>Nội dung</th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody id="content-form">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 10px">
+                        <nav aria-label="Page navigation example">
+                            <ul id="pagi-pages" class="pagination">
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Nội dung câu hỏi & phản hồi từ khách hàng</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <form>
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Nội dung:</label>
+                                        <div id="questionContent">
+                                        </div>
+                                        @* <p id="questionContent"> </p> *@
+                                    </div>
+                                    <div id="formStatus" class="form-group">
+                                        @* @* <label for="exampleFormControlSelect1">Trạng thái</label>
+                                        <select class="form-control" id="exampleFormControlSelect1">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>5</option>
+                                        </select> *@
+                                    </div>
+                                </form>
+
+
+                            </div>
+                        </div>
+                        <div id="modalsBtn" class="modal-footer">
+                            @* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="updateStatusBtn" type="button" class="btn btn-primary">Save changes</button> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="popup" id="popup">
+    <div class="popup__content">
+        <div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Tạo nhóm mới</h4>
+
+                    <form class="forms-sample">
+
+                        <div class="form-group row">
+                            <label for="exampleInputMobile" class="col-sm-3 col-form-label">Tên nhóm</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="name2" placeholder="Tên nhóm">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="exampleInputMobile" class="col-sm-3 col-form-label">Miêu tả</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="description2" placeholder="Tên nhóm">
+                            </div>
+                        </div>
+                        <button type="submit" id="add" class="btn btn-primary mr-2">Submit</button>
+                        <a href="#" class="btn btn-light">Cancel</a>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="popup2">
+    <div class="popup__content">
+        <div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        Cập nhật nhóm
+                    </h4>
+
+
+                    <form class="forms-sample">
+                        <div class="form-group row">
+                            <label for="exampleInputMobile" class="col-sm-3 col-form-label">Id</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="id" placeholder="Nhóm" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="exampleInputMobile" class="col-sm-3 col-form-label">Tên nhóm</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="name" placeholder="Nhóm">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="exampleInputMobile" class="col-sm-3 col-form-label">Miêu tả</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="description" placeholder="Nhóm">
+                            </div>
+                        </div>
+                        <button type="submit" id="update" class="btn btn-primary mr-2">Sửa</button>
+                        <a href="#" class="btn btn-light">Cancel</a>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<input type="text" id="updateId" hidden />
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                
+                <h4 class="modal-title">Bạn có chắc muốn xóa nhóm này không?</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" >
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                Name
+                            </td>
+                            <td>
+                                Planting Method
+                            </td>
+                            <td>
+                                Image
+                            </td>
+                        </tr>
+                        <tr>
+                    </thead>
+                    <tbody id="plantlist">
+                       
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="display:flex;">
+                <div></div>
+            <div class="modal-footer">
+                <button style="background-color:red;" type="button" class="btn btn-default" id="deletebtn" data-dismiss="modal">Xóa</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="~/js/milestonemanagement/api.js"></script>
+<script src="~/js/milestonemanagement/action.js"></script>
+@section Scripts {
+    <script>
+        farmid = 1;
+        
+   
+
+    </script>
+}

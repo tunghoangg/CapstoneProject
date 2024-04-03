@@ -1,0 +1,237 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using RAFS.Core.Models
+@inject SignInManager<AspUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- Title -->
+    <title>RAFS</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="~/Assets/HomePage/img/core-img/rafs.ico">
+
+    <!-- Core Stylesheet -->
+    <link rel="stylesheet" href="~/Assets/HomePage/style.css">
+    <link href="~/assets/blog/css/blogstyle.css" rel="stylesheet"/>
+    <style>
+        .logoutbtn {
+            background: none !important;
+            border: none;
+            padding: 2 !important;
+            /*optional*/
+            font-family: arial, sans-serif;
+            /*input has OS specific font-family*/
+            color: white;
+            cursor: pointer;
+        }
+        .logoutbtn-text{
+            position: absolute;
+            bottom: 0%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader d-flex align-items-center justify-content-center">
+        <div class="preloader-circle"></div>
+        <div class="preloader-img">
+            <img src="~/Assets/Dashboard/images/RAFSIcon.png" alt="">
+        </div>
+    </div>
+
+    <!-- ##### Header Area Start ##### -->
+    <header class="header-area">
+
+        <!-- ***** Top Header Area ***** -->
+        <div class="top-header-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="top-header-content d-flex align-items-center justify-content-between">
+                            <!-- Top Header Content -->
+                            <div class="top-header-meta">
+                                <a href="#" data-toggle="tooltip" data-placement="bottom" title="rafs.hub@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Email: rafs.hub@gmail.com</span></a>
+                                <a href="#" data-toggle="tooltip" data-placement="bottom" title="+84 838776396"><i class="fa fa-phone" aria-hidden="true"></i> <span>Liên hệ: +84 838776396</span></a>
+                            </div>
+
+                            <!-- Top Header Content -->
+                            <div class="top-header-meta d-flex">
+                                <!-- If the user is logged in, display welcome message & logout button -->
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+                                    <div class="welcome">
+                                        <a asp-action="ViewProfile" asp-controller="Profile"><i class="" aria-hidden="true"></i> <span style="color:white; padding-left: 1px">Xin chào @User?.Identity?.Name</span></a>
+                                    </div>
+                                    <div class="logout">
+                                        <a>
+                                        <form id="logoutForm" asp-controller="Authentication" asp-action="Logout" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="logoutbtn">
+                                                Đăng xuất
+                                            </button>
+                                        </form>
+                                        </a>
+                                    </div>
+                                } else
+                                {
+                                    <!-- Login -->
+                                    <div class="login">
+                                        <a asp-action="Login" asp-controller="Authentication"><i class="fa fa-user" aria-hidden="true"></i> <span>Đăng nhập</span></a>
+                                    </div>
+                                    <!-- Register -->
+                                    <div class="register">
+                                        <a asp-action="Register" asp-controller="Authentication"><i class="fa fa-user" aria-hidden="true"></i> <span>Đăng ký</span></a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ***** Navbar Area ***** -->
+        <div class="alazea-main-menu">
+            <div class="classy-nav-container breakpoint-off">
+                <div class="container">
+                    <!-- Menu -->
+                    <nav class="classy-navbar justify-content-between" id="alazeaNav">
+
+                        <!-- Nav Brand -->
+                        <a href="index.html" class="nav-brand"><img src="~/Assets/HomePage/img/core-img/rafs-logo.png" style="width: 90%; height:auto;" alt=""></a>
+
+                        <!-- Navbar Toggler -->
+                        <div class="classy-navbar-toggler">
+                            <span class="navbarToggler"><span></span><span></span><span></span></span>
+                        </div>
+
+                        <!-- Menu -->
+                        <div class="classy-menu">
+
+                            <!-- Close Button -->
+                            <div class="classycloseIcon">
+                                <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                            </div>
+
+                            <!-- Navbar Start -->
+                            <div class="classynav">
+                                <ul>
+                                    <li><a href="/Home">Trang chủ</a></li>
+                                    <li><a href="/Home/AboutUs">Về chúng tôi</a></li>
+                                    <li><a href="/Home/Farm">Trang Trại</a></li>
+                                    <li><a href="/Home/Blog">Blog</a></li>
+                                </ul>
+
+                            </div>
+                            <!-- Navbar End -->
+                        </div>
+                    </nav>
+
+                    <!-- Search Form -->
+                    <div class="search-form">
+                        <form action="#" method="get">
+                            <input type="search" name="search" id="search" placeholder="Type keywords &amp; press enter...">
+                            <button type="submit" class="d-none"></button>
+                        </form>
+                        <!-- Close Icon -->
+                        <div class="closeIcon"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ##### Header Area End ##### -->
+    @RenderBody()
+    <!-- ##### Footer Area Start ##### -->
+    <footer class="footer-area bg-img" style="background-image: url(/Assets/HomePage/img/bg-img/3.jpg);">
+        <!-- Main Footer Area -->
+        <div class="main-footer-area">
+            <div class="container">
+                <div class="row">
+
+                    <!-- Single Footer Widget -->
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="single-footer-widget">
+                            <div class="footer-logo mb-30">
+                                <a href="#"><img src="~/Assets/HomePage/img/core-img/rafs-logo.png" alt=""></a>
+                            </div>
+                            <p>Theo dõi chúng tôi trên nền tảng mạng xã hội để nhận tin tức mới nhất</p>
+                            <div class="social-info">
+                                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Single Footer Widget -->
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="single-footer-widget">
+                            <div class="widget-title">
+                                <h5>LIÊN HỆ</h5>
+                            </div>
+
+                            <div class="contact-information">
+                                <p><span>Địa chỉ:</span> Khu CNC Hoa Lac, km 29, Đại lộ, Thăng Long, Hà Nội</p>
+                                <p><span>Điện thoại:</span> +84 838776396</p>
+                                <p><span>Email:</span> rafs.hub@gmail.com</p>
+                                <p><span>Mở cửa:</span> Thứ 2 - Thứ 6: 8 AM đến 7 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom Area -->
+        <div class="footer-bottom-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="border-line"></div>
+                    </div>
+                    <!-- Copywrite Text -->
+                    <div class="col-12 col-md-6">
+                        <div class="copywrite-text">
+                        </div>
+                    </div>
+                    <!-- Footer Nav -->
+                    <div class="col-12 col-md-6">
+                        <div class="footer-nav">
+                            <nav>
+                                <ul>
+                                    <li><a href="/Home">Trang chủ</a></li>
+                                    <li><a href="/Home/AboutUs">Về chúng tôi</a></li>
+                                    <li><a href="/Home/Farm">Trang trại</a></li>
+                                    <li><a href="#">Blog</a></li>
+                                    <li><a href="#">Liên hệ</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+    <!-- ##### All Javascript Files ##### -->
+    <!-- jQuery-2.2.4 js -->
+    <script src="~/Assets/HomePage/js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="~/Assets/HomePage/js/bootstrap/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="~/Assets/HomePage/js/bootstrap/bootstrap.min.js"></script>
+    <!-- All Plugins js -->
+    <script src="~/Assets/HomePage/js/plugins/plugins.js"></script>
+    <!-- Active js -->
+    <script src="~/Assets/HomePage/js/active.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

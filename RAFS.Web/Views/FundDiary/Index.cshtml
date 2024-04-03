@@ -1,0 +1,276 @@
+﻿@{
+    Layout = "_DashboardLayout";
+    string formattedDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+}
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">DÒNG TIỀN - <button id="btn-modal-create=cash" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#create-model-cash">Tạo phiếu</button></p>
+                    <div class="filter-cash">
+                        <div class="filter-cash-col">
+                            <label for="filter-cash-by-type">
+                                <strong>Phân loại: </strong>
+                            </label>
+                            <select style="margin-bottom:15px" id="filter-cash-by-type">
+                                <option value="0" selected>-----------Tất cả-----------</option>
+                                <option value="1">Chi thuốc bảo vệ thực vật</option>
+                                <option value="2">Chi phân hóa học</option>
+                                <option value="3">Chi máy móc</option>
+                                <option value="4">Chi công cụ</option>
+                                <option value="5">Chi bán hàng</option>
+                                <option value="6">Chi nhân công</option>
+                                <option value="7">Chi đầu tư</option>
+                                <option value="8">Chi phát sinh khác</option>
+                                <option value="9">Thu sản phẩm</option>
+                                <option value="10">Thu hồi tài sản</option>
+                                <option value="11">Thu đầu tư</option>
+                                <option value="12">Thu nợ bán sản phẩm</option>
+                                <option value="13">Thu khác</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-top: 50px" class="notifications">
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                @*example, data-table-item*@
+                                @*Filter theo Loại: Thu/Chi, Kiểu thu chi*@
+                                <table id="data-table-cash-flow" class="display expandable-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Mã</th>
+                                            <th>Giá trị</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Thêm item-->
+<div class="modal fade " id="create-model-cash" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg mt-2 pl-3">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px 26px">
+                <h5 class="modal-title" id="exampleModalLabel">Tạo mới dòng tiền</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form" id="form-create-cash" method="post">
+                <div class="modal-body" style="padding:10px 26px">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="add-model-cash-value" class="label-with-star" title=""><strong>Giá trị (VNĐ)</strong></label>
+                            <input type="number" class="form-control" id="add-model-cash-value" name="inputValue" value="0">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="add-model-cash-type" title=""><strong>Loại dòng tiền</strong></label>
+                            <select id="add-model-cash-type" class="form-control" name="inputCashType">
+                                <option value="1" selected>Chi thuốc bảo vệ thực vật</option>
+                                <option value="2">Chi phân hóa học</option>
+                                <option value="3">Chi máy móc</option>
+                                <option value="4">Chi công cụ</option>
+                                <option value="5">Chi bán hàng</option>
+                                <option value="6">Chi nhân công</option>
+                                <option value="7">Chi đầu tư</option>
+                                <option value="8">Chi phát sinh khác</option>
+                                <option value="9">Thu sản phẩm</option>
+                                <option value="10">Thu hồi tài sản</option>
+                                <option value="11">Thu đầu tư</option>
+                                <option value="12">Thu sản phẩm sinh học</option>
+                                <option value="13">Thu khác</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-model-cash-description" class="label-with-star" title=""><strong>Mô tả</strong></label>
+                        <textarea class="form-control" id="add-model-cash-description" name="inputDescription" rows="5"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:10px 26px">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary" id="btn-create-new-cash">Tạo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Cập nhật item-->
+<div class="modal fade" id="update-model-cash" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg mt-2 pl-3">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px 26px">
+                <h5 class="modal-title" id="exampleModalLabel">Cập nhật</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form" id="form-update-cash" method="post">
+                <div class="modal-body" style="padding:10px 26px">
+                    <input id="update-model-cash-id" style="display:none">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="update-model-cash-value" class="label-with-star" title=""><strong>Giá trị (VNĐ)</strong></label>
+                            <input type="number" class="form-control" id="update-model-cash-value" name="inputValue" value="0">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="update-model-cash-type" title=""><strong>Loại dòng tiền</strong></label>
+                            <select id="update-model-cash-type" class="form-control" name="inputCashType">
+                                <option value="1">Chi thuốc bảo vệ thực vật</option>
+                                <option value="2">Chi phân hóa học</option>
+                                <option value="3">Chi máy móc</option>
+                                <option value="4">Chi công cụ</option>
+                                <option value="5">Chi bán hàng</option>
+                                <option value="6">Chi nhân công</option>
+                                <option value="7">Chi đầu tư</option>
+                                <option value="8">Chi phát sinh khác</option>
+                                <option value="9">Thu sản phẩm</option>
+                                <option value="10">Thu hồi tài sản</option>
+                                <option value="11">Thu đầu tư</option>
+                                <option value="12">Thu sản phẩm sinh học</option>
+                                <option value="13">Thu khác</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-model-cash-description" class="label-with-star" title=""><strong>Mô tả</strong></label>
+                        <textarea class="form-control" id="update-model-cash-description" name="inputDescription" rows="5"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:10px 26px">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary" id="btn-update-cash">Cập nhật</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Chi tiết item-->
+<div id="modal-detail-cash" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-2 pl-3" style="max-width:600px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="examplemodallabel">Chi tiết</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mt-0">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Mã:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-cash-code"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Giá trị:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-cash-value"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Loại:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-cash-type"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Trang trại:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-cash-farm"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Người tạo:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-cash-user"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Ngày tạo:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-cash-created-date"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Mô tả:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <p id="detail-cash-description"></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button id="btn-move-update-cash" type="button" class="btn btn-primary move-update-cash" data-toggle="modal" data-target="#update-model-cash">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Xóa cash-->
+<div class="modal fade" id="modal-soft-delete-cash" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-7 pl-3" style="max-width:500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p><strong>Điều này có thể khiến bản ghi này không còn xuất hiện!</strong></p>
+                    <p><strong>Bạn chắc chắn muốn xóa bản ghi này?</strong></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="confirm-delete-cash-flow">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/cashflow.js"></script>
+}

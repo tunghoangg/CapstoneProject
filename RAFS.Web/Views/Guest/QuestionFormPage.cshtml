@@ -1,0 +1,364 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_DashboardLayout";
+}
+
+<style>
+    .container {
+        display: flex;
+        align-items: center;
+    }
+
+    .card-title,
+    .form-control {
+        margin: 0;
+    }
+
+    .card-title {
+        margin-right: 10px; /* Điều chỉnh khoảng cách giữa các phần tử */
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div style="margin-top: 50px" class="notifications">
+                    </div>
+                    <div class="container" style="justify-content: space-between">
+                        
+                        <div><h4 class="card-title">Danh sách câu hỏi từ khách hàng</h4></div>
+
+                        <div style="display: flex;">
+                            <select id="filterForm" style="width:200px; margin-right:10px; border-radius: 10px" class="form-control form-control-sm">
+                                <option value="none" selected>Tất cả</option>
+                                <option value="not read">Chưa đọc</option>
+                                <option value="read">Đã trả lời</option>
+                            </select>
+                            <button id="sortBtn" type="button" class="btn btn-primary">Lọc</button>
+                            @* <div class="buttons">
+                                <button type="button" class="btn btn-primary" id="success">Show live toast</button>
+                            </div> *@
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tên khách hàng</th>
+                                    <th>Email</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Ngày gửi</th>
+                                    <th>Trạng thái</th>
+                                    <th>Nội dung</th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody id="content-form">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 10px">
+                        <nav aria-label="Page navigation example">
+                            <ul id="pagi-pages" class="pagination">
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Nội dung câu hỏi & phản hồi từ khách hàng</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <form>
+                                    <div class="form-group">
+                                        <label for="exampleFormControlInput1">Nội dung:</label>
+                                        <div id="questionContent">
+                                        </div>
+                                        @* <p id="questionContent"> </p> *@
+                                    </div>
+                                    <div id="formStatus" class="form-group">
+                                        @* @* <label for="exampleFormControlSelect1">Trạng thái</label>
+                                        <select class="form-control" id="exampleFormControlSelect1">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>5</option>
+                                        </select> *@
+                                    </div>
+                                </form>
+
+
+                            </div>
+                        </div>
+                        <div id="modalsBtn" class="modal-footer">
+                            @* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="updateStatusBtn" type="button" class="btn btn-primary">Save changes</button> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var page = 1;
+            var totalPages = 0;
+
+            $('#sortBtn').click(function () {
+                var page = 1;
+                var totalPages = 0;
+                console.log($('#filterForm').val());
+                fetchForms(page);
+            });
+
+            // Function to fetch farms based on page number
+            const fetchForms = (page) => {
+                var sort = $('#filterForm').val();
+                $.ajax({
+                    url: `https://localhost:7043/api/Guest/GetFormList/${page}`,
+                    method: 'GET',
+                    data: {
+                        sort: sort
+                    },
+                    contentType: 'application/json',
+                    success: (data) => {
+                        $('#content-form').html('');
+                        if (data && data.forms.length > 0) {
+                            $('#content-form').html(generateHtmlForm(data.forms));
+                            totalPages = data.pages;
+                            updatePaginationButtons(page);
+                        } else {
+                            $('#content-form').html('<h1>Không tìm được câu hỏi</h1>');
+                            $('#pagi-pages').html('');
+                        }
+                    },
+                    error: function () {
+                        console.error('Failed to fetch data.');
+                    }
+                });
+            };
+
+
+
+            // Initial fetch
+            fetchForms(page);
+
+            // Function to update pagination buttons
+            const updatePaginationButtons = (currentPage) => {
+                $('#pagi-pages').html('');
+                $('#pagi-pages').html('');
+                if (totalPages > 1) {
+                    if (currentPage > 1) {
+                        $('#pagi-pages').append(`<li class="page-item"><a class="page-link" id="prevPage" href="#" aria-label="Previous"><span aria-hidden="true"></span>Trước</a></li>`);
+                    }
+                    let startPage = 1;
+                    let endPage = totalPages;
+                    if (totalPages > 3) {
+                        startPage = Math.max(1, currentPage - 1);
+                        endPage = Math.min(totalPages, currentPage + 1);
+                        if (startPage === 1) {
+                            endPage = 3;
+                        }
+                        if (endPage === totalPages) {
+                            startPage = totalPages - 2;
+                        }
+                    }
+                    for (let i = startPage; i <= endPage; i++) {
+                        $('#pagi-pages').append(`<li class="page-item"><a class="page-link" id="pagi-pages${i}" href="#">${i}</a></li>`);
+                    }
+                    if (currentPage < totalPages) {
+                        $('#pagi-pages').append(`<li class="page-item"><a class="page-link" id="nextPage" href="#" aria-label="Next"><span aria-hidden="true"></span>Tiếp</a></li>`);
+                    }
+                }
+                $(`#pagi-pages${currentPage}`).addClass('active');
+
+
+            };
+
+            // Event delegation for pagination click
+            $('#pagi-pages').on('click', 'a.page-link', function () {
+                if ($(this).attr('id') === 'prevPage') {
+                    if (page > 1) {
+                        page--;
+                    }
+                } else if ($(this).attr('id') === 'nextPage') {
+                    if (page < totalPages) {
+                        page++;
+                    }
+                } else {
+                    page = parseInt($(this).text());
+                }
+                fetchForms(page);
+            });
+
+        });
+
+        const generateHtmlForm = (data) => {
+            let dataGrid = '';
+
+            data.forEach(element => {
+                var dateString = element.sendDate;
+                var date = new Date(dateString);
+
+                // Lấy ngày, tháng và năm từ đối tượng ngày
+                var day = date.getDate();
+                var month = date.getMonth() + 1; // Tháng bắt đầu từ 0 nên cần cộng thêm 1
+                var year = date.getFullYear();
+
+                // Định dạng lại chuỗi ngày theo định dạng mong muốn
+                var formattedDate = day + "/" + month + "/" + year;
+
+                // Kiểm tra status và gán label tương ứng
+                let statusLabel = '';
+                if (element.status) {
+                    statusLabel = '<label class="badge badge-success">Đã trả lời</label>';
+                } else {
+                    statusLabel = '<label class="badge badge-info">Chưa đọc</label>';
+                }
+
+                var formid = element.id;
+                dataGrid +=
+                    `
+                            <tr>
+                                <td>${element.guestName}</td>
+                                <td>${element.email}</td>
+                                <td>${element.title}</td>
+                                <td>${formattedDate}</td>
+                                <td>${statusLabel}</td>
+                                <td>
+                                    <button style='background-color: transparent;border: none; padding: 5px; cursor: pointer' class='btn btn-secondary btn-sm detailBtn' data-formid="${formid}" data-toggle="modal" data-target="#exampleModalCenter"><i class="mdi mdi-eye user-icon"></i></button>
+                                </td>
+                            </tr>
+                            `;
+            });
+
+            return dataGrid;
+        };
+
+        // Xử lý sự kiện click cho nút "Chi tiết"
+        $(document).on('click', '.detailBtn', function () {
+            const formid = $(this).data('formid');
+
+            // Gửi AJAX request để lấy dữ liệu dựa trên formid
+            $.ajax({
+                url: `https://localhost:7043/api/Guest/GetQuestionContent/${formid}`,
+                method: 'GET',
+                contentType: 'application/json',
+                success: (data) => {
+                    $('#content-detail').html('');
+                    if (data) {
+                        $('#questionContent').html(generateHtmlQuestionContent(data));
+                        $('#formStatus').html(generateHtmlFormStatus(data));
+                        $('#modalsBtn').html(generateHtmlModalsBtn(data));
+                    }
+                },
+                error: (data) => {
+                    // Xử lý lỗi ở đây nếu cần
+                }
+            });
+        });
+
+        const generateHtmlQuestionContent = (data) => {
+            return `
+                         <p>${data.description} </p>
+                    `;
+        };
+
+        const generateHtmlFormStatus = (data) => {
+            let option1 = '';
+            let option2 = '';
+
+            // Kiểm tra trạng thái của data.status và thiết lập option selected tương ứng
+            if (data.status === false) {
+                option1 = '<option value="false" selected>Chưa đọc</option>';
+                option2 = '<option value="true">Đã trả lời</option>';
+            } else {
+                option1 = '<option value="false">Chưa đọc</option>';
+                option2 = '<option value="true" selected>Đã trả lời</option>';
+            }
+
+            return `
+                        <label for="exampleFormControlSelect1">Trạng thái</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            ${option1}
+                            ${option2}
+                        </select>
+                    `;
+        };
+
+        const generateHtmlModalsBtn = (data) => {
+            const formid = data.id; // Lấy formid từ dữ liệu
+
+            return `
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                         <button id="saveStatus" class="btn btn-primary updateStatusBtn" data-formid="${formid}">Cập nhật</button>
+                         
+                    `;
+
+        };
+
+        function closeModal() {
+            $('#exampleModalCenter').modal('hide');
+        }
+
+        $(document).on('click', '.updateStatusBtn', function () {
+            const formid = $(this).data('formid');
+            let formStatus = $('#exampleFormControlSelect1').val();
+            formStatus = formStatus === 'true';
+
+            // Gửi AJAX request để cập nhật dữ liệu dựa trên formid
+            $.ajax({
+                url: `https://localhost:7043/api/Guest/UpdateStatus/${formid}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(formStatus),
+                success: function (data) {
+                    console.log(data);
+
+                    // Đóng modal
+                    closeModal();
+
+                    // Thực thi mã tạo toast
+                    let type = 'success';
+                    let icon = 'fa-solid fa-circle-check';
+                    let title = 'Thành công';
+                    let text = 'Bản ghi đã được cập nhật';
+                    createToast(type, icon, title, text);
+
+                    // Đợi 5 giây trước khi reload trang
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 5000); // 5000 milliseconds = 5 giây
+                },
+                error: function (xhr, status, error) {
+                    console.log("error");
+                    console.log(formid);
+                    console.log(formStatus);
+                }
+            });
+        });
+
+    </script>
+}

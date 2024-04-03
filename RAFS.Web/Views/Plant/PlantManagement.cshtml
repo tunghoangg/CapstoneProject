@@ -1,0 +1,1497 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    Layout = "_DashboardLayout";
+}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - A Pen by Nguyễn Đắc Dũng</title>
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/styledetail.css" rel="stylesheet" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="~/js/javascrip.js"></script>
+    <style>
+        .options-menu {
+            position: relative;
+            display: inline-block;
+            float: right; /* Di chuyển menu tùy chọn và dấu ba chấm sang bên phải */
+        }
+
+        .menu-trigger {
+            cursor: pointer;
+        }
+
+        .options-list {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px 0;
+            min-width: 120px;
+            z-index: 1;
+            right: 0; /* Đảm bảo danh sách tùy chọn nằm ở phía bên phải */
+        }
+
+            .options-list.visible {
+                display: block;
+            }
+
+            .options-list li {
+                list-style: none;
+            }
+
+                .options-list li a {
+                    display: block;
+                    color: #333;
+                    text-decoration: none;
+                    padding: 8px 10px;
+                }
+
+                    .options-list li a:hover {
+                        background-color: #f4f4f4;
+                    }
+
+        .page-body-wrapper {
+            min-height: calc(100vh - 60px);
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: row;
+            flex-direction: row;
+            padding-left: 0;
+            padding-right: 0;
+            /* padding-top: 60px; */
+        }
+
+        td {
+            width: 10%; 
+        }
+     	
+:root {
+	--hue: 223;
+	--bg: hsl(var(--hue),90%,95%);
+	--fg: hsl(var(--hue),90%,5%);
+	--trans-dur: 0.3s;
+}
+preloader {
+	background-color: var(--bg);
+	color: var(--fg);
+	font: 1em/1.5 sans-serif;
+	height: 100vh;
+	display: grid;
+	place-items: center;
+	transition: background-color var(--trans-dur);
+}
+.ip {
+	width: 16em;
+	height: 8em;
+}
+.ip__track {
+	stroke: hsl(var(--hue),90%,90%);
+	transition: stroke var(--trans-dur);
+}
+.ip__worm1,
+.ip__worm2 {
+	animation: worm1 2s linear infinite;
+}
+.ip__worm2 {
+	animation-name: worm2;
+}
+
+/* Dark theme */
+
+@@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: hsl(var(--hue),90%,5%);
+		--fg: hsl(var(--hue),90%,95%);
+	}
+	.ip__track {
+		stroke: hsl(var(--hue),90%,15%);
+	}
+}
+
+/* Animation */
+@@keyframes worm1 {
+	from {
+		stroke-dashoffset: 0;
+	}
+	50% {
+		animation-timing-function: steps(1);
+		stroke-dashoffset: -358;
+	}
+	50.01% {
+		animation-timing-function: linear;
+		stroke-dashoffset: 358;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+@@keyframes worm2 {
+	from {
+		stroke-dashoffset: 358;
+	}
+	50% {
+		stroke-dashoffset: 0;
+	}
+	to {
+		stroke-dashoffset: -358;
+	}
+}
+    </style>
+</head>
+<body >
+
+ <input id="checkload" value="0" hidden/>
+    <a href="#popup" style="padding-top: 10px; width:150px;">
+        <button class="button3 pure2">
+            Tạo mới <button /><a/>
+    <div id="table" class="row flex-nowrap overflow-auto">
+        
+        <div class="col-md-5 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">To Do Lists</h4>
+
+                    <div class="list-wrapper pt-2">
+                        <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
+                            <li>
+                                <div class="form-check form-check-flat">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Meeting with Urban Team
+                                    </label>
+                                           
+                            </div>
+                                        <div class='options-menu'>
+                                            <div class='menu-trigger'>&#9642;&#9642;&#9642;</div>
+                                            <ul class='options-list'>
+                                                <li><a href='#' class='delete-option'><i class='fas fa-trash-alt'></i>Delete</a></li>
+                                                <li><a href='#popup2' class='update-option'><i class='fas fa-edit'></i>Update</a></li>
+                                            </ul>
+                                        </div>
+                            </li>
+                            <li>
+                                <div class="form-check form-check-flat">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Meeting with Urban Team
+                                    </label>
+                                </div>
+                                <i class="remove ti-close"></i>
+                            </li>
+                            <li>
+                                <div class="form-check form-check-flat">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Meeting with Urban Team
+                                    </label>
+                                </div>
+                                <i class="remove ti-close"></i>
+                            </li>
+                            <li>
+                                <div class="form-check form-check-flat">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Meeting with Urban Team
+                                    </label>
+                                </div>
+                                <i class="remove ti-close"></i>
+                            </li>
+                            <li>
+                                <div class="form-check form-check-flat">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Meeting with Urban Team
+                                    </label>
+                                </div>
+                                <i class="remove ti-close"></i>
+                            </li>
+                            <li>
+                                <div class="form-check form-check-flat">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Meeting with Urban Team
+                                    </label>
+                                </div>
+                                <i class="remove ti-close"></i>
+                            </li>
+                            <li>
+                                <div class="form-check form-check-flat">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Meeting with Urban Team
+                                    </label>
+                                </div>
+                                <i class="remove ti-close"></i>
+                            </li>
+                                 
+                            <li>
+                                        <a href="#popup2">
+                                <div class="form-check form-check-flat">
+                                    <label class="form-check-label">
+                                        <input class="checkbox" type="checkbox">
+                                        Meeting with Urban Team 222
+                                    </label>
+                                </div>
+                                            </a>
+                                        <div class='options-menu'>
+                                            <div class='menu-trigger'>&#9642;&#9642;&#9642;</div>
+                                            <ul class='options-list'>
+                                                <li><a href='#' class='delete-option'><i class='fas fa-trash-alt'></i>Delete</a></li>
+                                                <li><a href='#popup2' class='update-option'><i class='fas fa-edit'></i>Update</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                   
+
+                            <!-- Other list items -->
+                        </ul>
+                    </div>
+                    <div class="add-items d-flex mb-0 mt-2">
+                        <input type="text" class="form-control todo-list-input" placeholder="Add new task">
+                        <button class="add btn btn-icon text-primary todo-list-add-btn bg-transparent"><i class="icon-circle-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="popup" id="popup">
+        <div class="popup__content">
+            <div>
+                <div class="card">
+                    <div class="card-body">
+                                <h4 class="card-title">Tạo cây mới</h4>
+                       
+                        <form class="forms-sample">
+
+                            <div class="form-group row">
+                                        <label for="milestoneId" class="col-sm-3 col-form-label">Nhóm</label>
+                                        <div class="col-sm-9">
+                                            <select id="milestoneId">
+                                            
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="name" class="col-sm-3 col-form-label">Tên cây</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="name" placeholder="Tên cây"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="type" class="col-sm-3 col-form-label">Loại cây</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="type" placeholder="Loại cây"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="description" class="col-sm-3 col-form-label">Mô t</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="description" placeholder="Mô tả"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="area" class="col-sm-3 col-form-label">Diện tích</label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" id="area" placeholder="Diện tích"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="areaUnit" class="col-sm-3 col-form-label">Đơn vị</label>
+                                        <div class="col-sm-9">
+                                            <select id="areaUnit">
+                                                <option value="m2">m2</option>
+                                                <option value="km2">km2</option>
+                                                <option value="ha">ha</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="healthCondition" class="col-sm-3 col-form-label">Tình trạng sức khỏe</label>
+                                        <div class="col-sm-9">
+                                            
+                                            <select id="healthCondition">
+                                                <option value="1">Tốt</option>
+                                                <option value="2">Bình thường</option>
+                                                <option value="3">Kém</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="plantingMethod" class="col-sm-3 col-form-label">Phương pháp trồng</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="plantingMethod" placeholder="Phương pháp trồng" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="image" class="col-sm-3 col-form-label">Ảnh</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="image" placeholder="Ảnh" />
+                                        </div>
+                                    </div>
+
+                            <button type="submit" id="add" class="btn btn-primary mr-2">Thêm</button>
+                            <a href="#" class="btn btn-light">Thoát</a>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+            <div class="wrapper">
+            <div class="popup" id="popup2">
+                <div class="popup__content">
+                    <div>
+                        <div class="card">
+                            <div class="card-body">
+                                    <h4 class="card-title">Cập nhật cây</h4>
+                           
+                                <form class="forms-sample">
+                                    <div class="form-group row">
+                                        <label for="id2" class="col-sm-3 col-form-label">Id cây</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="id2" placeholder="Mobile number" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="milestoneId2" class="col-sm-3 col-form-label">Nhóm</label>
+                                        <div class="col-sm-9">
+                                            <select id="milestoneId2">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="name2" class="col-sm-3 col-form-label">Tên</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="name2" placeholder="Mobile number" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="type2" class="col-sm-3 col-form-label">Loại</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="type2" placeholder="Mobile number" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="description2" class="col-sm-3 col-form-label">Mô tả</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="description2" placeholder="Mobile number" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="area2" class="col-sm-3 col-form-label">Diện tích</label>
+                                        <div class="col-sm-9">
+                                            <input type="number" class="form-control" id="area2" placeholder="Mobile number" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="areaUnit2" class="col-sm-3 col-form-label">Đơn vị</label>
+                                        <div class="col-sm-9">
+                                            <select id="areaUnit2">
+                                                <option value="m2">m2</option>
+                                                <option value="km2">km2</option>
+                                                <option value="ha">ha</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="healthCondition2" class="col-sm-3 col-form-label">Tình trạng sức khỏe</label>
+                                        <div class="col-sm-9">
+
+                                            <select id="healthCondition2">
+                                                <option value="1">Good</option>
+                                                <option value="2">Normal</option>
+                                                <option value="3">Bad</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="plantingMethod2" class="col-sm-3 col-form-label">Phương pháp trồng</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="plantingMethod2" placeholder="Mobile number" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="image2" class="col-sm-3 col-form-label">Ảnh</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="image2" placeholder="Mobile number" />
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" id="update" class="btn btn-primary mr-2">Lưu</button>
+                                    <a href="#" class="btn btn-light">Thoát</a>
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div id="popup3" class="popup3">
+                <i id="close" class="material-icons" style="font-size:48px;color:red">close</i>
+                <!-- Section 1: Information and Image -->
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-8 info-block">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            Id:
+                                        </td>
+                                        <td>
+                                            <input id="id3" value='1' hidden />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Milestne Id:
+                                        </td>
+                                        <td>
+                                            <select id="milestoneId3" name="cars" id="milestoneId3">
+                                                <option value="volvo">Volvo</option>
+                                                <option value="saab">Saab</option>
+                                                <option value="opel">Opel</option>
+                                                <option value="audi">Audi</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Name:
+                                        </td>
+                                        <td>
+                                            <input id="name3" value='Cay dao' disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Type:
+                                        </td>
+                                        </td>
+                                        <td>
+                                            <input id="type3" value='Cay ngan ngay' disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Description:
+                                        </td>
+                                        <td>
+                                            <input id="description3" value='Dep, de choi' disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Area:
+                                        </td>
+                                        <td>
+                                            <input id="area3" value='10' disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Area Unit:
+                                        </td>
+                                        <td>
+                                            <input id="areaUnit3" value='km2' disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Health Condition:
+                                        </td>
+                                        <td>
+                                            <input id="healthCondition3" value='Good' disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Planting Method:
+                                        </td>
+                                        <td>
+                                            <input id="plantingMethod3" value='Thuy sinh' disabled />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <div id="qrcode"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5"><img id="image3" src="" alt="Page Image"></div>
+                </div>
+                </br>
+                <!-- Section 2: Responsive Buttons -->
+                <div class="popup-section">
+                    <div class="buttons">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <button id="phan" class="myButton">Phan bon</button>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <button id="thuoc" class="myButton">Thuoc</button>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <button id="qua" class="myButton">Thu hoach</button>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <button id="nhat" class="myButton">Nhat ki</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Section 3: Dropdown List -->
+                <div class="popup-section">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-10 col-sm-10">
+                            <table class="fold-table" id="fold-table">
+                                <tr class="view" hidden>
+                                    <td> test</td>
+                                </tr>
+                                <tr class="fold" hidden>
+                                    <td colspan="7">
+                                        <div class="fold-content">
+                                            <h3>Company Name</h3>
+                                            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+                                            <table class="small-friendly">
+                                                <thead>
+                                                    <tr>
+                                                        <th><span class="visible-small" title="Company name">Comp. name</span><span class="visible-big">Company name</span></th>
+                                                        <th><span class="visible-small" title="Customer number">Cust.#</span><span class="visible-big">Customer no</span></th>
+                                                        <th><span class="visible-small" title="Customer name">Cust. name</span><span class="visible-big">Customer name</span></th>
+                                                        <th><span class="visible-small" title="Insurance number">Ins.#</span><span class="visible-big">Insurance no</span></th>
+                                                        <th><span class="visible-small" title="Strategy">Str.</span><span class="visible-big">Strategy</span></th>
+                                                        <th>Start</th>
+                                                        <th><span class="visible-small" title="Current">Cur.</span><span class="visible-big">Current</span></th>
+                                                        <th>Diff</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td data-th="Company name">Sony</td>
+                                                        <td data-th="Customer no">13245</td>
+                                                        <td data-th="Customer name">John Doe</td>
+                                                        <td data-th="Insurance no">064578</td>
+                                                        <td data-th="Strategy">A, 100%</td>
+                                                        <td data-th="Start"><span class="cur">20 000</span></td>
+                                                        <td data-th="Current"><span class="cur">33 000</span></td>
+                                                        <td data-th="Diff"><span class="cur">13 000</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <button style="width:100px;" id="tuan" class="myButton">Tuan</button>
+                            </br>
+                            </br>
+                            <button style="width:100px;" id="thang" class="myButton">Thang</button></br></br>
+                            <button style="width:100px;" id="quy" class="myButton">Quy</button>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- Section 4: Non-Dropdown List -->
+                <div class="popup-section">
+                    <button id='btnsection4'><h2>Hành trình trồng cây</h2>  </button>
+                        <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+
+
+                            <div style="width:100%;" id="wrapper" class="wrapper hidden">
+
+                                <header id="headerrecord" style=" background-image: url('https://t4.ftcdn.net/jpg/03/69/11/25/360_F_369112549_7TaHV9HV6QEWIauBBJGaW7DnLd7nibkf.jpg');background-repeat: no-repeat;background-size: cover;width:100%;" class="module-location">
+                                    <ul class="location-quickstats">
+                                        <li id="num1" class="rating-medica">
+                                            <i>Negative: </i>
+                                            <span>27</span>
+                                        </li>
+                                        <li id="num2" class="rating-fertilizer">
+                                            <i>Positive: </i>
+                                            <span>82</span>
+                                        </li>
+                                        <li id="num3" class="rating-harverst">
+                                            <i>Negative: </i>
+                                            <span>27</span>
+                                        </li>
+
+                                        <li id="totalnum" class="rating-total">
+                                            <i>Negative: </i>
+                                            <span>109</span>
+                                        </li>
+                                    </ul>
+                                   
+                                </header>
+                                <ul style="width:100%;" class="module-history" id="listrecord">
+                                    <li class="rating-negative memo-yep">
+                                        <h3>Book a flight to Melbourne</h3>
+                                        <time>5 minutes ago</time>
+                                        <i>Has a memo attached</i>
+                                    </li>
+                                    <li class="rating-positive memo-yep1">
+                                        <h3>Grab some last Pad Thai w/ Yi</h3>
+                                        <time>35 minutes ago</time>
+                                        <i></i>
+                                    </li>
+                                    <li class="rating-positive memo-yep2">
+                                        <h3>Clear desk at Pun Space</h3>
+                                        <time>1 hour ago</time>
+                                        <i></i>
+                                    </li>
+                                 
+                                    <li style="padding-top:5%; padding-bottom:10%;  color:white; background-image: url('https://t4.ftcdn.net/jpg/03/69/11/25/360_F_369112549_7TaHV9HV6QEWIauBBJGaW7DnLd7nibkf.jpg');background-repeat: no-repeat;background-size: cover;width:100%;"
+                                        class="location-title rating-positive memo-yep">
+                                        <h2>Book a flight to Melbourne</h2>
+                                        <timer>5 minutes ago</timer>
+                                        <i>Has a memo attached</i>
+                                    </li>
+                                </ul>
+
+                              
+                              
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+
+
+            <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js"></script>
+            <script>
+
+
+                const baseUrlClient = "";
+                const baseUrl = "https://localhost:7043/api/";
+                const farmid = 1;
+                let typeid = 0;
+
+                $(document).ready(function () {
+
+                    var btnSection4 = document.getElementById('btnsection4');
+                    var wrapper = document.querySelector('#wrapper');
+
+                    // Add event listener to the button
+                    btnSection4.addEventListener('click', function () {
+                        // Toggle the "hidden" class of the wrapper
+                        wrapper.classList.toggle('hidden');
+
+                        Manager.GetAllRecord();
+
+
+
+                    });
+                    var buttons = document.getElementsByClassName("myButton");
+                    var holdTimers = {};
+                    var startColor = [255, 255, 255]; // Màu ban đầu (trắng)
+                    var endColor = [0, 128, 0]; // Màu kết thúc (xanh lá cây)
+
+                    function handleMouseDown(button) {
+                        var currentTime = Date.now();
+                        holdTimers[button.id] = setInterval(function () {
+                            var elapsedTime = Date.now() - currentTime;
+                            if (elapsedTime >= 2000) {
+                                clearInterval(holdTimers[button.id]); // Dừng hẹn giờ nếu đạt 3 giây
+                                var buttonText = button.textContent.trim(); //
+                                if (buttonText === "Nhat ki") { // Check if the button text is "Nhat ki"
+                                    button.style.backgroundColor = "blue"; // Revert color
+                                }
+
+
+                                button.style.backgroundColor = ""; // Revert color
+                                if (buttonText === "Phan bon") { // Check if the button text is "Nhat ki"
+                                    window.location = "/materialhistory?plantid=" + document.getElementById("id3").value + "&type=1";
+                                }
+                                if (buttonText === "Thuoc") { // Check if the button text is "Nhat ki"
+                                    window.location = "/materialhistory?plantid=" + document.getElementById("id3").value + "&type=2";
+                                }
+                                if (buttonText === "Thu hoach") { // Check if the button text is "Nhat ki"
+                                    window.location = "/materialhistory?plantid=" + document.getElementById("id3").value + "&type=3";
+                                }
+                                if (buttonText === "Tuan") { // Check if the button text is "Nhat ki"
+                                    window.location = "/diary?plantid=" + document.getElementById("id3").value + "&type=1";
+                                }
+                                if (buttonText === "Thang") { // Check if the button text is "Nhat ki"
+                                    window.location = "/diary?plantid=" + document.getElementById("id3").value + "&type=2";
+                                }
+                                if (buttonText === "Quy") { // Check if the button text is "Nhat ki"
+                                    window.location = "/diary?plantid=" + document.getElementById("id3").value + "&type=3";
+                                }
+
+
+
+
+                            } else {
+                                var ratio = elapsedTime / 2000; // Tính tỉ lệ thời gian đã qua
+                                var currentColor = [
+                                    Math.round(startColor[0] + (endColor[0] - startColor[0]) * ratio),
+                                    Math.round(startColor[1] + (endColor[1] - startColor[1]) * ratio),
+                                    Math.round(startColor[2] + (endColor[2] - startColor[2]) * ratio)
+                                ];
+                                button.style.backgroundColor = 'rgb(' + currentColor.join(',') + ')';
+                            }
+                        }, 50); // Update màu mỗi 50ms
+                    }
+
+                    function handleMouseUp(button) {
+                        clearInterval(holdTimers[button.id]); // Dừng hẹn giờ
+                        var buttonText = button.textContent.trim(); // Lấy nội dung của button (loại bỏ khoảng trắng)
+                        if (buttonText === "Nhat ki") { // Check if the button text is "Nhat ki"
+                            button.style.backgroundColor = "blue"; // Revert color
+                        }
+                        else if (button.style.backgroundColor === "green") {
+
+                            button.style.backgroundColor = ""; // Revert color
+                            if (buttonText === "Phan bon") { // Check if the button text is "Nhat ki"
+                                window.location = "/materialhistory?plantid=" + document.getElementById("id3").value + "&type=1";
+                            }
+                            if (buttonText === "Thuoc") { // Check if the button text is "Nhat ki"
+                                window.location = "/materialhistory?plantid=" + document.getElementById("id3").value + "&type=2";
+                            }
+                            if (buttonText === "Thu hoach") { // Check if the button text is "Nhat ki"
+                                window.location = "/materialhistory?plantid=" + document.getElementById("id3").value + "&type=3";
+                            }
+                            if (buttonText === "Tuan") { // Check if the button text is "Nhat ki"
+                                window.location = "/diary?plantid=" + document.getElementById("id3").value + "&type=1";
+                            }
+                            if (buttonText === "Thang") { // Check if the button text is "Nhat ki"
+                                window.location = "/diary?plantid=" + document.getElementById("id3").value + "&type=2";
+                            }
+                            if (buttonText === "Quy") { // Check if the button text is "Nhat ki"
+                                window.location = "/diary?plantid=" + document.getElementById("id3").value + "&type=3";
+                            }
+
+
+
+                        } else {
+
+                            button.style.backgroundColor = "blue"; // Revert color
+                        }
+                    }
+
+                    for (var i = 0; i < buttons.length; i++) {
+                        buttons[i].addEventListener("mousedown", function (event) {
+                            handleMouseDown(event.target);
+                        });
+
+                        buttons[i].addEventListener("mouseup", function (event) {
+                            handleMouseUp(event.target);
+                        });
+                    }
+
+                    var qrcode = new QRCode("qrcode");
+                    function makeCode(text) {
+                        qrcode.makeCode(text);
+                    }
+
+                    $('#close').on("click", function () {
+                        $('#popup3').removeClass("appear");
+                        document.getElementById("thuoc").style.backgroundColor = "";
+                        document.getElementById("qua").style.backgroundColor = "";
+                        document.getElementById("nhat").style.backgroundColor = "";
+                        document.getElementById("phan").style.backgroundColor = "";
+                        document.getElementById("tuan").style.backgroundColor = "";
+                        document.getElementById("thang").style.backgroundColor = "";
+                        document.getElementById("quy").style.backgroundColor = "";
+                    });
+
+
+
+                    setTimeout(function () { Manager.GetAllProduct(); }, 200);
+
+                    document.getElementById("add").onclick = function () { Create() };
+                    document.getElementById("update").onclick = function () { Update() };
+                    document.getElementById("phan").onclick = function () {
+                        var inputValue = document.getElementById('id3').value;
+                        loadPlantMaterialHistory(inputValue, 1);
+                        document.getElementById("tuan").style.visibility = 'hidden';
+                        document.getElementById("thang").style.visibility = 'hidden';
+                        document.getElementById("quy").style.visibility = 'hidden';
+                        document.getElementById("thuoc").style.backgroundColor = "";
+                        document.getElementById("qua").style.backgroundColor = "";
+                        document.getElementById("nhat").style.backgroundColor = "";
+
+                        document.getElementById("tuan").style.backgroundColor = "";
+                        document.getElementById("thang").style.backgroundColor = "";
+                        document.getElementById("quy").style.backgroundColor = "";
+
+                    };
+                    document.getElementById("thuoc").onclick = function () {
+                        var inputValue = document.getElementById('id3').value;
+                        loadPlantMaterialHistory(inputValue, 2);
+                        document.getElementById("tuan").style.visibility = 'hidden';
+                        document.getElementById("thang").style.visibility = 'hidden';
+                        document.getElementById("quy").style.visibility = 'hidden';
+
+                        document.getElementById("phan").style.backgroundColor = "";
+                        document.getElementById("qua").style.backgroundColor = "";
+                        document.getElementById("nhat").style.backgroundColor = "";
+
+                        document.getElementById("tuan").style.backgroundColor = "";
+                        document.getElementById("thang").style.backgroundColor = "";
+                        document.getElementById("quy").style.backgroundColor = "";
+                    };
+                    document.getElementById("qua").onclick = function () {
+                        var inputValue = document.getElementById('id3').value;
+                        loadPlantMaterialHistory(inputValue, 3);
+                        document.getElementById("tuan").style.visibility = 'hidden';
+                        document.getElementById("thang").style.visibility = 'hidden';
+                        document.getElementById("quy").style.visibility = 'hidden';
+
+                        document.getElementById("tuan").style.backgroundColor = "";
+                        document.getElementById("thang").style.backgroundColor = "";
+                        document.getElementById("quy").style.backgroundColor = "";
+
+                        document.getElementById("thuoc").style.backgroundColor = "";
+                        document.getElementById("phan").style.backgroundColor = "";
+                        document.getElementById("nhat").style.backgroundColor = "";
+                    };
+
+                    document.getElementById("nhat").onclick = function () {
+                        var inputValue = document.getElementById('id3').value;
+                        loadPlantMaterialHistory(inputValue, 4);
+                        document.getElementById("tuan").style.visibility = 'visible';
+                        document.getElementById("thang").style.visibility = 'visible';
+                        document.getElementById("quy").style.visibility = 'visible';
+
+                        document.getElementById("tuan").style.backgroundColor = "blue";
+                        document.getElementById("thang").style.backgroundColor = "";
+                        document.getElementById("quy").style.backgroundColor = "";
+
+                        document.getElementById("thuoc").style.backgroundColor = "";
+                        document.getElementById("phan").style.backgroundColor = "";
+                        document.getElementById("qua").style.backgroundColor = "";
+                    };
+                    document.getElementById("tuan").onclick = function () {
+                        var inputValue = document.getElementById('id3').value;
+                        loadPlantMaterialHistory(inputValue, 4);
+                        document.getElementById("thang").style.backgroundColor = "";
+                        document.getElementById("quy").style.backgroundColor = "";
+                    };
+                    document.getElementById("thang").onclick = function () {
+                        var inputValue = document.getElementById('id3').value;
+                        loadPlantMaterialHistory(inputValue, 5);
+                        document.getElementById("tuan").style.backgroundColor = "";
+                        document.getElementById("quy").style.backgroundColor = "";
+                    };
+                    document.getElementById("quy").onclick = function () {
+                        var inputValue = document.getElementById('id3').value;
+                        loadPlantMaterialHistory(inputValue, 6);
+                        document.getElementById("thang").style.backgroundColor = "";
+                        document.getElementById("tuan").style.backgroundColor = "";
+                    };
+
+
+                    $("#table").on("click", ".delete-option", function (e) {
+                        var resId = $(this).attr("id");
+                        console.log(resId);
+                        $.ajax({
+                            url: baseUrl + "Plant/DeletePlant?milestoneId=" + resId,
+                            type: "delete",
+                            contentType: "application/json",
+                            success: function (result, status, xhr) {
+
+                                $(this).remove(); alert("delete succcess");
+                                Manager.GetAllProduct();
+                            }
+
+                        });
+                    });
+                    $("#table").on("click", ".detail-option", function (e) {
+                        var flag = document.getElementById("checkload").value;
+                        console.log(document.getElementById("checkload").value);
+
+                        if (flag % 2 == 0) {
+
+                            document.getElementById("checkload").value = 0;
+                            document.getElementById("phan").style.backgroundColor = "blue";
+                            document.getElementById("tuan").style.visibility = 'hidden';
+                            document.getElementById("thang").style.visibility = 'hidden';
+                            document.getElementById("quy").style.visibility = 'hidden';
+                            $('#popup3').addClass("appear");
+                            var resId = $(this).attr("id");
+                            $.ajax({
+                                url: baseUrl + "Plant/GetPlantById?id=" + resId,
+                                type: "get",
+                                contentType: "application/json",
+                                success: function (result, status, xhr) {
+                                    makeCode(result["qrCode"] + result["id"]);
+                                    $("#id3").val(result["id"]);
+                                    $("#milestoneId3").val(result["milestoneId"]);
+                                    $("#name3").val(result["name"]);
+                                    $("#type3").val(result["type"]);
+                                    $("#description3").val(result["description"]);
+                                    $("#area3").val(result["area"]);
+                                    $("#areaUnit3").val(result["areaUnit"]);
+                                    $("#healthCondition3").val(result["healthCondition"]);
+                                    $("#plantingMethod3").val(result["plantingMethod"]);
+                                    $("#image3").attr("src", result["image"]);
+
+                                    loadPlantMaterialHistory(result["id"], 1);
+                                }
+                            });
+
+                        }
+                        var x = Number(flag);
+                        document.getElementById("checkload").value = x + 1;
+
+
+                    });
+                    $("#table").on("click", ".update-option", function (e) {
+                        var resId = $(this).attr("id");
+                        $.ajax({
+                            url: baseUrl + "Plant/GetPlantById?id=" + resId,
+                            type: "get",
+                            contentType: "application/json",
+                            success: function (result, status, xhr) {
+                                $("#id2").val(result["id"]);
+                                $("#milestoneId2").val(result["milestoneId"]);
+                                $("#name2").val(result["name"]);
+                                $("#type2").val(result["type"]);
+                                $("#description2").val(result["description"]);
+                                $("#area2").val(result["area"]);
+                                $("#areaUnit2").val(result["areaUnit"]);
+                                $("#healthCondition2").val(result["healthCondition"]);
+                                $("#plantingMethod2").val(result["plantingMethod"]);
+                                $("#image2").val(result["image"]);
+                            }
+                        });
+
+                    });
+
+
+
+                })
+                function pauseExecution(milliseconds) {
+                    const startTime = Date.now();
+                    while (Date.now() < startTime + milliseconds) {
+                        // Loop until the specified time has passed
+                    }
+                }
+
+                function searchStringInArray(str, strArray) {
+                    for (var j = 0; j < strArray.length; j++) {
+                        if (strArray[j].match(str)) return j;
+                    }
+                    return -1;
+                }
+                function loadPlantMaterialHistory(plantid, type) {
+
+                    var obj = "";
+                    var typeid = 0;
+                    var id = "#fold-table";
+                    var rows = "";
+
+
+                    if (type == 1) {
+                        typeid = 10;
+                    }
+                    if (type == 2) {
+                        typeid = 12;
+                    }
+                    if (type == 3) {
+                        typeid = 18;
+                    }
+                    if (type == 4) {
+                        typeid = 1;
+                    }
+                    if (type == 5) {
+                        typeid = 2;
+                    }
+                    if (type == 6) {
+                        typeid = 3;
+                    }
+                    var serviceUrl = "https://localhost:7043/api/PlantMaterialHistory/GetAllPlantMaterialHistoryByType?plantid=" + plantid + "&typeId=" + typeid;
+                    if (type == 6 | type == 5 | type == 4) {
+                        serviceUrl = "https://localhost:7043/api/Diary/GetPlantDiaryListByType?plantid=" + plantid + "&type=" + typeid;
+                    }
+
+                    window.Manager.GetAPI(serviceUrl, onSuccess, onFailed);
+                    $('.viessss').remove();
+                    $(id).append(`            <div class='preloader'>
+                                                                                <svg style='margin-left: 35%;' class="ip" viewBox="0 0 256 128" width="256px" height="128px" xmlns="http://www.w3.org/2000/svg">
+                                                                    <defs>
+                                                                        <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="0">
+                                                                            <stop offset="0%" stop-color="#5ebd3e" />
+                                                                            <stop offset="33%" stop-color="#ffb900" />
+                                                                            <stop offset="67%" stop-color="#f78200" />
+                                                                            <stop offset="100%" stop-color="#e23838" />
+                                                                        </linearGradient>
+                                                                        <linearGradient id="grad2" x1="1" y1="0" x2="0" y2="0">
+                                                                            <stop offset="0%" stop-color="#e23838" />
+                                                                            <stop offset="33%" stop-color="#973999" />
+                                                                            <stop offset="67%" stop-color="#009cdf" />
+                                                                            <stop offset="100%" stop-color="#5ebd3e" />
+                                                                        </linearGradient>
+                                                                    </defs>
+                                                                    <g fill="none" stroke-linecap="round" stroke-width="16">
+                                                                        <g class="ip__track" stroke="#ddd">
+                                                                            <path d="M8,64s0-56,60-56,60,112,120,112,60-56,60-56" />
+                                                                            <path d="M248,64s0-56-60-56-60,112-120,112S8,64,8,64" />
+                                                                        </g>
+                                                                        <g stroke-dasharray="180 656">
+                                                                            <path class="ip__worm1" stroke="url(#grad1)" stroke-dashoffset="0" d="M8,64s0-56,60-56,60,112,120,112,60-56,60-56" />
+                                                                            <path class="ip__worm2" stroke="url(#grad2)" stroke-dashoffset="358" d="M248,64s0-56-60-56-60,112-120,112S8,64,8,64" />
+                                                                        </g>
+                                                                    </g>
+                                                                </svg>
+                                                            </div>`);
+                    function onSuccess(jsonData) {
+                        let listDate = [];
+
+                        obj = jsonData;
+                        var rows = "";
+                        var options = "";
+                        var indexof = 0
+                        $.each(jsonData, function (i, item) {
+                            var mydate = new Date(item.lastUpdate);
+                            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                            let text = mydate.toLocaleDateString('vi-VN', options);
+                            indexof = searchStringInArray(text, listDate);
+
+                            var mydatetime = new Date(item.lastUpdate);
+                            var optionstime = {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                second: 'numeric'
+                            };
+                            let texttime = mydatetime.toLocaleDateString('vi-VN', optionstime);
+
+                            if (indexof === -1) {
+                                listDate.push(text);
+                                var rows = "";
+                                if (type == 6 | type == 5 | type == 4) {
+                                    rows = "<tr class='view viessss ' ><td><h3> " + text + "</h3></td></tr>" +
+                                        "<tr class='fold viessss'>" +
+                                        "<td colspan='7'>" +
+                                        "<div class='fold-content'>" +
+                                        "<h3>Chi tiết bản ghi</h3>" +
+                                        "<table class='small-friendly'>" +
+                                        "<thead>" +
+                                        "<tr>" +
+                                        "<th><span class='visible-small' title='Company name'>Comp. name</span><span class='visible-big'>Record Id</span></th>" +
+                                        "<th><span class='visible-small' title='Customer number'>Cust.#</span><span class='visible-big'>Title</span></th>" +
+                                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Body</span></th>" +
+                                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Image</span></th>" +
+                                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>LastUpdate</span></th>" +
+
+                                        "</tr>" +
+                                        "</thead>" +
+                                        "<tbody id ='indexof" + listDate.length + "'>" +
+                                        "<tr>" +
+                                        "<td data-th='Company name'>" + item.id + "</td>" +
+                                        "<td data-th='Customer no'>" + item.title + "</td>" +
+                                        "<td data-th='Customer no'>" + item.body + "</td>" +
+                                        "<td data-th='Customer name'> <img src='" + item.image + "' alt='Girl in a jacket'></td>" +
+                                        "<td data-th='Insurance no'>" + texttime + "</td>" +
+                                        "</tr>" +
+                                        "</tbody>" +
+                                        "</table>" +
+                                        "</div>" +
+
+                                        "</td>" +
+                                        "</tr>";
+                                } else {
+
+
+
+                                    rows = "<tr class='view viessss ' ><td><h3> " + text + "</h3></td></tr>" +
+                                        "<tr class='fold viessss'>" +
+                                        "<td colspan='7'>" +
+                                        "<div class='fold-content'>" +
+                                        "<h3>Chi tiết bản ghi</h3>" +
+                                        "<table class='small-friendly'>" +
+                                        "<thead>" +
+                                        "<tr>" +
+                                        "<th><span class='visible-small' title='Company name'>Comp. name</span><span class='visible-big'>Record Id</span></th>" +
+                                        "<th><span class='visible-small' title='Customer number'>Cust.#</span><span class='visible-big'>Item Name</span></th>" +
+                                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Quality</span></th>" +
+                                        "<th><span class='visible-small' title='Insurance number'>Ins.#</span><span class='visible-big'>LastUpdate</span></th>" +
+
+                                        "</tr>" +
+                                        "</thead>" +
+                                        "<tbody id ='indexof" + listDate.length + "'>" +
+                                        "<tr>" +
+                                        "<td data-th='Company name'>" + item.id + "</td>" +
+                                        "<td data-th='Customer no'>" + item.inventoryName + "</td>" +
+                                        "<td data-th='Customer name'>" + item.quality + "</td>" +
+                                        "<td data-th='Insurance no'>" + texttime + "</td>" +
+                                        "</tr>" +
+                                        "</tbody>" +
+                                        "</table>" +
+                                        "</div>" +
+
+                                        "</td>" +
+                                        "</tr>";
+                                }
+                                $(id).append(rows);
+
+                            } else {
+                                if (type == 6 | type == 5 | type == 4) {
+                                    rows = "<tr>" +
+                                        "<td data-th='Company name'>" + item.id + "</td>" +
+                                        "<td data-th='Customer no'>" + item.title + "</td>" +
+                                        "<td data-th='Customer no'>" + item.body + "</td>" +
+                                        "<td data-th='Customer name'> <img src='" + item.image + "' alt='Girl in a jacket'></td>" +
+                                        "<td data-th='Insurance no'>" + texttime + "</td>" +
+                                        "</tr>";
+
+                                } else {
+                                    rows =
+                                        "<tr>" +
+                                        "<td data-th='Company name'>" + item.id + "</td>" +
+                                        "<td data-th='Customer no'>" + item.inventoryName + "</td>" +
+                                        "<td data-th='Customer name'>" + item.quality + "</td>" +
+                                        "<td data-th='Insurance no'>" + texttime + "</td>" +
+                                        "</tr>";
+                                }
+
+                                id = "#indexof" + (indexof + 1);
+
+                                $(id).append(rows); $('.preloader').remove();
+                                console.log(document.getElementById('indexof' + (indexof + 1)).innerHTML);
+                                id = "#fold-table";
+                            }
+
+                        });
+
+                        $(".fold-table tr.view").on("click", function () {
+                            if ($(this).hasClass("open")) {
+                                $(this).removeClass("open").next(".fold").removeClass("open");
+                            } else {
+                                $(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
+                                $(this).addClass("open").next(".fold").addClass("open");
+                            }
+                        });
+                        $('.preloader').remove();
+
+
+                    }
+                    function onFailed(error) {
+                        window.alert(error.statusText);
+                        $('.preloader').remove();
+
+                    }
+
+                }
+                function Update() {
+
+                    var xhttp = new XMLHttpRequest();
+
+                    xhttp.open("PUT", baseUrl + "Plant/UpdatePlant", true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    var obj = {
+                        id: document.getElementById("id2").value,
+                        name: document.getElementById("name2").value,
+                        milestoneId: document.getElementById("milestoneId2").value,
+                        type: document.getElementById("type2").value,
+                        description: document.getElementById("description2").value,
+                        area: document.getElementById("area2").value,
+                        areaUnit: document.getElementById("areaUnit2").value,
+                        healthCondition: document.getElementById("healthCondition2").value,
+                        plantingMethod: document.getElementById("plantingMethod2").value,
+                        image: document.getElementById("image2").value
+
+                    };
+                    xhttp.onreadystatechange = function () {
+                        if (xhttp.readyState === 4) {
+                            var response = JSON.parse(xhttp.responseText);
+                            if (xhttp.status === 200) {
+                                alert("update successful");
+                                window.location = "/plant?#";
+
+                                Manager.GetAllProduct();
+
+                            } else {
+                                alert("update faild");
+                                window.location = "/plant?#";
+
+                                Manager.GetAllProduct();
+
+                            }
+                        }
+                    }
+                    xhttp.send(JSON.stringify(obj));
+
+
+                    pauseExecution(750);
+
+                }
+                function AddTrigger() {
+                    $('.menu-trigger').click(function () {
+                        var optionsList = $(this).siblings('.options-list');
+                        $('.options-list').not(optionsList).removeClass('visible'); // Đóng tất cả các danh sách tùy chọn khác
+                        optionsList.toggleClass('visible');
+                    });
+
+                    $(document).click(function (event) {
+                        if (!$(event.target).closest('.options-menu').length) {
+                            $('.options-list').removeClass('visible');
+                        }
+                    });
+
+                }
+                function Create() {
+                    var xhttp = new XMLHttpRequest();
+
+                    xhttp.open("POST", baseUrl + "Plant/CreatePlant", true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    var obj = {
+
+                        milestoneId: document.getElementById("milestoneId").value,
+                        name: document.getElementById("name").value,
+                        type: document.getElementById("type").value,
+                        description: document.getElementById("description").value,
+                        area: document.getElementById("area").value,
+                        areaUnit: document.getElementById("areaUnit").value,
+                        healthCondition: document.getElementById("healthCondition").value,
+                        plantingMethod: document.getElementById("plantingMethod").value,
+                        image: document.getElementById("image").value
+
+
+                    };
+
+                    xhttp.send(JSON.stringify(obj));
+                    xhttp.onreadystatechange = function () {
+                        if (xhttp.readyState === 4) {
+                            var response = JSON.parse(xhttp.responseText);
+                            if (xhttp.status === 200) {
+                                alert("add successful");
+                                window.location = "/plant?#";
+
+                                Manager.GetAllProduct();
+
+                            } else {
+                                alert("add faild");
+                                window.location = "/plant?#";
+
+                                Manager.GetAllProduct();
+
+                            }
+                        }
+                    }
+
+                    pauseExecution(750);
+
+                }
+                var Manager = {
+                    GetAllProduct: function () {
+                        var obj = "";
+                        var serviceUrl = baseUrl + "Plant/GetMilestoneList?farmid=" + farmid;
+                        window.Manager.GetAPI(serviceUrl, onSuccess, onFailed);
+
+                        function onSuccess(jsonData) {
+
+                            obj = jsonData;
+                            var rows = "";
+                            var options = "";
+                            $.each(jsonData, function (i, item) {
+                                rows += "<div class='col-md-4 grid-margin stretch-card'>" +
+                                    "<div class='card'>" +
+                                    "<div class='card-body'>" +
+                                    "<h4 class='card-title'> <a href='/milestone'> " + item.name + " </a></h4>" +
+                                    "<div class='list-wrapper pt-2'>" +
+                                    "<ul id='listplant" + item.id + "' class='d-flex flex-column-reverse todo-list todo-list-custom '>" +
+                                    "</ul>" +
+                                    "</div>" +
+                                    "<div class='add-items d-flex mb-0 mt-2'>" +
+
+                                    "</div>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "</div>";
+
+
+                                options += "<option value='" + item.id + "'>" + item.name + "</option>";
+                            });
+                            var id = '#table';
+                            $(id).empty().append(rows);
+
+                            $('#milestoneId').empty().append(options);
+                            $('#milestoneId2').empty().append(options);
+                            $('#milestoneId3').empty().append(options);
+                        }
+                        function onFailed(error) {
+                            window.alert(error.statusText);
+                        }
+                        setTimeout(function () {
+                            serviceUrl = baseUrl + "Plant/GetPlantList";
+                            window.Manager.GetAPI(serviceUrl, onSuccess2, onFailed2);
+
+                            function onSuccess2(jsonData) {
+
+                                obj = jsonData;
+                                var rows = "";
+                                $.each(jsonData, function (i, item) {
+                                    rows +=
+                                        "<li style='width:100%;'>" +
+                                        "<div style='width:100%;' class='row col-md-12 col-md-12 col-md-12'>" +
+                                        "<div id='detail' style='width:100%;' class='col-md-11 col-md-11 col-md-11 text-start'>" +
+                                        "<a id='" + item.id + "' href='#popup3' class='text-start detail-option'>" +
+                                        "<div class='form-check form-check-flat text-start'>" +
+                                        "<label class='form-check-label text-start'>" +
+                                        "<input class='checkbox' type='checkbox' class='text-start'>" +
+                                        "" + item.name + "" +
+                                        "</label>" +
+                                        "</div>" +
+                                        "</a>" +
+                                        "</div>" +
+                                        "<div style=' float: right;' class='options-menu'>" +
+                                        "<ul class='options-list'>" +
+                                        "<li><a id='" + item.id + "' href='#' class='delete-option'><button style='font-size: 18px'>Delete <i class='material-icons'>delete</i></button></a></li>" +
+                                        "<li><a id='" + item.id + "' href='#popup2' class='update-option'><button style='font-size: 18px'>Update <i class='material-icons'>border_color</i></button></a></li>" +
+                                        "</ul>" +
+                                        "<div class='menu-trigger'>&#9642;&#9642;&#9642;</div>" +
+                                        "</div>" +
+
+
+                                        "</div>" +
+
+                                        "</li>";
+
+                                    var id = "#listplant" + item.milestoneId;
+                                    $(id).append(rows);
+
+                                    rows = "";
+
+                                });
+                                AddTrigger();
+
+                            }
+                            function onFailed2(error) {
+                                window.alert(error.statusText);
+                            }
+                        }, 500);
+
+
+                        return obj;
+                    },
+                    GetAllRecord: function () {
+                        var obj = "";
+                        var inputValue = document.getElementById('id3').value;
+                        var serviceUrl = baseUrl + "QR/GetPlantRecord?plantid=" + inputValue;
+                        window.Manager.GetAPI(serviceUrl, onSuccess, onFailed);
+
+                        function onSuccess(jsonData) {
+
+                            obj = jsonData;
+                            var rows = "";
+                            var footer = "";
+                            var options = "";
+                            var header = "";
+                            var count1 = 0;
+                            var count2 = 0;
+                            var count3 = 0;
+                            $.each(jsonData, function (i, item) {
+                                var mydatetime = new Date(item.createdate);
+                                var optionstime = {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    second: 'numeric'
+                                };
+                                let texttime = mydatetime.toLocaleDateString('vi-VN', optionstime);
+                                if (item.type == 1) {
+                                    footer += `<li style="padding-top:5%; padding-bottom:10%;  color:white; background-image: url('https://t4.ftcdn.net/jpg/03/69/11/25/360_F_369112549_7TaHV9HV6QEWIauBBJGaW7DnLd7nibkf.jpg');background-repeat: no-repeat;background-size: cover;width:100%;"
+                                                                                        class="location-title rating-positive memo-yep">
+                                                                                                        <h2>${item.description}</h2>
+                                                                                                        <timer>${texttime}</timer>
+                                                                                        <i></i>
+                                                                                    </li>`;
+                                }
+                                if (item.type == 2) {
+                                    header += ` <div class="location-title rating-negative memo-yep">
+                                                                        <h3>${item.description}</h3>
+                                                                        <time>${texttime}</time>
+                                                        <i>Has a memo attached</i>
+                                                    </div>`;
+
+                                }
+                                if (item.type == 3) {
+                                    rows += "<li class='rating-negative memo-yep'>" +
+                                        "<h3>" + item.description + "</h3>" +
+                                        "<time>" + texttime + "</time>" +
+                                        "<i></i>" +
+                                        "</li>";
+                                    count1++;
+                                }
+                                if (item.type == 4) {
+                                    rows += "<li class='rating-positive memo-yep1'>" +
+                                        "<h3>" + item.description + "</h3>" +
+                                        "<time>" + texttime + "</time>" +
+                                        "<i></i>" +
+                                        "</li>";
+                                    count2++;
+                                }
+                                if (item.type == 5) {
+                                    rows += "<li class='rating-positive memo-yep2'>" +
+                                        "<h3>" + item.description + "</h3>" +
+                                        "<time>" + texttime + "</time>" +
+                                        "<i></i>" +
+                                        "</li>";
+                                    count3++;
+                                }
+
+
+                            });
+                            $('#num1').html(` <i>Negative: </i> <span>${count1}</span>`);
+                            $('#num2').html(` <i>Negative: </i> <span>${count2}</span>`);
+                            $('#num3').html(` <i>Negative: </i> <span>${count3}</span>`);
+                            $('#totalnum').html(` <i>Negative: </i> <span>${(count3 + count2 + count1)}</span>`);
+
+                            var id = '#listrecord';
+                            $(id).empty().append(rows);
+                            $(id).append(footer);
+                            id = '#headerrecord';
+                            $(id).append(header);
+                        }
+                        function onFailed(error) {
+                            window.alert(error.statusText);
+                        }
+                    },
+                    GetAPI: function (serviceUrl, successCallback, errorCallback) {
+                        $.ajax({
+                            type: "GET",
+                            url: serviceUrl,
+                            dataType: "json",
+                            success: successCallback,
+                            error: errorCallback
+                        });
+                    }
+                }
+            </script>
+</body>
+</html>

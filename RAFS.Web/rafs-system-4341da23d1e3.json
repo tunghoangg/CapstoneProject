@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "rafs-system",
+  "private_key_id": "4341da23d1e3b23e5773c13c497a32ae8d532248",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCRXLPMaqbf/few\n7k6HmZmGcpM2utIB7m8J4Xnduh1n1eL6O+xnnTTuYqv1hJFuzuQ+LySgkzGGGKP/\nO9bWoHP32L7O6kVmSw7aCnZkOWqavJUCGGmlsZ2zfhUru2ezv6gJD++q5UeBaLhB\nD1ge+XUBX/V+jdzCkYUf4EFoQV6vangS7YFVr5mHlCIKjvhaROljiKrDLYguzoB7\n5aAnCUX3FB1/Kx8lvXrvtRpYDa6EnoGhthT1sZiSJwdXGFXZf0b0aSNuimiLswtv\n+SZcyITfDqhT8diOxiSKjxd8+arNN2CfMttZTCvTusnNvHJwiqKrCQWn/qiC04cT\nDZdIsJxvAgMBAAECggEANw8VfWaiSbKBOM+zCBKqf63zS+YseJXPEj+I8O63h6aQ\nwDalX0PBElBmkOsDSSTteA5UQcwvFHtN1vXb9NS2yFidQXOkENB6UiVnXaQP2Id4\nq2AC2EN0F9I4g6WK7J86LyCNp74LvR0kuWPt/WGAq6IksyhZx4rmEUJYk/w6uJc5\ngRUKMdsRQsnsldd9gbICMomUTN2pUQxDeNkBIlEU+hyYorQCmBZRk/UOcZRM07XR\nmYNasflV7OBHxqNbV5LGm861U6bB9Dh85cnJkqUI/qvDMxKl5DzSOgmx/KPBSOjp\ntmTrdaEkTpxF+JUppCKOZZkHtvrE1zdRm8d7xMsykQKBgQDMCsqyeZ6ka+t4WZ1E\nzVGkYrfFeVAbNrpQJ8Aq9zT6BtqFxBcs8vXp1hWAFEPILczbzHPRzem2o7xa6DZv\n3P86kxbibfoV7rXeC5bD+Y9yR9ctz+Qfae2onlH3ZDCRjJwpr9S6qaUjXQZ3tJnU\nyHWrI42NoFFS2kaUQJxBGsal/wKBgQC2YKUrXdmosl+btEuHCeElWPjhTZ6EAXZy\n8sNBFU1xfY+udQWBTZQK1GMT5yljE93e1BlgAyzXQA5Qzf7/BXntA00jKy+L1YY+\nXouceFO1i+FaPQqKxghbQ3sUTkqCe4lsedjCQFHLDwIdUZdgCiT04zcp9kD23PwC\nS59XcelpkQKBgQCrtnVI56MDejLq0HfSu/t2HQHM9T/d9xuqcxl8zxfNRlFGe3SJ\nhlo/lMP5SpSUdT7Oxuu9Z83Ev1y3IG8XiuNb9wcuPSFWrdJt8FDL0kzO/vhufGLd\nsPapjbsrOCzLgIq3ZlrfT/9CmHnl6Z3//UdRZBUvV/i4gisdfpZBD/iXHwKBgAC3\nzK6pBexWF25DfXCgp1RAT2qDpbYbU14MepxM+ysRNXmYWFcz+Ps57tHrPQx4zYzN\nBPSNzqViSSwkQ3a5jMtUEf+rcdp5Erg4IxCQoLO8QzzZtKrrMKk7UMa5sC1nUxks\nOaA6JJhKDNYUtiXYpGCabGMr5wGRySQxLAVqG2MhAoGANtk1KoZkaETR2HN8Z+XN\ndsddWPNb4FjYLRfMztrcUhgSKyLonOCxcANJ9U2Ebcoj7vBxz7YjoPfKkBBrDbFB\n1mpnHRuSENrpcrXuGPySefKMFN3SZcaj+ZVzZGRweYujTe0or1iEY0dqE6vrolQn\nWkRNAwT3iG8nDlSq9bq0MnA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "rafs-driver@rafs-system.iam.gserviceaccount.com",
+  "client_id": "113744660504095230656",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/rafs-driver%40rafs-system.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

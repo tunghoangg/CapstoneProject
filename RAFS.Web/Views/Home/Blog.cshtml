@@ -1,0 +1,469 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+}
+
+<style>
+  
+    }
+</style>
+@* <div style="margin-top: 50px" class="notifications">
+</div> *@
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="breadcrumb-area">
+    <!-- Top Breadcrumb Area -->
+    <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(/Assets/HomePage/img/bg-img/farm-bg3.jpg);">
+        <h2>Bài Đăng</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/Home"><i class="fa fa-home"></i> Trang chủ</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Bài Đăng</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ##### Blog Area Start ##### -->
+<section class="alazea-blog-area mb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <div class="row" id="content-blog">
+
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pages">
+                              @*   <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li> *@
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="post-sidebar-area">
+
+                    <!-- ##### Single Widget Area ##### -->
+                    <div class="single-widget-area">
+                        <form action="#" method="get" class="search-form">
+                            <input type="search" name="searchString" id="titleSearch" placeholder="Search...">
+                            <button id="filterBlog" type="button"><i class="icon_search"></i></button>
+                        </form>
+                    </div>
+
+                    <!-- ##### Single Widget Area ##### -->
+                    <div class="single-widget-area">
+                        <!-- Title -->
+                        <div class="widget-title">
+                            <h4>Recent post</h4>
+                        </div>
+                        <div style="margin-left: 4px;" class="row " id="content-recentBlog">
+                        </div>
+                      
+
+                    
+                        </div>
+
+                       
+                    </div>
+
+                    <!-- ##### Single Widget Area ##### -->
+                <div style="margin-left:30px;" class="single-widget-area">
+                        <!-- Title -->
+                        <div class="widget-title">
+                            <h4>Tag Cloud</h4>
+                        </div>
+                        <!-- Tags -->
+                        <ol class="popular-tags d-flex flex-wrap" id="tagList">
+                            @* <li><a href="#">PLANTS</a></li>
+                            <li><a href="#">NEW PRODUCTS</a></li>
+                            <li><a href="#">CACTUS</a></li>
+                            <li><a href="#">DESIGN</a></li>
+                            <li><a href="#">NEWS</a></li>
+                            <li><a href="#">TRENDING</a></li>
+                            <li><a href="#">VIDEO</a></li>
+                            <li><a href="#">GARDEN DESIGN</a></li> *@
+                        </ol>
+                    </div>
+
+                    <!-- ##### Single Widget Area ##### -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Blog Area End ##### -->
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var page = 1;
+            var totalPages = 0;
+
+            $('#filterBlog').click(function () {
+                var page = 1;
+                var totalPages = 0;
+                fetchFarms(page);
+            });
+            
+
+            // Function to fetch farms based on page number
+            const fetchFarms = (page, tag = null) => {
+                var searchString = $('#titleSearch').val();
+                var sort = $('#sort').val();
+                var area = $('#farmArea').val();
+                var data = {
+                    sort: sort,
+                    title: searchString
+                };
+
+                // Nếu tag được truyền vào, thêm tag vào dữ liệu truyền cho AJAX
+                if (tag !== null) {
+                    data.tag = tag;
+                }
+
+                $.ajax({
+                    url: `https://localhost:7043/api/HomePage/GetFilteredBlog/${page}`,
+                    method: 'GET',
+                    data: data,
+                    contentType: 'application/json',
+                    success: (data) => {
+                        $('#content-blog').html('');
+                        if (data && data.blogs.length > 0) {
+                            $('#content-blog').html(generateHtmlBlog(data.blogs));
+                            totalPages = data.pages;
+                            updatePaginationButtons(page);
+                        } else {
+                            $('#content-blog').html('<h1>Không tìm thấy bài đăng</h1>');
+                            $('#pages').html('');
+                        }
+                    },
+                    error: function () {
+                        console.error('Failed to fetch data.');
+                    }
+                });
+                $.ajax({
+                    url: `https://localhost:7043/api/HomePage/GetFilteredBlog/1`,
+                    method: 'GET',
+                    data: {
+                        sort: "asc",
+                        pageResults: 4,
+                    },
+                    contentType: 'application/json',
+                    success: (data) => {
+                        $('#content-recentBlog').html('');
+                        if (data && data.blogs.length > 0) {
+                            $('#content-recentBlog').html(generateHtmlRecentBlog(data.blogs));
+                            updatePaginationButtons(page);
+                        } 
+                    },
+                    error: function () {
+                        console.error('Failed to fetch data.');
+                    }
+                });
+                $.ajax({
+                    url: `https://localhost:7043/api/HomePage/GetTagInHomePage`,
+                    method: 'GET',
+                    data: {
+                    },
+                    contentType: 'application/json',
+                    success: (data) => {
+                        $('#tagList').html('');
+                        if (data) {
+                            $('#tagList').html(generateHtmlTag(data));
+                            $('.tagFilter').click(function () {
+                                var page = 1;
+                                var totalPages = 0;
+                                var tag = $(this).text();
+                                fetchFarms(page, tag);
+                                console.log($(this).text());
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.error('Failed to fetch data.');
+                    }
+                });
+               
+            };
+            
+
+
+
+            // Initial fetch
+            fetchFarms(page);
+
+            // Function to update pagination buttons
+            const updatePaginationButtons = (currentPage) => {
+                $('#pages').html('');
+                $('#pages').html('');
+                if (totalPages > 1) {
+                    if (currentPage > 1) {
+                        $('#pages').append(`<li class="page-item"><a class="page-link" id="prevPage" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>`);
+                    }
+                    let startPage = 1;
+                    let endPage = totalPages;
+                    if (totalPages > 3) {
+                        startPage = Math.max(1, currentPage - 1);
+                        endPage = Math.min(totalPages, currentPage + 1);
+                        if (startPage === 1) {
+                            endPage = 3;
+                        }
+                        if (endPage === totalPages) {
+                            startPage = totalPages - 2;
+                        }
+                    }
+                    for (let i = startPage; i <= endPage; i++) {
+                        $('#pages').append(`<li class="page-item"><a class="page-link" id="page${i}" href="#">${i}</a></li>`);
+                    }
+                    if (currentPage < totalPages) {
+                        $('#pages').append(`<li class="page-item"><a class="page-link" id="nextPage" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>`);
+                    }
+                }
+                $(`#page${currentPage}`).addClass('active');
+
+
+            };
+
+            // Event delegation for pagination click
+            $('#pages').on('click', 'a.page-link', function () {
+                if ($(this).attr('id') === 'prevPage') {
+                    if (page > 1) {
+                        page--;
+                    }
+                } else if ($(this).attr('id') === 'nextPage') {
+                    if (page < totalPages) {
+                        page++;
+                    }
+                } else {
+                    page = parseInt($(this).text());
+                }
+                fetchFarms(page);
+            });
+
+        });
+
+
+        const generateHtmlBlog = (data) => {
+            let dataGrid = '';
+            var now = new Date(); // Lấy ngày giờ hiện tại
+            data.forEach(element => {
+                var createDate = new Date(element.createDate);
+                if (Array.isArray(element.imageURL) && element.imageURL.length >= 1) {
+                    dataGrid +=
+                        `
+                        
+                                <div class="col-12 col-lg-6">
+                            <div class="single-blog-post mb-50">
+                            <div class="post-thumbnail mb-30">
+                                             <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}"><img style="border-radius: 10px; width: 350px; height: 255.5px; object-fit: cover;" src="${element.imageURL[0]}" alt="logo farm"></a>
+                            </div>
+                            <div class="post-content">
+                            <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}" class="post-title">
+                                    <h5>${element.title}</h5>
+                            </a>
+                            <div class="post-meta">
+                                     `;
+                    if (createDate !== undefined && createDate instanceof Date) {
+                        if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear() &&
+                            now.getHours() == createDate.getHours()) {
+                            dataGrid += '<a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + (now.getMinutes() - createDate.getMinutes()) + ' phút trước';
+                        } else if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + (now.getHours() - createDate.getHours()) + ' giờ trước' ;
+                        } else if (now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + (now.getDate() - createDate.getDate()) + ' ngày trước' ;
+                        } else {
+                            dataGrid += '<a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + 'Đăng tại ' + createDate.toLocaleDateString('en-GB') ;
+                        }
+                    }
+
+                    else {
+
+                        console.log(item.createDate + "Error Create Date"); // Thử truy cập thuộc tính createDate hoặc CreateDate
+                    }
+                    dataGrid += `
+
+                                                                    <a href="#"><i class="fa fa-user" aria-hidden="true"></i>${element.authorName} </a>
+                                            </div>
+
+                                            </div>
+                                            </div>
+                                            </div>
+
+                                                    `;
+                }
+                else {
+                    dataGrid +=
+                        `
+                                    <div class="col-12 col-lg-6">
+                                    <div class="single-blog-post mb-50">
+                                    <div class="post-thumbnail mb-30">
+                                                     <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}"><img style="border-radius: 10px; width: 350px; height: 255.5px; object-fit: cover;" src="../assets/blog/images/tải xuống.png" alt="logo farm"></a>
+                                    </div>
+                                    <div class="post-content">
+                                            <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}" class="post-title">
+                                            <h5>${element.title}</h5>
+                                    </a>
+                                    <div class="post-meta">
+                                            `;
+                    if (createDate !== undefined && createDate instanceof Date) {
+                        if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear() &&
+                            now.getHours() == createDate.getHours()) {
+                            dataGrid += '<a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + 'Đăng tại ' + (now.getMinutes() - createDate.getMinutes()) + ' phút trước';
+                        } else if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + 'Đăng tại ' + (now.getHours() - createDate.getHours()) + ' giờ trước';
+                        } else if (now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + 'Đăng tại ' + (now.getDate() - createDate.getDate()) + ' ngày trước';
+                        } else {
+                            dataGrid += '<a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + 'Đăng tại ' + createDate.toLocaleDateString('en-GB') ;
+                        }
+                    }
+                    else {
+
+                        console.log(item.createDate + "Error Create Date"); // Thử truy cập thuộc tính createDate hoặc CreateDate
+                    }
+                    dataGrid += `
+
+                                                                    <a href="#"><i class="fa fa-user" aria-hidden="true"></i>${element.authorName} </a>
+                                            </div>
+
+                                            </div>
+                                            </div>
+                                            </div>
+
+                                                    `;
+                }
+            });
+            return dataGrid;
+        };
+        const generateHtmlRecentBlog = (data) => {
+            let dataGrid = '';
+            
+            var now = new Date(); // Lấy ngày giờ hiện tại
+            data.forEach(element => {
+                var createDate = new Date(element.createDate);
+                if (Array.isArray(element.imageURL) && element.imageURL.length >= 1) {
+                    dataGrid +=
+                        `
+                        <div class="single-latest-post d-flex align-items-center">
+                                <div class="post-thumb">
+                                                  <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}"><img style="border-radius: 10px; width: 70px; height: 70px; object-fit: cover;" src="${element.imageURL[0]}" alt="logo farm"></a>
+                                </div>
+                                <div class="post-content">
+                                            <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}" class="post-title">
+                                                <h6>${element.title}</h6>
+                                    </a>
+                                             `;
+                    if (createDate !== undefined && createDate instanceof Date) {
+                        if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear() &&
+                            now.getHours() == createDate.getHours()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại '  + (now.getMinutes() - createDate.getMinutes()) + ' phút trước' + '</a>' + '</div>';
+                        } else if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại '  + (now.getHours() - createDate.getHours()) + ' giờ trước' + '</a>' + '</div>';
+                        } else if (now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại '  + (now.getDate() - createDate.getDate()) + ' ngày trước ' + '</a>' + '</div>';
+                        } else {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + createDate.toLocaleDateString('en-GB') + '</div>';
+                        }
+                    }
+                    else {
+
+                        console.log(item.createDate + "Error Create Date"); // Thử truy cập thuộc tính createDate hoặc CreateDate
+                    }
+                                
+                }
+                else {
+                    dataGrid +=
+                        `
+                                <div class="single-latest-post d-flex align-items-center">
+                                        <div class="post-thumb">
+                                                                          <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}"><img style="border-radius: 10px; width: 70px; height: 70px; object-fit: cover;" src="../assets/blog/images/tải xuống.png" alt="logo farm"></a>
+                                        </div>
+                                        <div class="post-content">
+                                                    <a data-id="${element.id}" href="/Home/BlogDetails?id=${element.id}" class="post-title">
+                                                        <h6>${element.title}</h6>
+                                            </a>
+                                                     `;
+                    if (createDate !== undefined && createDate instanceof Date) {
+                        if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear() &&
+                            now.getHours() == createDate.getHours()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + (now.getMinutes() - createDate.getMinutes()) + ' phút trước' + '</a>' + '</div>';
+                        } else if (now.getDate() == createDate.getDate() &&
+                            now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + (now.getHours() - createDate.getHours()) + ' giờ trước' + '</a>' + '</div>';
+                        } else if (now.getMonth() == createDate.getMonth() &&
+                            now.getFullYear() == createDate.getFullYear()) {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại '  + (now.getDate() - createDate.getDate()) + ' ngày trước ' + '</a>' + '</div>';
+                        } else {
+                            dataGrid += '<a class="post-date" href="#">' + 'Đăng tại ' + createDate.toLocaleDateString('en-GB') + '</a>' + '</div>';
+                        } 
+                    }
+                    else {
+
+                        console.log(item.createDate + "Error Create Date"); // Thử truy cập thuộc tính createDate hoặc CreateDate
+                    }
+
+                }
+                dataGrid += '</div>'
+            });
+            return dataGrid;
+        };
+        const generateHtmlTag = (data) => {
+            let dataGrid = '';
+            data.forEach(element => {
+                dataGrid+=
+                `
+                                    <li><a href="#"  class="tagFilter">${element}</a></li>
+                `
+            });
+            return dataGrid;
+        };
+
+    </script>
+    @*
+    <script>
+        var text = document.getElementById('myText').innerText;
+        var maxLength = 100; // Set your desired maximum length
+        var truncated = text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        document.getElementById('myText').innerText = truncated;
+    </script> *@
+
+    @* --- code address api --- *@
+
+
+}

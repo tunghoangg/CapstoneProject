@@ -1,0 +1,289 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    Layout = "_LoginLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CodePen - A Pen by Nguyễn Đắc Dũng</title>
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/styledetail.css" rel="stylesheet" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="~/js/javascrip.js"></script>
+    <style>
+        .options-menu {
+            position: relative;
+            display: inline-block;
+            float: right; /* Di chuyển menu tùy chọn và dấu ba chấm sang bên phải */
+        }
+
+        .menu-trigger {
+            cursor: pointer;
+        }
+
+        .options-list {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px 0;
+            min-width: 120px;
+            z-index: 1;
+            right: 0; /* Đảm bảo danh sách tùy chọn nằm ở phía bên phải */
+        }
+
+            .options-list.visible {
+                display: block;
+            }
+
+            .options-list li {
+                list-style: none;
+            }
+
+                .options-list li a {
+                    display: block;
+                    color: #333;
+                    text-decoration: none;
+                    padding: 8px 10px;
+                }
+
+                    .options-list li a:hover {
+                        background-color: #f4f4f4;
+                    }
+
+        .page-body-wrapper {
+            min-height: calc(100vh - 60px);
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: row;
+            flex-direction: row;
+            padding-left: 0;
+            padding-right: 0;
+            /* padding-top: 60px; */
+        }
+
+        td {
+            width: 10%;
+        }
+
+        .wrapper {
+            background-color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
+            max-width: 100%;
+            z-index: 9999;
+            max-height: 100%;
+            /* Limiting maximum height */
+            overflow-y: auto;
+        }
+
+        html {
+            background-color: #d9d9d9;
+            -webkit-font-smoothing: antialiased;
+          
+            text-rendering: optimizeLegibility;
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-section">
+       
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+
+
+                <div style="width:100%;" id="wrapper" class="wrapper ">
+
+                    <header id="headerrecord" style=" background-image: url('https://t4.ftcdn.net/jpg/03/69/11/25/360_F_369112549_7TaHV9HV6QEWIauBBJGaW7DnLd7nibkf.jpg');background-repeat: no-repeat;background-size: cover;width:100%;" class="module-location">
+                        <ul class="location-quickstats">
+                            <li id="num1" class="rating-medica">
+                                <i>Negative: </i>
+                                <span>27</span>
+                            </li>
+                            <li id="num2" class="rating-fertilizer">
+                                <i>Positive: </i>
+                                <span>82</span>
+                            </li>
+                            <li id="num3" class="rating-harverst">
+                                <i>Negative: </i>
+                                <span>27</span>
+                            </li>
+
+                            <li id="totalnum" class="rating-total">
+                                <i>Negative: </i>
+                                <span>109</span>
+                            </li>
+                        </ul>
+                       
+                    </header>
+                    <ul style="width:100%;" class="module-history" id="listrecord">
+                        <li class="rating-negative memo-yep">
+                            <h3>Book a flight to Melbourne</h3>
+                            <time>5 minutes ago</time>
+                            <i>Has a memo attached</i>
+                        </li>
+                        <li class="rating-positive memo-yep1">
+                            <h3>Grab some last Pad Thai w/ Yi</h3>
+                            <time>35 minutes ago</time>
+                            <i></i>
+                        </li>
+                        <li class="rating-positive memo-yep2">
+                            <h3>Clear desk at Pun Space</h3>
+                            <time>1 hour ago</time>
+                            <i></i>
+                        </li>
+
+                        <li style="padding-top:5%; padding-bottom:10%;  color:white; background-image: url('https://t4.ftcdn.net/jpg/03/69/11/25/360_F_369112549_7TaHV9HV6QEWIauBBJGaW7DnLd7nibkf.jpg');background-repeat: no-repeat;background-size: cover;width:100%;"
+                            class="location-title rating-positive memo-yep">
+                            <h2>Book a flight to Melbourne</h2>
+                            <timer>5 minutes ago</timer>
+                            <i>Has a memo attached</i>
+                        </li>
+                    </ul>
+
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+            <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js"></script>
+            <script>
+
+
+
+
+                $(document).ready(function () {
+
+                    
+                    Manager.GetAllRecord();
+                    // Add event listener to the button
+               
+
+
+                })
+        function checkParameter() {
+            // Get the URL parameters
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            // Get the value of the parameter you're interested in
+            const paramValue = urlParams.get('plantid');
+
+            // Check if the parameter has a value
+            if (paramValue !== null && paramValue !== '') {
+                return paramValue;
+                // Do something with the parameter value, e.g., validate, process, etc.
+            } else {
+                return 0;
+            }
+        }
+                var Manager = {
+                    GetAllRecord: function () {
+                        var obj = "";
+
+                var serviceUrl = "https://localhost:7043/api/QR/GetPlantRecord?plantid=" + checkParameter();
+                        window.Manager.GetAPI(serviceUrl, onSuccess, onFailed);
+
+                        function onSuccess(jsonData) {
+
+                            obj = jsonData;
+                            var rows = "";
+                            var footer = "";
+                            var options = "";
+                            var header = "";
+                            var count1 = 0;
+                            var count2 = 0;
+                            var count3 = 0;
+                            $.each(jsonData.plantRecords, function (i, item) {
+                                var mydatetime = new Date(item.createdate);
+                                var optionstime = {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    second: 'numeric'
+                                };
+                                let texttime = mydatetime.toLocaleDateString('vi-VN', optionstime);
+                                if (item.type == 1) {
+                                    footer += `<li style="padding-top:5%; padding-bottom:10%;  color:white; background-image: url('https://t4.ftcdn.net/jpg/03/69/11/25/360_F_369112549_7TaHV9HV6QEWIauBBJGaW7DnLd7nibkf.jpg');background-repeat: no-repeat;background-size: cover;width:100%;"
+                                                                                        class="location-title rating-positive memo-yep">
+                                                                                                        <h2>${item.description}</h2>
+                                                                                                        <timer>${texttime}</timer>
+                                                                                        <i></i>
+                                                                                    </li>`;
+                                }
+                                if (item.type == 2) {
+                                    header += ` <div class="location-title rating-negative memo-yep">
+                                                                        <h3>${item.description}</h3>
+                                                                        <time>${texttime}</time>
+                                                        <i>Đã Hủy</i>
+                                                    </div>`;
+
+                                }
+                                if (item.type == 3) {
+                                    rows += "<li class='rating-negative memo-yep'>" +
+                                "<h3 style='white-space: normal; word-wrap: break-word;'>" + item.description + "</h3>" +
+                                        "<time>" + texttime + "</time>" +
+                                        "<i></i>" +
+                                        "</li>";
+                                    count1++;
+                                }
+                                if (item.type == 4) {
+                                    rows += "<li class='rating-positive memo-yep1'>" +
+                                "<h3  style='white-space: normal; word-wrap: break-word;'>" + item.description + "</h3>" +
+                                        "<time>" + texttime + "</time>" +
+                                        "<i></i>" +
+                                        "</li>";
+                                    count2++;
+                                }
+                                if (item.type == 5) {
+                                    rows += "<li class='rating-positive memo-yep2'>" +
+                                "<h3  style='white-space: normal; word-wrap: break-word;'>" + item.description + "</h3>" +
+                                        "<time>" + texttime + "</time>" +
+                                        "<i></i>" +
+                                        "</li>";
+                                    count3++;
+                                }
+
+
+                            });
+                            $('#num1').html(` <i>Negative: </i> <span>${count1}</span>`);
+                            $('#num2').html(` <i>Negative: </i> <span>${count2}</span>`);
+                            $('#num3').html(` <i>Negative: </i> <span>${count3}</span>`);
+                            $('#totalnum').html(` <i>Negative: </i> <span>${(count3 + count2 + count1)}</span>`);
+
+                            var id = '#listrecord';
+                            $(id).empty().append(rows);
+                            $(id).append(footer);
+                            id = '#headerrecord';
+                            $(id).append(header);
+                        }
+                        function onFailed(error) {
+                            window.alert(error.statusText);
+                        }
+                    },
+                    GetAPI: function (serviceUrl, successCallback, errorCallback) {
+                        $.ajax({
+                            type: "GET",
+                            url: serviceUrl,
+                            dataType: "json",
+                            success: successCallback,
+                            error: errorCallback
+                        });
+                    }
+                }
+            </script>
+</body>
+</html>

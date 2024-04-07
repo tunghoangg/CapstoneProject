@@ -89,6 +89,19 @@ namespace RAFS.Core.Repositories.Repo
                 double totalSum = model.ItemValue.Sum();
                 var sortedItemValues = model.ItemValue.OrderByDescending(x => x).Take(3).ToList();
                 model.TopThreeValue = sortedItemValues.Select(value => Math.Round((value / totalSum) * 100, 2)).ToArray();
+
+                var typeNameMapping = new Dictionary<int, string>
+                    {
+                        { 10, "Thuốc hóa học" },
+                        { 12, "Phân bón hóa học" },
+                        { 15, "Máy móc" },
+                        { 16, "Công cụ" },
+                        { 17, "Chế phẩm sinh học" },
+                        { 18, "Sản phẩm nông sản" }
+                    };
+
+                model.TopThreeName = sortedItemValues.Select(value => typeNameMapping.FirstOrDefault(x => x.Key == groupedItems.FirstOrDefault(item => item.TotalValue == value)?.TypeId).Value).ToArray();
+
             }
             else
             {
@@ -99,7 +112,7 @@ namespace RAFS.Core.Repositories.Repo
                 model.ItemValue = new double[6];
                 for (int quarter = 1; quarter <= 6; quarter++)
                 {
-                    int currentQuarter = quarter; 
+                    int currentQuarter = quarter;
                     model.ItemValue[quarter - 1] = 0;
                 }
                 model.TopThreeValue = new double[3];
@@ -108,6 +121,8 @@ namespace RAFS.Core.Repositories.Repo
                     int currentQuarter = quarter;
                     model.TopThreeValue[quarter - 1] = 0;
                 }
+
+                model.TopThreeName = ["Không có", "Không có", "Không có"];
 
             }
 
@@ -166,7 +181,7 @@ namespace RAFS.Core.Repositories.Repo
                     }
                 }
 
-                if (columnName.Trim().ToLower().Equals("Giá trị".Trim().ToLower()))
+                if (columnName.Trim().ToLower().Equals("Tổng giá trị".Trim().ToLower()))
                 {
                     if (typeSort.ToLower().Equals("asc"))
                     {
@@ -245,7 +260,7 @@ namespace RAFS.Core.Repositories.Repo
                     }
                 }
 
-                if (columnName.Trim().ToLower().Equals("Giá trị".Trim().ToLower()))
+                if (columnName.Trim().ToLower().Equals("Tổng giá trị".Trim().ToLower()))
                 {
                     if (typeSort.ToLower().Equals("asc"))
                     {
@@ -276,6 +291,6 @@ namespace RAFS.Core.Repositories.Repo
 
         }
 
-        
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "_DashboardLayout";
-    string formattedDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+    string formattedDateItem = DateTime.UtcNow.ToString("dd-mm-yyyy");
+    //yyyy-MM-dd
 }
 
 <style>
@@ -46,7 +47,7 @@
                                             <th>Id</th>
                                             <th>Tên</th>
                                             <th>Số lượng</th>
-                                            <th>Giá trị</th>
+                                            <th>Tổng giá trị</th>
                                             <th>Ngày nhập kho</th>
                                             <th>Chi tiết</th>
                                         </tr>
@@ -114,12 +115,12 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="add-model-item-value" class="label-with-star" title=""><strong>Tổng giá trị (VNĐ)</strong></label>
+                            <label for="add-model-item-value" class="label-with-star" title=""><strong>Tổng giá trị (triệu VNĐ)</strong></label>
                             <input type="number" class="form-control" id="add-model-item-value" name="inputItemValue" value="0">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="add-model-item-created-date" class="label-with-star" title="Ngày nhập kho không được vượt qua ngày hiện tại"><strong>Ngày nhập kho</strong></label>
-                            <input type="date" class="form-control" id="add-model-item-created-date" name="inputCreatedDate" value="@formattedDate">
+                            <input type="date" class="form-control" id="add-model-item-created-date" name="inputCreatedDate" value="@formattedDateItem">
                         </div>
                     </div>
                     <div class="form-group">
@@ -196,13 +197,14 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="update-model-item-value" class="label-with-star" title=""><strong>Tổng giá trị (VNĐ)</strong></label>
+                            <label for="update-model-item-value" class="label-with-star" title=""><strong>Tổng giá trị (triệu VNĐ)</strong></label>
                             <input type="number" class="form-control" id="update-model-item-value" name="inputItemValue" value="0">
                         </div>
                         <div class="form-group col-md-6">
                             <div class="form-group col-md-6">
                                 <label for="update-model-item-created-date" class="label-with-star" title=""><strong>Ngày nhập kho</strong></label>
-                                <input type="date" class="form-control" id="update-model-item-created-date" name="inputCreatedDate" value="@formattedDate">
+                                <input type="date" class="form-control" id="update-model-item-created-date" name="inputCreatedDate" >
+                                @* //value="@formattedDate" *@
                             </div>
                         </div>
                     </div>

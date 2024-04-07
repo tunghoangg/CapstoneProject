@@ -181,6 +181,18 @@ namespace RAFS.Core.Repositories.Repo
                         filter3 = list.OrderByDescending(x => x.Value).ToList();
                     }
                 }
+                
+                //if (columnName.Trim().ToLower().Equals("Loại".Trim().ToLower()))
+                //{
+                //    if (typeSort.ToLower().Equals("asc"))
+                //    {
+                //        filter3 = list.OrderBy(x => x.Value).ToList();
+                //    }
+                //    else
+                //    {
+                //        filter3 = list.OrderByDescending(x => x.Value).ToList();
+                //    }
+                //}
 
                 if (columnName.Trim().ToLower().Equals("Ngày tạo".Trim().ToLower()))
                 {

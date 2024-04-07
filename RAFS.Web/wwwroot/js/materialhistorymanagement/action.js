@@ -1,6 +1,14 @@
 ﻿$(document).ready(function () {
-   
+    Manager.GetAllItems(0);
+
     var typeid = checkParameterType();
+    var plantid = checkParameter();
+    const elements = document.querySelectorAll('.backbtn');
+
+    // Loop through each element
+    elements.forEach(element => {
+        element.setAttribute('href', '/plant?plantid=' + plantid + "#" );
+    });
     if (typeid != 0) {
         if (typeid == 1) {
             document.getElementById("profile").checked = true;
@@ -151,54 +159,80 @@
     Manager.GetAllProduct();
     $("table").on("click", ".deleteffff", function (e) {
         var resId = $(this).attr("id");
+        $("#myModal").modal();
+        var rows = "";
+        rows += ` <tr class="milestone" id=milestoneofplant'${resId}' >
+                                            <td>
+                                            <h3>Việc xóa bản ghi này có thể sẽ không được khôi phục và các dữ liệu liên quan cũng sẽ biến mất (trừ dữ liệu trang QR)</h3>
+                                            </td>
+                                        </tr>`;
+        $('#plantlist').empty().append(rows);
+       
+    });
+    function Delete(resId) {
         $.ajax({
             url: baseUrl + "PlantMaterialHistory/DeletePlantMaterialRecord?milestoneId=" + resId,
             type: "delete",
             contentType: "application/json",
             success: function (result, status, xhr) {
-                $(this).remove();
-                alert("delete successful");
-                if (checkParameter() != 0) {
+
+                createToast('success', 'fa-solid fa-circle-check', 'Success', 'Xóa thành công');
+
+                var id2 = '#table2 tbody';
+                $(id2).empty();
+                id2 = '#table1 tbody';
+                $(id2).empty();
+                id2 = '#table3 tbody';
+                $(id2).empty();
+                setTimeout(function () {
+                    Manager.GetAllProduct();
+                }, 1000);
+
+                window.location = "/materialhistory?plantid=" + checkParameter() + "&type=" + checkParameterType() + "#";
 
 
-                    window.location = "/materialhistory?plantid=" + checkParameter() + "&type=" + typeid + "#";
-                } else {
-
-                    window.location = "/materialhistory#";
-                }
-                Manager.GetAllProduct();
             },
             error: function (xhr, status, error) {
-                // Handle error
-                alert("delete fail");
+                createToast('error', 'fa-solid fa-circle-exclamation', 'Error', error.message);
+                pauseExecution(1000);
 
             }
 
         });
-    });
 
+    }
+    $('#deletebtn').on('click', function () {
+        var elements = document.getElementsByClassName("milestone");
+        var id = elements[0].id;
+
+        var resId = id;
+        resId = resId.slice(16);
+
+        resId = resId.replace(/\D/g, '');
+        resId = parseInt(resId);
+        console.log(resId);
+        Delete(resId);
+    });
     document.getElementById("add").onclick = function () { Create() };
     document.getElementById("update").onclick = function () { Update() };
+    
     document.getElementById("createbtn").onclick = function () {
-        Manager.GetAllItems();
-        setTimeout(function () {
-            var select = document.getElementById("InventoryId");
-            Manager.HideOption(1);
-        }, 300);
+        $("#PlantId").val(checkParameter());
+
+        Manager.GetAllItems(1);
+
+
+        
     };
     document.getElementById("createbtn2").onclick = function () {
-        Manager.GetAllItems();
-        setTimeout(function () {
-            var select = document.getElementById("InventoryId");
-            Manager.HideOption(2);
-        }, 300);
+        $("#PlantId").val(checkParameter());
+        Manager.GetAllItems(2);
+        
     };
     document.getElementById("createbtn3").onclick = function () {
-        Manager.GetAllItems();
-        setTimeout(function () {
-            var select = document.getElementById("InventoryId");
-            Manager.HideOption(3);
-        }, 300);
+        $("#PlantId").val(checkParameter());
+        Manager.GetAllItems(3);
+      
     };
 
 })
@@ -212,9 +246,10 @@ function checkParameterType() {
 
     // Check if the parameter has a value
     if (paramValue !== null && paramValue !== '') {
-        return paramValue;
-        // Do something with the parameter value, e.g., validate, process, etc.
+        // Return the parameter value
+        return String(paramValue)[0];
+
     } else {
-        return 0;
+        return '0';
     }
 }

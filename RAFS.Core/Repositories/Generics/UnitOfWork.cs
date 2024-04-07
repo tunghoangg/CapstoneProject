@@ -31,6 +31,7 @@ namespace RAFS.Core.Repositories.Generics
         public IQuestionFormRepo questionFormRepo { get; }
         public ICashFlowRepo cashFlowRepo  { get; }
         public IItemRepo itemRepo { get; }
+        public IImageRepo imageRepo { get; }
 
         public UnitOfWork(RAFSContext context) {  
             _context = context;
@@ -49,6 +50,7 @@ namespace RAFS.Core.Repositories.Generics
             plantMaterialHistoryRepo = new PlantMaterialHistoryRepo(_context);
             cashFlowRepo = new CashFlowRepo(_context);
             itemRepo = new ItemRepo(_context);  
+            imageRepo = new ImageRepo(_context);
         }
 
         public void Dispose()

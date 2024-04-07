@@ -25,6 +25,139 @@ namespace RAFS.Web.ApiControllers
             _drive = drive;
         }
         [Authorize(Roles = "Technician")]
+        [HttpGet("CheckMilestoneName")]
+        public ActionResult<bool> CheckMilestoneName(int farmid,string name)
+        {
+            try
+            {
+                var milestoneList = _milestoneService.GetAllMilestone(farmid);
+                var milestone = milestoneList.FirstOrDefault(x=>x.Name.ToLower().Equals(name.ToLower()));
+                if(milestone != null)
+                {
+                    return Ok(true);
+                }
+                else
+                {
+                    return Ok(false);
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Technician")]
+        [HttpGet("CheckMilestoneUpdateName")]
+        public ActionResult<bool> CheckMilestoneUpdateName(int farmid, string name, int id)
+        {
+            try
+            {
+                var milestoneList = _milestoneService.GetAllMilestone(farmid);
+                var milestone = milestoneList.FirstOrDefault(x => x.Name.ToLower().Equals(name.ToLower()));
+                if (milestone != null)
+                {
+                    if(milestone.Id != id)
+                    {
+                        return Ok(true);
+                    }
+                    else
+                    {
+                        return Ok(false);
+                    }
+                   
+                }
+                else
+                {
+                    return Ok(false);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Technician")]
+        [HttpGet("GetSearchDateMilestone")]
+        public ActionResult<IEnumerable<Milestone>> GetSearchDateMilestone(int farmid, string search)
+        {
+            try
+            {
+                var milestoneList = _milestoneService.GetAllFarmFilteredMilestones(farmid).Where(x => x.Name.ToLower().Contains(search.ToLower())).OrderByDescending(x => x.LastUpdate).ToList();
+                return Ok(milestoneList);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Technician")]
+        [HttpGet("GetSearchNumMilestone")]
+        public ActionResult<IEnumerable<Milestone>> GetSearchNumMilestone(int farmid, string search)
+        {
+            try
+            {
+                var milestoneList = _milestoneService.GetAllFarmFilteredMilestones(farmid).Where(x => x.Name.ToLower().Contains(search.ToLower())).OrderByDescending(x => x.NumberOfPlants).ToList();
+                return Ok(milestoneList);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Technician")]
+        [HttpGet("GetSearchMilestone")]
+        public ActionResult<IEnumerable<Milestone>> GetSearchMilestone(int farmid, string search)
+        {
+            try
+            {
+                var milestoneList = _milestoneService.GetAllFarmFilteredMilestones(farmid).Where(x=>x.Name.ToLower().Contains(search.ToLower())).ToList();
+                return Ok(milestoneList);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Technician")]
+        [HttpGet("GetMilestoneOdByLastUpdate")]
+        public ActionResult<IEnumerable<Milestone>> GetMilestoneOdByLastUpdate(int farmid)
+        {
+            try
+            {
+                var milestoneList = _milestoneService.GetAllFarmFilteredMilestones(farmid).OrderByDescending(x=>x.LastUpdate).ToList();
+                return Ok(milestoneList);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Technician")]
+        [HttpGet("GetMilestoneOdByNumberOfPlant")]
+        public ActionResult<IEnumerable<Milestone>> GetMilestoneOdByNumberOfPlant(int farmid)
+        {
+            try
+            {
+                var milestoneList = _milestoneService.GetAllFarmFilteredMilestones(farmid).OrderByDescending(x =>x.NumberOfPlants).ToList();
+                return Ok(milestoneList);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "Technician")]
         [HttpGet("GetMilestoneList")]
         public ActionResult<IEnumerable<Milestone>> GetmilestoneList(int farmid)
         {
@@ -55,8 +188,8 @@ namespace RAFS.Web.ApiControllers
             }
         }
         [Authorize(Roles = "Technician")]
-        [HttpGet("GetAllFarmMilestones")]
-        public ActionResult<Milestone> GetMilestoneById(int farmid, int page)
+        [HttpGet("GetListAllFarmMilestones")]
+        public ActionResult<IEnumerable<Milestone>> GetListAllFarmMilestones(int farmid, int page)
         {
             try
             {
@@ -328,7 +461,7 @@ namespace RAFS.Web.ApiControllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest("Chưa cập nhật thành công");
                 }
             }
             catch (Exception)
@@ -343,12 +476,15 @@ namespace RAFS.Web.ApiControllers
         {
             try
             {
-                string serverPath = Path.GetTempFileName();
-                using (var stream = new FileStream(serverPath, FileMode.Create))
-                {
-                    milestoneName.Image.CopyTo(stream);
-                }
-                string saveLogoLink = await _drive.CreateDriveFile(serverPath);
+                string saveLogoLink = "";
+                
+                    string serverPath = Path.GetTempFileName();
+                    using (var stream = new FileStream(serverPath, FileMode.Create))
+                    {
+                        milestoneName.Image.CopyTo(stream);
+                    }
+                    saveLogoLink = await _drive.CreateDriveFile(serverPath);
+               
 
 
                 Plant milestoneList = new Plant();
@@ -377,7 +513,7 @@ namespace RAFS.Web.ApiControllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest("Chưa tạo thành công");
                 }
             }
             catch (Exception)

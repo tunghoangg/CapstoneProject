@@ -1,6 +1,7 @@
 
 
 $(document).ready(function () {
+    console.log(farmId);
 
     // Call LoadItemData() with the default filter value (0)
     LoadItemData();
@@ -84,7 +85,21 @@ function LoadItemData(typeId) {
             { "data": "id", "name": "Id", "autoWidth": true },
             { "data": "itemName", "name": "Tên", "autoWidth": true },
             { "data": "quantity", "name": "Số lượng", "autoWidth": true },
-            { "data": "value", "name": "Giá trị", "autoWidth": true },
+            //{ "data": "value", "name": "", "autoWidth": true },
+            {
+                "data": "value",
+                "name": "Tổng giá trị",
+                "autoWidth": true,
+                "render": function (data, type, row, meta) {
+                    // Check if data is null or undefined
+                    if (data === null || data === undefined) {
+                        return "";
+                    } else {
+                        // Append " triệu VNĐ" after the value and return
+                        return data + " triệu VNĐ";
+                    }
+                }
+            },
             {
                 "data": "createdTime",
                 "name": "Ngày nhập kho",
@@ -436,7 +451,7 @@ function DetailItem() {
             default:
                 break;
         };
-        $('#detail-item-value').text(data.value + " VNĐ");
+        $('#detail-item-value').text(data.value + " triệu VNĐ");
         $('#detail-item-created-date').text(formatDate2(new Date(data.createdTime)));
         $('#detail-item-lasted-update').text(formatDate2(new Date(data.lastUpdate)));
         $('#detail-item-description').text(data.description);

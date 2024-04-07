@@ -174,13 +174,17 @@ namespace RAFS.Web.ApiControllers
         {
             try
             {
-                string serverPath = Path.GetTempFileName();
-                using (var stream = new FileStream(serverPath, FileMode.Create))
-                {
-                    milestoneName.Image.CopyTo(stream);
-                }
+                string saveLogoLink = "";
+                
+                    string serverPath = Path.GetTempFileName();
+                    using (var stream = new FileStream(serverPath, FileMode.Create))
+                    {
+                        milestoneName.Image.CopyTo(stream);
+                    }
 
-                string saveLogoLink = await _drive.CreateDriveFile(serverPath);
+                        saveLogoLink = await _drive.CreateDriveFile(serverPath);
+                
+               
                 Diary diary = new Diary();
                 diary.PlantId= milestoneName.PlantId;
                 diary.Title = milestoneName.Title;  

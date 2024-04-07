@@ -29,6 +29,19 @@
     #plantlist img{
         width:100%;
     }
+
+    .notifications {
+       
+        z-index: 10040;
+    }
+    *{
+        font-family: "Nunito", sans-serif;
+    }
+
+    .card {
+       
+        word-wrap: normal;
+    }
 </style>
 
 <div class="content-wrapper">
@@ -47,15 +60,18 @@
                         </div>
               
                         <div style="display: flex;">
-                            
-                            <select id="filterForm" style="width:200px; margin-right:10px; border-radius: 10px" class="form-control form-control-sm">
-                                <option value="none" selected>Tất cả</option>
-                                <option value="not read">Chưa đọc</option>
-                                <option value="read">Đã trả lời</option>
+                            <input style="min-width: 50px;width: 100%; margin-right:10px; border-radius: 10px" class="form-control form-control-sm" type="text" id="searchName" placeholder="Nhập tên nhóm cần tìm " />
+                            <select id="filterForm" style="min-width: 50px;width: 100%; margin-right:10px; border-radius: 10px" class="form-control form-control-sm">
+                                <option value="0" selected>Tất cả</option>
+                                <option value="1">Sắp xếp theo ngày sửa đổi</option>
+                                <option value="2">Sắp xếp theo số lượng cây trong nhóm</option>
                             </select>
                             <button id="sortBtn" type="button" class="btn btn-primary">Lọc</button>
                             <a href="#popup">
-                                <button class="button3 pure2">
+                                <button class="btn btn-primary" style="
+                                        background-color: forestgreen;
+                                        margin-left: 6%;
+                                    ">
                                     Tạo mới
                                 </button>
                             </a>
@@ -76,7 +92,7 @@
                                     <th>Mô tả</th>
                                     <th>Thời điểm cập nhật</th>
                                     <th>Số lượng cây </th>
-                                    <th>Nội dung</th>
+                                    <th>Chi tiết</th>
 
                                 </tr>
 
@@ -146,22 +162,24 @@
                 <div class="card-body">
                     <h4 class="card-title">Tạo nhóm mới</h4>
 
-                    <form class="forms-sample">
+                    <form id="createForm" class="forms-sample">
 
                         <div class="form-group row">
                             <label for="exampleInputMobile" class="col-sm-3 col-form-label">Tên nhóm</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="name2" placeholder="Tên nhóm">
+                                <div id="name2-toast" style="color: red; font-size: 12px;"></div>
+
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="exampleInputMobile" class="col-sm-3 col-form-label">Miêu tả</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="description2" placeholder="Tên nhóm">
+                                <input type="text" class="form-control" id="description2" placeholder="Miêu tả nhóm">
                             </div>
                         </div>
-                        <button type="submit" id="add" class="btn btn-primary mr-2">Submit</button>
-                        <a href="#" class="btn btn-light">Cancel</a>
+                        <label  id="add" class="btn btn-primary mr-2">Thêm</label>
+                        <a href="#" class="btn btn-light">Thoát</a>
                     </form>
                 </div>
             </div>
@@ -182,26 +200,24 @@
 
 
                     <form class="forms-sample">
-                        <div class="form-group row">
-                            <label for="exampleInputMobile" class="col-sm-3 col-form-label">Id</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="id" placeholder="Nhóm" disabled>
-                            </div>
-                        </div>
+                        
+                                <input type="text" class="form-control" id="id" hidden placeholder="Nhóm" disabled>
+                         
                         <div class="form-group row">
                             <label for="exampleInputMobile" class="col-sm-3 col-form-label">Tên nhóm</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="name" placeholder="Nhóm">
+                                <input type="text" class="form-control" id="name" placeholder="Tên nhóm">
+                                <div id="name-toast" style="color: red; font-size: 12px;"></div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="exampleInputMobile" class="col-sm-3 col-form-label">Miêu tả</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="description" placeholder="Nhóm">
+                                <input type="text" class="form-control" id="description" placeholder="Miêu tả nhóm">
                             </div>
                         </div>
-                        <button type="submit" id="update" class="btn btn-primary mr-2">Sửa</button>
-                        <a href="#" class="btn btn-light">Cancel</a>
+                        <label  type="submit" id="update" class="btn btn-primary mr-2">Sửa</label>
+                        <a href="/milestone#" class="btn btn-light">Thoát</a>
                     </form>
                 </div>
             </div>
@@ -257,13 +273,14 @@
 
     </div>
 </div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="~/js/milestonemanagement/api.js"></script>
 <script src="~/js/milestonemanagement/action.js"></script>
 @section Scripts {
     <script>
-        farmid = 1;
-        
+        var farmid = farmId;
+      
    
 
     </script>

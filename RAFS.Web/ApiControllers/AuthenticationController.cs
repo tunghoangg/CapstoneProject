@@ -95,7 +95,7 @@ namespace RAFS.Web.ApiControllers
 
                 }
 
-                return BadRequest();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -135,7 +135,7 @@ namespace RAFS.Web.ApiControllers
                 if (user != null && farm != null)
                 {
                     //Get UserFunctionFarm
-                    var uff = await _uow.uffRepo.GetUFFsByFarmId(user.Id, farm.Id);
+                    var uff = await _uow.uffRepo.GetTechUFFsByFarmId(user.Id, farm.Id);
                     //Get FunctionId
                     var funcs = uff.Select(uff => uff.FunctionId).ToList();
                     return Ok(funcs);

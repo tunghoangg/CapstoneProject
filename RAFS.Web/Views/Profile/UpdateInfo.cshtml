@@ -15,7 +15,7 @@
         <tr>
             <td>Họ và tên:</td>
             <td>
-                <input type="text" class="form-control" asp-for="FullName" id="FullName" name="FullName" placeholder="Họ và tên" value="@profile.FullName">
+                <input type="text" class="form-control" asp-for="FullName" id="FullName" name="FullName" placeholder="Họ và tên" onkeydown="return /[\p{L}\s]/u.test(event.key)" value="@profile.FullName">
             </td>
         </tr>
         <tr>
@@ -33,13 +33,13 @@
         <tr>
             <td>Địa chỉ:</td>
             <td>
-                <input type="text" class="form-control" asp-for="Address" id="Address" name="Address" placeholder="Địa chỉ" value="@profile.Address">
+                <input type="text" class="form-control" asp-for="Address" id="Address" name="Address" placeholder="Địa chỉ" maxlength="50" value="@profile.Address">
             </td>
         </tr>
         <tr>
             <td>Mô tả:</td>
             <td>
-                <input type="text" class="form-control" asp-for="Description" id="Description" name="Description" placeholder="Mô tả" value="@profile.Description">
+                <input type="text" class="form-control" asp-for="Description" id="Description" name="Description" maxlength="50" placeholder="Mô tả" value="@profile.Description">
             </td>
         </tr>
     </tbody>

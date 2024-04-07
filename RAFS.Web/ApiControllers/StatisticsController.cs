@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RAFS.Core.Services.IService;
 using RAFS.Core.Services.Service;
@@ -17,7 +18,7 @@ namespace RAFS.Web.ApiControllers
             _statisticServices = statisticServices;
             _drive = drive;
         }
-
+        [Authorize(Roles = "Owner")]
         [HttpGet("ListFarmStatistic/{userId}")]
         public async Task<IActionResult> ListFarmStatistic(string userId)
         {
@@ -34,13 +35,14 @@ namespace RAFS.Web.ApiControllers
                 return BadRequest("Message: " + ex);
             }
         }
-
-        [HttpGet("StatisticFarm/{userId}/{farmId}/{yearStatistic}")]
-        public async Task<IActionResult> StatisticFarm(string userId, int farmId, int yearStatistic)
+        [Authorize(Roles = "Owner")]
+        [HttpGet("StatisticFarmAdmin/{userId}/{farmIdSelected}/{yearSelected}")]
+        public async Task<IActionResult> StatisticFarmAdmin(string userId, int farmIdSelected, int yearSelected)
         {
+            
             try
             {
-                var model = await _statisticServices.StatisticByFarmAndYear(userId ,farmId, yearStatistic);
+                var model = await _statisticServices.StatisticByFarmAndYear(userId , farmIdSelected, yearSelected);
                 return Ok(model);
             }
             catch (Exception ex)

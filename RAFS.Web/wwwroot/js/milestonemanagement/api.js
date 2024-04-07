@@ -5,12 +5,12 @@
         contentType: "application/json",
         success: function (result, status, xhr) {
             $(this).remove();
-            alert("delete success");
+            
+            createToast('success', 'fa-solid fa-circle-check', 'Success', 'Xóa thành công');
+ 
+            window.location = "/milestone#";
 
-            pauseExecution(250);
-            window.location = "/milestone?#";
-
-            pauseExecution(250);
+      
             setTimeout(function () {
                 window.location.reload();
             }, 500);
@@ -18,91 +18,184 @@
         },
         error: function (xhr, status, error) {
             // Handle error
-            alert("delete fail");
+            createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Xóa không thành công');
+
 
         }
 
     });
 }
-// Function to update pagination buttons
-function Update() {
-    var xhttp = new XMLHttpRequest();
-    var name = document.getElementById("name").value;
-    var id = document.getElementById("updateId").value;
-    var link = baseUrl + "Plant/UpdateMilestone";
-    console.log(link);
-    xhttp.open("PUT", link, true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    var obj = {
-        id: document.getElementById("id").value,
-        farmId: 1,
-        name: document.getElementById("name").value,
-        description: document.getElementById("description").value
-    };
-    xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-            var response = JSON.parse(xhttp.responseText);
-            if (xhttp.status === 200) {
-                alert("update success");
+function checkParameter() {
+    // Get the URL parameters
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
 
-                pauseExecution(250);
-                window.location = "/milestone?#";
+    // Get the value of the parameter you're interested in
+    const paramValue = urlParams.get('milestoneid');
 
-                pauseExecution(250);
-                setTimeout(function () {
-                    window.location.reload();
-                }, 500);
-                fetchForms(page);
-            } else {
-                alert("update faild");
-
-            }
-        }
+    // Check if the parameter has a value
+    if (paramValue !== null && paramValue !== '') {
+        return paramValue;
+        // Do something with the parameter value, e.g., validate, process, etc.
+    } else {
+        return 0;
     }
+}
+function Update() {
 
-    xhttp.send(JSON.stringify(obj));
+    var name = document.getElementById("name").value.trim();
+    var id = document.getElementById("id").value;
+    if (name === null || name.length === 0) {
 
-    pauseExecution(250);
+        document.getElementById("name-toast").innerHTML = 'Hãy điền tên của nhóm';
+    } else {
+        $.ajax({
+            url: baseUrl + `Plant/CheckMilestoneUpdateName?farmid=${farmid}&name=${name}&id=${id}`,
+            method: 'GET',
+            contentType: 'application/json',
+            success: (data) => {
 
+                if (data) {
+                    document.getElementById("name-toast").innerHTML = 'Tên này đã xuất hiện hãy chọn tên khác';
+                } else {
+                 document.getElementById("name-toast").innerHTML = '';
+                    
+                    var xhttp = new XMLHttpRequest();
+
+                    var link = baseUrl + "Plant/UpdateMilestone";
+
+                    xhttp.open("PUT", link, true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    var obj = {
+                        id: id,
+                        farmId: farmid,
+                        name: name,
+                        description: document.getElementById("description").value
+                    };
+                    xhttp.onreadystatechange = function () {
+                        if (xhttp.readyState === 4) {
+                            var response = JSON.parse(xhttp.responseText);
+                            if (xhttp.status === 200) {
+
+                                createToast('success', 'fa-solid fa-circle-check', 'Success', 'Sửa thành công');
+                                
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 1000);
+                                window.location = "/milestone#";
+                                fetchForms(page);
+
+                            } else {
+                                createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Chưa cập nhật thành công');
+
+
+                            }
+                        }
+                    }
+
+                    xhttp.send(JSON.stringify(obj));
+                }
+            },
+            error: (data) => {
+                alert(data);
+            }
+        });
+    }
 }
 
 
 function Create() {
-    var xhttp = new XMLHttpRequest();
-    var name = document.getElementById("name2").value;
-    xhttp.open("POST", baseUrl + "Plant/CreateMilestone", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    var obj = {
-        farmId: 1,
-        name: document.getElementById("name2").value,
-        description: document.getElementById("description2").value
-    };
-    xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-            var response = JSON.parse(xhttp.responseText);
-            if (xhttp.status === 200) {
-                alert("add success");
+    var name = document.getElementById("name2").value.trim();
+    if (name === null || name.length === 0) {
+        document.getElementById("name2-toast").innerHTML = 'Hãy điền tên của nhóm';
+    } else {
+        $.ajax({
+            url: baseUrl + `Plant/CheckMilestoneName?farmid=${farmid}&name=${name}`,
+            method: 'GET',
+            contentType: 'application/json',
+            success: (data) => {
+             
+                if (data) {
+                    document.getElementById("name2-toast").innerHTML = 'Tên này đã xuất hiện hãy chọn tên khác';
 
-                pauseExecution(250);
-                window.location = "/milestone?#";
+                } else {
+                    document.getElementById("name2-toast").innerHTML = '';
+                    // name is not null and has non-zero length after trimming
+                    var xhttp = new XMLHttpRequest();
+                    var name = document.getElementById("name2").value;
+                    xhttp.open("POST", baseUrl + "Plant/CreateMilestone", true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    var obj = {
+                        farmId: farmid,
+                        name: name,
+                        description: document.getElementById("description2").value
+                    };
+                    xhttp.onreadystatechange = function () {
+                        if (xhttp.readyState === 4) {
+                            var response = JSON.parse(xhttp.responseText);
+                            if (xhttp.status === 200) {
+                                createToast('success', 'fa-solid fa-circle-check', 'Success', 'Thêm thành công');
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 500);
+                                window.location = "/milestone#";
+                                fetchForms(page);
 
-                pauseExecution(250);
-                setTimeout(function () {
-                    window.location.reload();
-                }, 500);
+                            } else {
+                                createToast('success', 'fa-solid fa-circle-check', 'Success', 'Thêm thất bại');
 
-                fetchForms(page);
+                            }
+                        }
+                    }
 
-            } else {
-                alert("add faild");
+                   
+                    xhttp.send(JSON.stringify(obj));
+                }
+            },
+            error: (data) => {
+                alert(data);
+            }
+        });
 
+        
+    }
+}
+function checkInputNameForUpdate(id, input) {
+    // Convert input to lower case for case-insensitive comparison
+    var inputValue = input.toLowerCase();
+
+    // Get all <tr> elements with id starting with 'milestone'
+    var trElements = document.querySelectorAll('tr[id^="milestone"]');
+
+    // Iterate over each <tr> element
+    for (var i = 0; i < trElements.length; i++) {
+        // Get the first <td> element within the current <tr>
+        var firstTd = trElements[i].querySelector('td:first-child');
+
+        // Get the text content of the first <td> and convert it to lower case
+        var tdIdContent = firstTd.textContent.toLowerCase();
+
+        // Check if the id matches the content of the first <td>
+        if (id === tdIdContent) {
+            // Get the second <td> element within the current <tr>
+            var secondTd = trElements[i].querySelector('td:nth-child(2)');
+
+            // Get the text content of the second <td> and convert it to lower case
+            var tdContent = secondTd.textContent.toLowerCase();
+
+            // Check if the input matches the content of the second <td>
+            if (inputValue === tdContent) {
+                return true; // Return true if both id and input match
             }
         }
     }
-
-    xhttp.send(JSON.stringify(obj));
-    pauseExecution(250);
+    return false; // Return false if no match is found
 }
+function normalizeString(str) {
+    // Remove diacritics and normalize the string
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
 function pauseExecution(milliseconds) {
     const startTime = Date.now();
     while (Date.now() < startTime + milliseconds) {
@@ -140,7 +233,7 @@ const generateHtmlForm = (data) => {
                                 <td>${formattedDate}</td>
                                 <td>${statusLabel}</td>
                                 <td>
-                                  <i id = 'demo'  class='material-icons deleteffff pure2' style='font-size:48px;'>delete</i>
+                                  <i id = 'demo'  class='material-icons deleteffff pure2' style='font-size:28px;'>delete</i>
                                 </td>
                             </tr>
                             `;
@@ -191,9 +284,7 @@ const generateHtmlModalsBtn = (data) => {
 
 };
 
-function closeModal() {
-    $('#exampleModalCenter').modal('hide');
-}
+
 $(document).on('click', '.detailBtn', function () {
     const formid = $(this).data('formid');
 
@@ -227,7 +318,7 @@ $(document).on('click', '.updateStatusBtn', function () {
         contentType: 'application/json',
         data: JSON.stringify(formStatus),
         success: function (data) {
-            console.log(data);
+           
 
             // Đóng modal
             closeModal();
@@ -245,9 +336,10 @@ $(document).on('click', '.updateStatusBtn', function () {
             }, 500); // 5000 milliseconds = 5 giây
         },
         error: function (xhr, status, error) {
-            console.log("error");
-            console.log(formid);
-            console.log(formStatus);
+           
         }
     });
 });
+function closeModal() {
+    $('#exampleModalCenter').modal('hide');
+}

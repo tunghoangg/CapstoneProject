@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
 using RAFS.Core.Context;
 using RAFS.Core.DTO;
 using RAFS.Core.Models;
@@ -27,7 +28,7 @@ namespace RAFS.Core.Repositories.Repo
             try
             {
 
-                milestoneinfor.FarmId = 1;
+               
                 milestoneinfor.LastUpdate = DateTime.Now;
                 milestoneinfor.Status = true;
                 _context.Milestones.Add(milestoneinfor);
@@ -54,6 +55,30 @@ namespace RAFS.Core.Repositories.Repo
                 return false;
             }
         }
+
+        public List<MilestoneDTOVer2> GetFarmMilestones(int farmid)
+        {
+            List<Milestone> milestones = _context.Milestones.Where(x => x.FarmId == farmid
+                                          && x.Status == true).ToList();
+            List<Plant> plants = _context.Plants.Where(x =>
+                                         x.Status == true).ToList();
+            List<MilestoneDTOVer2> milestoneDTOs = new List<MilestoneDTOVer2>();
+
+          
+                milestoneDTOs = milestones
+                     .Select(c => new MilestoneDTOVer2
+                     {
+                         Id = c.Id,
+                         NumberOfPlants = plants.Where(x => x.MilestoneId == c.Id).ToList().Count,
+                         Name = c.Name,
+                         Description = c.Description,
+                         LastUpdate = c.LastUpdate,
+                         totalpage = 0,
+                         Status = c.Status
+                     })
+                     .ToList();
+            return milestoneDTOs;
+            }
 
         public List<Milestone> GetMilestones(int farmid)
         {

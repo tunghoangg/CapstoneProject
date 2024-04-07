@@ -92,12 +92,14 @@
 <script src="~/ckeditor5-build-classic/ckeditor.js"></script>
 <div style="margin-top: 50px;z-index: 9999;" class="notifications">
 </div>
+<div class="content-wrapper">
+   
 
 <div class="container" style="background-color:whitesmoke;height:auto;overflow: auto;">
 
     <div class="row">
         <div class="col-3">
-            <h1 style="padding-left:40px; margin-top:20px">Blogs</h1>
+                <h3 style="padding-left:40px; margin-top:20px;white-space: nowrap">Bài Đăng</h3>
         </div>
         <div class="col-9">
             <input id="createBlogbtn" type="button" class="btn btn-info" style="float:right;margin-top:20px" value="Tạo Bài Đăng" />
@@ -138,16 +140,17 @@
         </div>
 
     </div>
-    <div id="box" class="row" style="   min-width: 500px;max-width: 1060px;position: relative;margin-left:40px;border:solid;height:auto;background-color:white;min-height: 500px;border-radius: 7px;overflow: auto;">
+    <div id="box" class="row" style="   min-width: 500px;max-width: 1060px;position: relative;margin-left:40px;border:solid;height:auto;background-color:white;min-height: 350px;border-radius: 7px;overflow: auto;">
     </div>
 </div>
+    </div>
 
 <script>
     $(document).ready(function () {
         if ($('#blogList').val() == "owner") {
             var userId = "ffce777b-ea98-4c1f-8695-dca40c2fb5b1";
             $.ajax({
-                url: 'https://localhost:7043/api/Blog/GetBlogList?userId=' + userId,
+                url: baseUrl+'Blog/GetBlogList?userId=' + userId,
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -162,7 +165,7 @@
         }
         else {
             $.ajax({
-                url: `https://localhost:7043/api/Blog/GetBlogList`,
+                url: baseUrl +`Blog/GetBlogList`,
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -281,7 +284,7 @@
         $("#createBlogbtn").click(function () {
             var tagsHTML = "";
             $.ajax({
-                url: `https://localhost:7043/api/Blog/GetAllTag`,
+                url: baseUrl+`Blog/GetAllTag`,
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -497,7 +500,7 @@
                                 
                                 var url = '@Url.Action("BlogList", "Blog")';
                                 $.ajax({
-                                    url: `https://localhost:7043/api/Blog/CreateBlog`,
+                                    url: baseUrl + `Blog/CreateBlog`,
                                     method: 'POST',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
@@ -517,7 +520,12 @@
                                         handleWaitingListClick();
                                     },
                                     error: function (xhr, status, error) {
-                                        console.log("error");
+                                        let type = 'error';
+                                        let icon = 'fa-solid fa-circle-check';
+                                        let title = 'Tạo bài đăng không thành công';
+                                        let text = 'Có lỗi trong quá trình tạo bài đăng';
+                                        createToast(type, icon, title, text);
+                                        handleBlogListClick();
 
                                     }
                                 });
@@ -544,7 +552,7 @@
             var blogId = $(this).data('id');
             var isOwner = $('#isOwner').val() === "true";
         $.ajax({
-            url: `https://localhost:7043/api/Blog/GetBlogById/${blogId}`,
+                url: baseUrl + `Blog/GetBlogById/${blogId}`,
             method: 'GET',
             contentType: 'application/json',
             success: function (data) {
@@ -590,7 +598,12 @@
                     });
             },
             error: function () {
-                console.error('Failed to fetch blog data.');
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-check';
+                    let title = 'Lỗi';
+                    let text = 'Không tìm thấy bài đăng';
+                    createToast(type, icon, title, text);
+                    handleBlogListClick();
             }
         });
 
@@ -607,7 +620,7 @@
         }
         else {
             $.ajax({
-                url: `https://localhost:7043/api/Blog/Update/${id}`,
+                    url: baseUrl + `Blog/Update/${id}`,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
@@ -623,7 +636,12 @@
                         handleWaitingListClick();
                 },
                 error: function () {
-                    console.error('Failed to fetch data.')
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-check';
+                        let title = 'Cập nhật không thành công';
+                        let text = 'Có lỗi trong quá trình cập nhật';
+                        createToast(type, icon, title, text);
+                        handleBlogListClick();
                 }
             });
         }
@@ -639,7 +657,7 @@
         if (result) {
             var url = '@Url.Action("BlogList", "Blog")';
             $.ajax({
-                url: `https://localhost:7043/api/Blog/Delete/${blogId}`, // Sửa lỗi cú pháp ở đây
+                url: baseUrl + `Blog/Delete/${blogId}`, // Sửa lỗi cú pháp ở đây
                 method: 'Delete',
                 contentType: 'application/json',
                 success: (data) => {
@@ -654,7 +672,11 @@
                         handleWaitingListClick();
                 },
                 error: function () {
-                    console.error('Failed to fetch data.')
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-check';
+                    let title = 'Xóa không thành công';
+                    let text = 'Có lỗi trong quá trình xóa ';
+                    createToast(type, icon, title, text);
                 }
             });
         }
@@ -666,7 +688,7 @@
         if (result) {
             var url = '@Url.Action("BlogList", "Blog")';
             $.ajax({
-                url: `https://localhost:7043/api/Blog/DeleteTag/${tagId}`, // Sửa lỗi cú pháp ở đây
+                url: baseUrl + `Blog/DeleteTag/${tagId}`, // Sửa lỗi cú pháp ở đây
                 method: 'Delete',
                 contentType: 'application/json',
                 success: (data) => {
@@ -690,7 +712,11 @@
 
                 },
                 error: function () {
-                    console.error('Failed to fetch data.')
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-check';
+                    let title = 'Xóa không thành công';
+                    let text = 'Có lỗi trong quá trình xóa thẻ';
+                    createToast(type, icon, title, text);
                 }
             });
         }
@@ -698,7 +724,7 @@
     function approveBlog(blogId) {
         var url = '@Url.Action("BlogList", "Blog")';
         $.ajax({
-            url: `https://localhost:7043/api/Blog/Approveblog/${blogId}`, // Sửa lỗi cú pháp ở đây
+            url: baseUrl + `Blog/Approveblog/${blogId}`, // Sửa lỗi cú pháp ở đây
             method: 'PUT',
             contentType: 'application/json',
             success: (data) => {
@@ -710,7 +736,11 @@
                 handleBlogListClick();
             },
             error: function () {
-                console.error('Failed to fetch data.')
+                let type = 'success';
+                let icon = 'fa-solid fa-circle-check';
+                let title = 'Duyệt  thất bại';
+                let text = 'Có lỗi trong quá trình duyệt';
+                createToast(type, icon, title, text);
             }
         });
     }
@@ -775,18 +805,18 @@
             count += 1;
             var createDate = new Date(item.createDate);
             if (count == 1) {
-                htmlContent += '<table style=" style=" max-height:124px;min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
+                htmlContent += '<table style=" max-height:124px;min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
             }
             else {
-                htmlContent += '<table style=" style=" max-height:124px;min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
+                htmlContent += '<table style="max-height:124px; min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor =\'#B0E0E6\'" onmouseout="this.style.backgroundColor=\'transparent\'">';
             }
             if (item.imageURL != null && item.imageURL.length > 0) {
 
-                htmlContent += ' <th style="height: 92px;min-width: 112px;padding-left:20px; padding-top:20px""><img src="' + item.imageURL[0] + '" style="width: 120px;height: 100px;border-radius: 25%;margin-top: -11px;" class="img-rounded" alt="Load img fail"></th>';
+                htmlContent += ' <th style="max-height: 92px;max-width: 112px;min-width: 92px;padding-left:20px; padding-top:20px""><img src="' + item.imageURL[0] + '" style="width: 120px;height: 100px;border-radius: 25%;margin-top: -11px;" class="img-rounded" alt="Load img fail"></th>';
             }
             else {
 
-                htmlContent += ' <th style="height: 92px;min-width: 112px;padding-left:20px; padding-top:20px""><img src="' + '../assets/blog/images/tải xuống.png' + '" style="width: 120px;height: 100px;border-radius: 25%;margin-top: -11px;" class="img-rounded" alt="Load img fail"></th>';
+                htmlContent += ' <th style="max-height: 92px;max-width: 112px;min-width: 92px;padding-left:20px; padding-top:20px""><img src="' + '../assets/blog/images/tải xuống.png' + '" style="width: 120px;height: 100px;border-radius: 25%;margin-top: -11px;" class="img-rounded" alt="Load img fail"></th>';
             }
             htmlContent += '  <th style="width: 85%;"><div  style="min-width: 500px;max-width: 916px;height:109.4px;padding-left:20px;padding-top:13px; white-space: nowrap;" ><h3 style="display: inline-block; vertical-align: top;margin-top: 17px;text-overflow: ellipsis; overflow: hidden; white - space: nowrap;" >' + item.title + '</h3>';
             htmlContent += '<button onclick="deleteBlog(\'' + item.id + '\')" id="deletebtn" style="float:right; border:none; width:103px; height:70px; background-color:none; appearance: none; background-color: inherit; display: flex; justify-content: center; align-items: center;">'
@@ -839,7 +869,7 @@
         if ($('#blogList').val() == "owner") {
             var userId = "ffce777b-ea98-4c1f-8695-dca40c2fb5b1";
             $.ajax({
-                url: 'https://localhost:7043/api/Blog/GetWaitingBlogList?userId=' + userId,
+                url: baseUrl + 'Blog/GetWaitingBlogList?userId=' + userId,
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -853,7 +883,7 @@
         }
         else {
             $.ajax({
-                url: 'https://localhost:7043/api/Blog/GetWaitingBlogList',
+                url: baseUrl + 'Blog/GetWaitingBlogList',
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -870,7 +900,7 @@
         if ($('#blogList').val() == "owner") {
             var userId = "ffce777b-ea98-4c1f-8695-dca40c2fb5b1";
             $.ajax({
-                url: 'https://localhost:7043/api/Blog/GetBlogList?userId='+userId,
+                url: baseUrl + 'Blog/GetBlogList?userId=' + userId,
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -883,7 +913,7 @@
         }
         else {
             $.ajax({
-                url: `https://localhost:7043/api/Blog/GetBlogList`,
+                url: baseUrl + `Blog/GetBlogList`,
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -901,7 +931,7 @@
     function loadTagList() {
         var count = 0;
         $.ajax({
-            url: `https://localhost:7043/api/Blog/GetAllTag`,
+            url: baseUrl + `Blog/GetAllTag`,
             method: 'GET',
             contentType: 'application/json',
             success: (data) => {
@@ -947,7 +977,7 @@
                     }
                     else {
                         $.ajax({
-                            url: `https://localhost:7043/api/Blog/CreateTag`,
+                            url: baseUrl + `Blog/CreateTag`,
                             method: 'POST',
                             contentType: 'application/json',
                             data: JSON.stringify(tagName),

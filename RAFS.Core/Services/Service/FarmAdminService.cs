@@ -38,6 +38,7 @@ namespace RAFS.Core.Services.Service
             farm.EstablishedDate = model.EstablishedDate;
             farm.Description = model.Description;
             farm.Status = true;
+            farm.Logo = "https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik";
 
             await _uow.farmAdminRepo.AddAsync(farm);
             _uow.Save();
@@ -52,6 +53,21 @@ namespace RAFS.Core.Services.Service
             uff.FunctionId = 1;
             await _uow.uffRepo.AddAsync(uff);
             await _uow.SaveAsync();
+
+            List<Image> images = new List<Image>()
+            {
+                new Image(){URL = "https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik", FarmId = farmId},
+                new Image(){URL = "https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik", FarmId = farmId},
+                new Image(){URL = "https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik", FarmId = farmId},
+                new Image(){URL = "https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik", FarmId = farmId},
+                new Image(){URL = "https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik", FarmId = farmId},
+            };
+
+            foreach (Image image in images)
+            {
+                await _uow.imageRepo.AddAsync(image);
+                await _uow.SaveAsync();
+            }
 
             for (int i = 0; i < 2; i++)
             {
@@ -259,6 +275,7 @@ namespace RAFS.Core.Services.Service
             aspUser.Address = "";
             aspUser.FullName = "";
             aspUser.Description = "";
+            aspUser.Avatar = "https://lh3.googleusercontent.com/d/1LtjBZGYa-Mn6n1D7n2WwXwLrRpeUIUkY";
 
             aspUser.PasswordHash = HashPassword(aspUser, GenerateRandomString(6).ToLower());
 
@@ -355,6 +372,39 @@ namespace RAFS.Core.Services.Service
         {
             Farm farm = _uow.farmAdminRepo.GetFarmByUserIdAsync(userId);
             return farm;
+        }
+
+        public async Task<List<ImagesFarmDTO>> GetImagesFarmDTO(int farmId)
+        {
+            var list = await _uow.imageRepo.GetImagesFarm(farmId);
+            List<ImagesFarmDTO> imagesFarmDTOs = new List<ImagesFarmDTO>();
+            if (list.Count >= 5)
+            {
+                foreach (var item in list)
+                {
+                    ImagesFarmDTO model = new ImagesFarmDTO();
+                    model.ImageId = item.Id;
+                    model.ImageURL = item.URL;
+                    model.FarmId = farmId;
+                    imagesFarmDTOs.Add(model);
+                }
+            }
+
+            return imagesFarmDTOs;
+        }
+
+        public async Task<string> GetImageURLByImageId(int imageId)
+        {
+            Image image = await _uow.imageRepo.GetByIdAsync(imageId);
+            return image.URL;
+        }
+
+        public async Task UpdateImagesFarm(int imageId, string imageURL)
+        {
+            var image = await _uow.imageRepo.GetByIdAsync(imageId);    
+            image.URL = imageURL;
+            await _uow.imageRepo.UpdateAsync(image);
+            await _uow.SaveAsync();
         }
     }
 }

@@ -13,5 +13,7 @@ namespace RAFS.Core.Repositories.IRepo
     {
 
         Task<List<UserFunctionFarm>> GetUFFsByFarmId(string userId, int farmId);
+
+        Task<List<UserFunctionFarm>> GetTechUFFsByFarmId(string userId, int farmId);
     }
 }

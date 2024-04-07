@@ -81,18 +81,9 @@ namespace RAFS.Web.Controllers
                 {
                     //Get User Roles after succesful login
                     var userRoles = await _userManager.GetRolesAsync(currentUser);
-                    var rolesCookie = string.Join(",", userRoles);
-                    //Add UserId to Cookie
-                    //Add Cookie setting
-                    var cookieOption = new CookieOptions
-                    {
-                        Expires = DateTimeOffset.UtcNow.AddMinutes(15), // Set expiration time 
-                        //HttpOnly = true // Make sure the cookie is HTTP only for security
-                    };
 
-                    Response.Cookies.Append("UserId", currentUser.Id, cookieOption);
-                    Response.Cookies.Append("UserRoles", rolesCookie, cookieOption);
-
+                    string redirectAction = "";
+                    string redirectController = "";
                     //Add FarmId to Cookie if User is a technician or employee
                     foreach (var role in userRoles)
                     {
@@ -104,20 +95,43 @@ namespace RAFS.Web.Controllers
                                 if (!farm.Status)
                                 {
                                     ModelState.AddModelError("error", "Trang trại chủ quản không hoạt động.");
+                                    await _signInManager.SignOutAsync();
                                     return View(user);
                                 }
 
-                                Response.Cookies.Append("FarmId", farm.Id.ToString(), cookieOption);
+                                
                             }
                             if (farm == null)
                             {
                                 ModelState.AddModelError("error", "Tài khoản nhân viên không thuộc vào trang trại nào.");
+                                await _signInManager.SignOutAsync();
                                 return View(user);
                             }
+
+                            redirectAction = "ViewProfile";
+                            redirectController = "Profile";
+                        }
+
+                        if (role.Equals("Admin"))
+                        {
+                            redirectAction = "UserManagement";
+                            redirectController = "Admin";
+                        }
+
+                        if (role.Equals("Owner"))
+                        {
+                            redirectAction = "Index";
+                            redirectController = "Statistics";
+                        }
+
+                        if (role.Equals("Staff"))
+                        {
+                            redirectAction = "BlogList";
+                            redirectController = "Blog";
                         }
                     }
 
-                    return RedirectToAction("Index", "Dashboard");
+                    return RedirectToAction(redirectAction, redirectController);
                 }
 
                 else if (result.IsNotAllowed)
@@ -413,7 +427,7 @@ namespace RAFS.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ExternalRegister(RegistrationDTO registration)
+        public async Task<IActionResult> ExternalRegister(ExternalRegistrationDTO registration)
         {
             if (!ModelState.IsValid)
             {
@@ -425,16 +439,9 @@ namespace RAFS.Web.Controllers
             user.PhoneNumber = registration.PhoneNumber;
             user.EmailConfirmed = true;
             user.Status = true;
+            user.Avatar = registration.Avatar;
             var result = await _userManager.UpdateAsync(user);
 
-            var password = await _userManager.AddPasswordAsync(user, registration.Password);
-
-            
-
-
-            //if (!TermsAccepted) {
-            //    ModelState.AddModelError(string.Empty, "Bạn phải chấp nhận các điều khoản.");
-            //}
 
             if (!result.Succeeded)
             {

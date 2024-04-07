@@ -20,8 +20,12 @@ namespace RAFS.Core.Repositories.Repo
 
         public async Task<List<UserFunctionFarm>> GetUFFsByFarmId(string userId, int farmId)
         {
-            // 
             return await _context.UserFunctionFarms.Include(x => x.AspUser).Where(x => x.FarmId == farmId && x.AspUserId != userId).ToListAsync();
+        }
+
+        public async Task<List<UserFunctionFarm>> GetTechUFFsByFarmId(string userId, int farmId)
+        {
+            return await _context.UserFunctionFarms.Include(x => x.AspUser).Where(x => x.FarmId == farmId && x.AspUserId == userId).ToListAsync();
         }
     }
 }

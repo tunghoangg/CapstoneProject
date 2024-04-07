@@ -10,7 +10,7 @@ namespace RAFS.Core.DTO
     public class UserLoginDTO
     {
         //[EmailAddress]
-        [Display(Name = "Enter your email")]
+        [Display(Name = "Nhập tên người dùng")]
         [Required(ErrorMessage = "Tên người dùng không được để trống.")]
         public string Email { get; set; }
         [DataType(DataType.Password)]
@@ -22,6 +22,7 @@ namespace RAFS.Core.DTO
     }
 
     public class RegistrationDTO {
+
         [Required(ErrorMessage = "Tên người dùng là bắt buộc")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "Email là bắt buộc")]
@@ -37,12 +38,27 @@ namespace RAFS.Core.DTO
         public string ConfirmPassword { get; set; }
         [DataType(DataType.PhoneNumber)]
         [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
+        [RegularExpression(@"(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b", ErrorMessage = "Số điện thoại không hợp lệ")]
         public string PhoneNumber { get; set; }
 
-        public string Avatar = "https://drive.google.com/thumbnail?id=1zsFTO20tqgfzr9mmvrwj_1m3MzWFgns4";
-        //[Required(ErrorMessage = "Bạn phải chấp nhận các điều khoản ?!")]
-        //public bool TermsAccepted { get; set; }
+        public string Avatar = "https://lh3.googleusercontent.com/d/1LtjBZGYa-Mn6n1D7n2WwXwLrRpeUIUkY";
+        
+    }
 
+    public class ExternalRegistrationDTO
+    {
+        [Required(ErrorMessage = "Tên người dùng là bắt buộc")]
+        public string UserName { get; set; }
+        [Required(ErrorMessage = "Email là bắt buộc")]
+        [EmailAddress(ErrorMessage = "Địa chỉ Email không hợp lệ.")]
+        public string Email { get; set; }
+        [DataType(DataType.PhoneNumber)]
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
+        [RegularExpression(@"(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b", ErrorMessage = "Số điện thoại không hợp lệ")]
+        public string PhoneNumber { get; set; }
+
+        public string Avatar = "https://lh3.googleusercontent.com/d/1LtjBZGYa-Mn6n1D7n2WwXwLrRpeUIUkY";
+        
     }
 }
 

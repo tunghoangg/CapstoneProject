@@ -31,7 +31,7 @@ namespace RAFS.Core.DTO
         public int Type { get; set; }
         public string Body { get; set; }
         public DateTime CreatedDay { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public DateTime LastUpdate { get; set; }
         public bool Status { get; set; }
     }

@@ -37,8 +37,6 @@ namespace RAFS.Web.Controllers
                 return RedirectToAction("Login", "Authentication");
             } else
             {
-                List<FarmAdminDTO> listFarms = await _farmAdminService.GetFarmAdminDTOsAsync(currentUser.Id);
-                ViewBag.Farms = _mapper.Map<List<Farm>>(listFarms);
                 ViewBag.Profile = currentUser;
                 return View();
             }

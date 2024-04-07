@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using RAFS.Core.DTO
+@using RAFS.Core.Models
+
+
+@model RegistrationDTO
+<head>
+    <script src="~/js/javascrip.js"></script>
+</head>
+
+<table class="table table-borderless table-sm">
+    <tbody>
+        <tr>
+            <td>Tên người dùng:</td>
+            <td>
+                <input type="text" class="form-control" asp-for="UserName" id="UserName" name="UserName" placeholder="Tên người dùng" value="">
+            </td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>
+                <input type="email" class="form-control" asp-for="Email" id="Email" name="Email" placeholder="Địa chỉ Email" value="">
+            </td>
+        </tr>
+        <tr>
+            <td>Mật khẩu:</td>
+            <td>
+                <input type="password" class="form-control" asp-for="Password" id="Password" name="Password" placeholder="Mật khẩu" value="">
+            </td>
+        </tr>
+        <tr>
+            <td>Nhập lại mật khẩu:</td>
+            <td>
+                <input type="password" class="form-control" asp-for="ConfirmPassword" id="ConfirmPassword" name="ConfirmPassword" placeholder="Nhập lại mật khẩu" value="">
+            </td>
+        </tr>
+        <tr>
+            <td>Số điện thoại:</td>
+            <td>
+                <input type="text" class="form-control" asp-for="PhoneNumber" id="PhoneNumber" name="PhoneNumber" placeholder="Số điện thoại" value="">
+            </td>
+        </tr>
+    </tbody>
+</table>
+

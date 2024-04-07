@@ -26,7 +26,7 @@ namespace RAFS.Core.Configs
 
             builder.Property(x => x.Phone).IsRequired().HasMaxLength(10);
 
-            builder.Property(x => x.Logo).IsRequired().HasMaxLength(int.MaxValue).IsUnicode().HasDefaultValue("https://lh3.googleusercontent.com/d/1xrH_6tJsC9SNeCbO0frMlhhdPJfUKEFw=s220");
+            builder.Property(x => x.Logo).IsRequired().HasMaxLength(int.MaxValue).IsUnicode().HasDefaultValue("https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik");
 
             builder.Property(x => x.PageLink).HasMaxLength(int.MaxValue).IsUnicode();
 

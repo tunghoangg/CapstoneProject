@@ -12,6 +12,7 @@ namespace RAFS.Core.Services.IService
     {
         public List<Milestone> GetAllMilestone(int farmid);
         public List<PlantDeleteDTO> GetAllPlantofMilestone(int milestoneid);
+        List<MilestoneDTOVer2> GetAllFarmFilteredMilestones(int farmid);
         List<MilestoneDTOVer2> GetAllFarmMilestones(int farmid, int page);
         public Milestone GetMilestoneById(int milestoneId);
         public bool CreateMilestone(Milestone milestone);

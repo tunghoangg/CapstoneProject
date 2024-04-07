@@ -5,6 +5,8 @@
 <link href="~/css/style.css" rel="stylesheet" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="~/Assets/Dashboard/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
     .card.draggable {
@@ -40,744 +42,50 @@
         width:150px;
         height: 150px;
     }
+
+    .notifications {
+        z-index: 10040;
+    }
+
+    * {
+        font-family: "Nunito", sans-serif;
+    }
 </style>
-<style>
-    @@media only screen and (min-width: 768px) {
-}
-.bodycolor {
-    background-color: darkblue;
-}
 
-.pcs,
-.cur,
-.per {
-    white-space: nowrap;
-}
+<link href="~/css/plantDetail.css" rel="stylesheet" />
 
-.appear {
-    display: block;
-}
-
-.pcs:after {
-    content: " pcs";
-}
-
-.cur:before {
-    content: "$";
-}
-
-.per:after {
-    content: "%";
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    position: relative;
-   
-    color: #555;
-}
-
-    table {
-    position: relative;
-    width: 100%;
-}
-
-    table th {
-        text-align: left;
-        vertical-align: bottom;
-        border-bottom: 1px solid #ccc;
-        text-transform: uppercase;
-        font: 0.8em "Oswald", sans-serif;
-    }
-
-    table th,
-    table td {
-        padding: 0.4em;
-    }
-
-    table.fold-table {
-        background: white;
-        color: #555;
-    }
-
-        table.fold-table > tbody > tr.view {
-            font-family: "Droid Serif", serif;
-            transition: all 0.3s ease;
-        }
-
-            table.fold-table > tbody > tr.view td,
-            table.fold-table > tbody > tr.view th {
-                cursor: pointer;
-            }
-
-                table.fold-table > tbody > tr.view td:first-child,
-                table.fold-table > tbody > tr.view th:first-child {
-                    position: relative;
-                    padding-left: 20px;
-                }
-
-                    table.fold-table > tbody > tr.view td:first-child:before,
-                    table.fold-table > tbody > tr.view th:first-child:before {
-                        position: absolute;
-                        top: 50%;
-                        left: 5px;
-                        width: 9px;
-                        height: 16px;
-                        margin-top: -8px;
-                        font: 16px fontawesome;
-                        content: "";
-                        transition: all 0.3s ease;
-                    }
-
-            table.fold-table > tbody > tr.view:nth-child(4n-1) {
-                background: #eee;
-            }
-
-            table.fold-table > tbody > tr.view:hover {
-                background: #ddd;
-            }
-
-            table.fold-table > tbody > tr.view.open {
-                background: tomato;
-                color: white;
-            }
-
-                table.fold-table > tbody > tr.view.open td:first-child:before,
-                table.fold-table > tbody > tr.view.open th:first-child:before {
-                    transform: rotate(-180deg);
-                    color: white;
-                }
-
-        table.fold-table > tbody > tr.fold {
-            display: none;
-        }
-
-            table.fold-table > tbody > tr.fold.open {
-                display: table-row;
-            }
-
-.fold-content {
-    padding: 0.5em;
-}
-
-    .fold-content h3 {
-        margin-top: 0;
-    }
-
-    .fold-content > table {
-        background: white;
-        color: #555;
-        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
-    }
-
-        .fold-content > table > tbody > tr {
-            font-family: "Droid Serif", serif;
-            cursor: pointer;
-        }
-
-            .fold-content > table > tbody > tr:nth-child(even) {
-                background: #eee;
-            }
-
-            .fold-content > table > tbody > tr:hover {
-                background: #ddd;
-            }
-
-.visible-small {
-    display: none;
-}
-
-.visible-big {
-    display: block;
-}
-
-@@media (max-width: 700px) {
-    body {
-        font-size: 0.8em;
-        padding: 0 10px;
-    }
-
-    table th,
-    table td {
-        padding: 1em 0.2em;
-    }
-
-    table th {
-        vertical-align: bottom;
-        padding-bottom: 0;
-    }
-
-    table.small-friendly > thead {
-        display: none;
-    }
-
-    table.small-friendly > tbody > tr > td,
-    table.small-friendly > tbody > tr > th {
-        position: relative;
-        padding: 0;
-        padding-left: 50%;
-        display: block;
-        vertical-align: top;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-        table.small-friendly > tbody > tr > td:before,
-        table.small-friendly > tbody > tr > th:before {
-            position: absolute;
-            top: 0;
-            left: 0.5em;
-            max-width: 50%;
-            content: attr(data-th) ": ";
-            display: block;
-            font-weight: bold;
-        }
-
-        table.small-friendly > tbody > tr > td:first-child,
-        table.small-friendly > tbody > tr > th:first-child {
-            margin-top: 1em;
-        }
-
-        table.small-friendly > tbody > tr > td:last-child,
-        table.small-friendly > tbody > tr > th:last-child {
-            margin-bottom: 1em;
-            border: 0;
-        }
-
-    .visible-small {
-        display: block;
-    }
-
-    .visible-big {
-        display: none;
-    }
-}
-
-    :root {
-        --hue: 223;
-        --bg: hsl(var(--hue),90%,95%);
-        --fg: hsl(var(--hue),90%,5%);
-        --trans-dur: 0.3s;
-    }
-
-    preloader {
-        background-color: var(--bg);
-        color: var(--fg);
-        font: 1em/1.5 sans-serif;
-        height: 100vh;
-        display: grid;
-        place-items: center;
-        transition: background-color var(--trans-dur);
-    }
-
-    .ip {
-        width: 16em;
-        height: 8em;
-    }
-
-    .ip__track {
-        stroke: hsl(var(--hue),90%,90%);
-        transition: stroke var(--trans-dur);
-    }
-
-    .ip__worm1,
-    .ip__worm2 {
-        animation: worm1 2s linear infinite;
-    }
-
-    .ip__worm2 {
-        animation-name: worm2;
-    }
-
-    /* Dark theme */
-
-    @@media (prefers-color-scheme: dark) {
-        :root {
-            --bg: hsl(var(--hue),90%,5%);
-            --fg: hsl(var(--hue),90%,95%);
-        }
-
-        .ip__track {
-            stroke: hsl(var(--hue),90%,15%);
-        }
-    }
-
-    /* Animation */
-    @@keyframes worm1 {
-        from {
-            stroke-dashoffset: 0;
-        }
-
-        50% {
-            animation-timing-function: steps(1);
-            stroke-dashoffset: -358;
-        }
-
-        50.01% {
-            animation-timing-function: linear;
-            stroke-dashoffset: 358;
-        }
-
-        to {
-            stroke-dashoffset: 0;
-        }
-    }
-
-    @@keyframes worm2 {
-        from {
-            stroke-dashoffset: 358;
-        }
-
-        50% {
-            stroke-dashoffset: 0;
-        }
-
-        to {
-            stroke-dashoffset: -358;
-        }
-    }
-
-    td {
-        width: 10%;
-    }
-
-    .module-location {
-        background-color: black;
-        background-image: url("https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-frc3/1236043_628949037155666_1992414107_n.jpg");
-        background-position: center center;
-        background-size: cover;
-        color: white;
-        height: 140px;
-        position: relative;
-    }
-
-        .module-location::before {
-            background-color: rgba(0, 0, 0, 0.4);
-            bottom: 0;
-            content: "";
-            display: block;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-        }
-
-        .module-location .location-quickstats {
-            background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjgiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMC4wIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g");
-            background-size: 100%;
-            background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.8)), color-stop(100%, rgba(0, 0, 0, 0)));
-            background-image: -moz-linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-            background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-            list-style: none;
-            margin: 0;
-            padding: 10px;
-            position: relative;
-            overflow: hidden;
-            *zoom: 1;
-        }
-
-            .module-location .location-quickstats li {
-                float: left;
-                line-height: 20px;
-                margin-right: 15px;
-                padding-left: 25px;
-                position: relative;
-            }
-
-                .module-location .location-quickstats li:last-child {
-                    float: right;
-                    margin-left: 15px;
-                    margin-right: 0;
-                }
-
-                .module-location .location-quickstats li.rating-negative i {
-                    background-image: url("/Assets/Images/vector60-7993-01.jpg");
-                }
-
-                .module-location .location-quickstats li.rating-positive i {
-                    background-image: url("/Assets/Images/fertilizer-6766447.png");
-                }
-
-                .module-location .location-quickstats li.rating-medica i {
-                    background-image: url("/Assets/Images/vector60-7993-01.jpg");
-                }
-
-                .module-location .location-quickstats li.rating-fertilizer i {
-                    background-image: url("/Assets/Images/fertilizer-6766447.png");
-                    background-color: white;
-                }
-
-                .module-location .location-quickstats li.rating-harverst i {
-                    background-image: url("/Assets/Images/noun-harvesting-3216765.png");
-                    background-color: white;
-                }
-
-                .module-location .location-quickstats li.rating-positive i {
-                    background-image: url("/Assets/Images/fertilizer-6766447.png");
-                    background-color: white;
-                }
-
-                .module-location .location-quickstats li.rating-positive i {
-                    background-image: url("/Assets/Images/fertilizer-6766447.png");
-                }
-
-                .module-location .location-quickstats li.rating-positive i {
-                    background-image: url("/Assets/Images/fertilizer-6766447.png");
-                }
-
-                .module-location .location-quickstats li.rating-total i {
-                    background-image: url("https://i.imgur.com/MQgvlAI.png");
-                }
-
-                .module-location .location-quickstats li i {
-                    background-size: cover;
-                    color: transparent;
-                    display: block;
-                    font-size: 0;
-                    height: 20px;
-                    left: 0;
-                    margin-right: 5px;
-                    overflow: hidden;
-                    position: absolute;
-                    width: 20px;
-                }
-
-                .module-location .location-quickstats li span {
-                    display: inline-block;
-                    font-size: 0.8125em;
-                }
-
-        .module-location .location-title {
-            bottom: 0;
-            left: 0;
-            padding: 0 50px 25px 50px;
-            position: absolute;
-            right: 0;
-            background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMC44Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g");
-            background-size: 100%;
-            background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 0.8)));
-            background-image: -moz-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
-            background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
-            background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
-        }
-
-            .module-location .location-title.rating-positive::before {
-                background-color: #5be225;
-            }
-
-            .module-location .location-title.rating-positive::after {
-                background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzViZTIyNSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzViZTIyNSIgc3RvcC1vcGFjaXR5PSIwLjAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=");
-                background-size: 100%;
-                background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5be225), color-stop(100%, rgba(91, 226, 37, 0)));
-                background-image: -moz-linear-gradient(#5be225, rgba(91, 226, 37, 0));
-                background-image: -webkit-linear-gradient(#5be225, rgba(91, 226, 37, 0));
-                background-image: linear-gradient(#5be225, rgba(91, 226, 37, 0));
-            }
-
-            .module-location .location-title.rating-negative::before {
-                background-color: #ff3927;
-            }
-
-            .module-location .location-title.rating-negative::after {
-                background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmMzkyNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmMzkyNyIgc3RvcC1vcGFjaXR5PSIwLjAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=");
-                background-size: 100%;
-                background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ff3927), color-stop(100%, rgba(255, 57, 39, 0)));
-                background-image: -moz-linear-gradient(#ff3927, rgba(255, 57, 39, 0));
-                background-image: -webkit-linear-gradient(#ff3927, rgba(255, 57, 39, 0));
-                background-image: linear-gradient(#ff3927, rgba(255, 57, 39, 0));
-            }
-
-            .module-location .location-title::before {
-                border-radius: 50%;
-                bottom: 45px;
-                content: "";
-                display: block;
-                left: 20px;
-                height: 11px;
-                position: absolute;
-                width: 11px;
-            }
-
-            .module-location .location-title::after {
-                bottom: -28px;
-                content: "";
-                display: block;
-                height: 73px;
-                left: 25px;
-                position: absolute;
-                width: 1px;
-            }
-
-            .module-location .location-title h2 {
-                font-size: 1.125em;
-                font-weight: 400;
-                margin: 0;
-            }
-
-            .module-location .location-title time {
-                color: rgba(255, 255, 255, 0.8);
-                display: block;
-                font-size: 0.8125em;
-            }
-
-    .module-history {
-        list-style: none;
-        margin: 0;
-        padding: 15px 0;
-    }
-
-        .module-history li {
-            margin-bottom: 1px;
-            padding: 9px 30px 7px 50px;
-            position: relative;
-        }
-
-            .module-history li.rating-positive i {
-                background-color: #5be225;
-            }
-
-                .module-history li.rating-positive i::before {
-                    background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzViZTIyNSIgc3RvcC1vcGFjaXR5PSIwLjAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM1YmUyMjUiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=");
-                    background-size: 100%;
-                    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(91, 226, 37, 0)), color-stop(100%, #5be225));
-                    background-image: -moz-linear-gradient(rgba(91, 226, 37, 0), #5be225);
-                    background-image: -webkit-linear-gradient(rgba(91, 226, 37, 0), #5be225);
-                    background-image: linear-gradient(rgba(91, 226, 37, 0), #5be225);
-                }
-
-                .module-history li.rating-positive i::after {
-                    background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzViZTIyNSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzViZTIyNSIgc3RvcC1vcGFjaXR5PSIwLjAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=");
-                    background-size: 100%;
-                    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5be225), color-stop(100%, rgba(91, 226, 37, 0)));
-                    background-image: -moz-linear-gradient(#5be225, rgba(91, 226, 37, 0));
-                    background-image: -webkit-linear-gradient(#5be225, rgba(91, 226, 37, 0));
-                    background-image: linear-gradient(#5be225, rgba(91, 226, 37, 0));
-                }
-
-            .module-history li.rating-negative i {
-                background-color: #ff3927;
-            }
-
-                .module-history li.rating-negative i::before {
-                    background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmMzkyNyIgc3RvcC1vcGFjaXR5PSIwLjAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZjM5MjciLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=");
-                    background-size: 100%;
-                    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 57, 39, 0)), color-stop(100%, #ff3927));
-                    background-image: -moz-linear-gradient(rgba(255, 57, 39, 0), #ff3927);
-                    background-image: -webkit-linear-gradient(rgba(255, 57, 39, 0), #ff3927);
-                    background-image: linear-gradient(rgba(255, 57, 39, 0), #ff3927);
-                }
-
-                .module-history li.rating-negative i::after {
-                    background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmMzkyNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmMzkyNyIgc3RvcC1vcGFjaXR5PSIwLjAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=");
-                    background-size: 100%;
-                    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ff3927), color-stop(100%, rgba(255, 57, 39, 0)));
-                    background-image: -moz-linear-gradient(#ff3927, rgba(255, 57, 39, 0));
-                    background-image: -webkit-linear-gradient(#ff3927, rgba(255, 57, 39, 0));
-                    background-image: linear-gradient(#ff3927, rgba(255, 57, 39, 0));
-                }
-
-            .module-history li.memo-yep i {
-                background-image: url("/Assets/Images/vector60-7993-01.jpg");
-                background-image: -webkit-image-set(url("/Assets/Images/vector60-7993-01.jpg") 1x, url("https://i.imgur.com/qrG2rHB.png") 2x);
-                background-size: cover;
-                height: 21px;
-                left: 15px;
-                top: 10px;
-                width: 21px;
-            }
-
-                .module-history li.memo-yep i::before,
-                .module-history li.memo-yep i::after {
-                    height: 35px;
-                    left: 10px;
-                }
-
-                .module-history li.memo-yep i::before {
-                    top: -35px;
-                }
-
-                .module-history li.memo-yep i::after {
-                    bottom: -35px;
-                }
-
-            .module-history li.memo-yep1 i {
-                background-image: url("/Assets/Images/fertilizer-6766447.png");
-                background-image: -webkit-image-set(url("/Assets/Images/fertilizer-6766447.png") 1x, url("/Assets/Images/fertilizer-6766447.png") 2x);
-                background-size: cover;
-                height: 21px;
-                left: 15px;
-                top: 10px;
-                width: 21px;
-            }
-
-                .module-history li.memo-yep1 i::before,
-                .module-history li.memo-yep1 i::after {
-                    height: 35px;
-                    left: 10px;
-                }
-
-                .module-history li.memo-yep1 i::before {
-                    top: -35px;
-                }
-
-                .module-history li.memo-yep1 i::after {
-                    bottom: -35px;
-                }
-
-            .module-history li.memo-yep2 i {
-                background-image: url("/Assets/Images/noun-harvesting-3216765.png");
-                background-image: -webkit-image-set(url("/Assets/Images/noun-harvesting-3216765.png") 1x, url("/Assets/Images/noun-harvesting-3216765.png") 2x);
-                background-size: cover;
-                height: 21px;
-                left: 15px;
-                top: 10px;
-                width: 21px;
-            }
-
-                .module-history li.memo-yep2 i::before,
-                .module-history li.memo-yep2 i::after {
-                    height: 35px;
-                    left: 10px;
-                }
-
-                .module-history li.memo-yep2 i::before {
-                    top: -35px;
-                }
-
-                .module-history li.memo-yep2 i::after {
-                    bottom: -35px;
-                }
-
-
-            .module-history li:last-child i::before {
-                height: 73px;
-                top: -73px;
-            }
-
-            .module-history li:last-child i::after {
-                display: none;
-            }
-
-        .module-history h3,
-        .module-history time {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .module-history h3 {
-            color: #404040;
-            font-size: 1.125em;
-            font-weight: 400;
-            margin: 0;
-        }
-
-        .module-history time {
-            color: #a6a6a6;
-            display: block;
-            font-size: 0.625em;
-            text-transform: uppercase;
-        }
-
-        .module-history h2,
-        .module-history timer {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .module-history h2 {
-            color: white;
-            font-size: 1.125em;
-            font-weight: 400;
-            margin: 0;
-        }
-
-        .module-history timer {
-            color: white;
-            display: block;
-            font-size: 0.625em;
-            text-transform: uppercase;
-        }
-
-        .module-history i {
-            background-color: #a6a6a6;
-            border-radius: 50%;
-            color: transparent;
-            display: block;
-            font-size: 0;
-            height: 11px;
-            left: 20px;
-            position: absolute;
-            top: 15px;
-            width: 11px;
-            z-index: 2;
-        }
-
-            .module-history i::before,
-            .module-history i::after {
-                content: "";
-                display: block;
-                height: 40px;
-                left: 5px;
-                position: absolute;
-                width: 1px;
-                z-index: -1;
-            }
-
-            .module-history i::before {
-                top: -40px;
-            }
-
-            .module-history i::after {
-                bottom: -40px;
-            }
-
-   
-    .container {
-        display: flex;
-        align-items: center;
-    }
-
-    .card-title,
-    .form-control {
-        margin: 0;
-    }
-
-    .card-title {
-        margin-right: 10px; /* Điều chỉnh khoảng cách giữa các phần tử */
-    }
-
-    td {
-        width: 10%;
-    }
-
-    #plantlist img {
-        width: 100%;
-    }
-
-</style>
 <div class="scrollable-container">
     <div style="margin-top: 50px" class="notifications">
     </div>
 <div class="container-fluid pt-3">
-    <div style="display:flex;">
-            <div >
+        <div style="display:flex;">
+            <div style="  width: 40%;">
                 <h3 style="color:black;" class="font-weight-light ">Quản lý Cây Trồng </h3>
                 <div style="color:black;" class="small ">Có thể kéo thả giữa các cột</div>
             </div>
-
-
-            <div style="    position: fixed; right: 2%;">
-            <a href="#popup" style="padding-top: 10px; width:150px;">
-                <button class="button3 pure2">
-                    Tạo mới </button></a>
+            <div>
+                <a href="#popup" style="max-height: 60px; width:150px;">
+                    <button class="button3 pure2" style="    margin-right: 8px; max-height: 60px;padding-top: 7px;">
+                        Tạo mới
+                    </button>
+                </a>
             </div>
+            <input style=" margin: auto;min-width: 50px;width: 50%; margin-right:10px; border-radius: 10px" class="form-control form-control-sm" type="text" id="searchName" placeholder="Nhập tên nhóm cần tìm " />
+            <select id="healFilter" style=" margin: auto;min-width: 50px;width: 25%; margin-right:10px; border-radius: 10px" class="form-control form-control-sm">
+                <option value="0" selected>Tất cả trạng thái</option>
+                <option value="Bình thường">Bình thường</option>
+                <option value="Tốt">Tốt</option>
+                <option value="Kém">Kém</option>
+            </select>
+            <select id="typeFilter" style=" margin: auto; min-width: 50px;width: 50%; margin-right:10px; border-radius: 10px" class="form-control form-control-sm">
+                <option value="0" selected>Tất cả phương pháp trồng</option>
+              
+            </select>
+            <button id="sortBtn" type="button" style=" max-height: 60px;" class="btn btn-primary">Lọc</button>
+            <button id="resetBtn" type="button" style="background-color:blue; max-height: 60px;" class="btn btn-primary">Đặt lại</button>
+            
         </div>
-    <div class="row flex-row flex-sm-nowrap py-3">
+    <div class="row flex-row flex-sm-nowrap py-3" style="min-height:800px;">
     </div>
 </div>
 </div>
@@ -802,25 +110,29 @@ body {
                             <div class="form-group row">
                                 <label for="name" class="col-sm-3 col-form-label">Tên cây</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="name" placeholder="Tên cây" />
+                                    <input type="text" class="form-control" id="name" placeholder="Tên cây" onchange="validateInput('name')" />
+
+                                    <div id="name-toast" style="color: red; font-size: 12px;"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="type" class="col-sm-3 col-form-label">Loại cây</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="type" placeholder="Loại cây" />
+                                    <input type="text" class="form-control" id="type" placeholder="Loại cây" onchange="validateInput('type')" />
+                                    <div id="type-toast" style="color: red; font-size: 12px;"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="description" class="col-sm-3 col-form-label">Mô tả</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="description" placeholder="Mô tả" />
+                                    <textarea style="height: 200px; min-height: 100%; overflow-y: auto;" class="form-control" id="description" placeholder="Mô tả"></textarea>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="area" class="col-sm-3 col-form-label">Diện tích</label>
                                 <div class="col-sm-9">
-                                    <input type="number" class="form-control" id="area" placeholder="Diện tích" />
+                                    <input type="number" class="form-control" id="area" placeholder="Diện tích" onchange="validateInput('area')" />
+                                    <div id="area-toast" style="color: red; font-size: 12px;"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -847,17 +159,20 @@ body {
                             <div class="form-group row">
                                 <label for="plantingMethod" class="col-sm-3 col-form-label">Phương pháp trồng</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="plantingMethod" placeholder="Phương pháp trồng" />
+                                    <input type="text" class="form-control" id="plantingMethod" placeholder="Phương pháp trồng" onchange="validateInput('plantingMethod')" />
+                                    <div id="plantingMethod-toast" style="color: red; font-size: 12px;"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="image" class="col-sm-3 col-form-label">Ảnh</label>
                                 <div class="col-sm-9">
                                     <input type="file" class="form-control" id="image" placeholder="Ảnh" />
+                                    <div id="image-toast" style="color: red; font-size: 12px;"></div>
+
                                 </div>
                             </div>
 
-                            <button type="submit" id="add" class="btn btn-primary mr-2">Thêm</button>
+                            <label id="add" class="btn btn-primary mr-2">Thêm</label>
                             <a href="#" class="btn btn-light">Thoát</a>
                         </form>
                     </div>
@@ -877,12 +192,9 @@ body {
                         <h4 class="card-title">Cập nhật cây</h4>
 
                         <form class="forms-sample">
-                            <div class="form-group row">
-                                <label for="id2" class="col-sm-3 col-form-label">Id cây</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="id2" placeholder="Mobile number" />
-                                </div>
-                            </div>
+                            
+                                    <input type="text" class="form-control" id="id2" placeholder="Id cây" hidden  />
+                                
 
                             <div class="form-group row">
                                 <label for="milestoneId2" class="col-sm-3 col-form-label">Nhóm</label>
@@ -895,25 +207,28 @@ body {
                             <div class="form-group row">
                                 <label for="name2" class="col-sm-3 col-form-label">Tên</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="name2" placeholder="Mobile number" />
+                                    <input type="text" class="form-control" id="name2" placeholder="Tên cây" onchange="validateInput('name2')" />
+                                    <div id="name2-toast" style="color: red; font-size: 12px;"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="type2" class="col-sm-3 col-form-label">Loại</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="type2" placeholder="Mobile number" />
+                                    <input type="text" class="form-control" id="type2" placeholder="Loại cây" onchange="validateInput('type2')" />
+                                    <div id="type2-toast" style="color: red; font-size: 12px;"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="description2" class="col-sm-3 col-form-label">Mô tả</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="description2" placeholder="Mobile number" />
+                                <textarea style="height: 200px; min-height: 100%; overflow-y: auto; resize: vertical;" class="form-control" id="description2" placeholder="Mô tả về cây"></textarea>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="area2" class="col-sm-3 col-form-label">Diện tích</label>
                                 <div class="col-sm-9">
-                                    <input type="number" class="form-control" id="area2" placeholder="Mobile number" />
+                                    <input type="number" class="form-control" id="area2" placeholder="Diện tích trồng cây" onchange="validateInput('area2')" />
+                                    <div id="area2-toast" style="color: red; font-size: 12px;"></div>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -940,11 +255,12 @@ body {
                             <div class="form-group row">
                                 <label for="plantingMethod2" class="col-sm-3 col-form-label">Phương pháp trồng</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="plantingMethod2" placeholder="Mobile number" />
+                                    <input type="text" class="form-control" id="plantingMethod2" placeholder="Phương pháp trồng cây" onchange="validateInput('plantingMethod2')" />
+                                    <div id="plantingMethod2-toast" style="color: red; font-size: 12px;"></div>
                                 </div>
                             </div>
 
-                            <button type="submit" id="update" class="btn btn-primary mr-2">Lưu</button>
+                            <label id="update" class="btn btn-primary mr-2">Lưu</label>
                             <a href="#" class="btn btn-light">Thoát</a>
                         </form>
                     </div>
@@ -992,7 +308,7 @@ body {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Thông tin của cây trồng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" id="topClose" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -1087,7 +403,7 @@ body {
                         </select>
                         </div>
                         <div class="col-md-2">
-                            <button style="width: 100%; padding: 1rem 1.5rem 1rem 1.5rem;" type="button" id="redirectbtn" class="btn btn-secondary">Quản lý</button>
+                            <button style="min-width: 75px;width: 100%; padding: 1rem 1.5rem 1rem 1.5rem;" type="button" id="redirectbtn" class="btn btn-secondary">Quản lý</button>
                         </div>
                     </div>
 
@@ -1215,14 +531,19 @@ body {
     </div>
 </div>
 <input id="checkload" value="0" hidden />
-<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js"></script>
 
-<script src="~/js/plantmanagement/api.js"></script>
-<script src="~/js/plantmanagement/action.js"></script>
-<script>
-    farmid = 1;
-    let qrcode = new QRCode("qrcode");
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-</script>
+    <script src="~/js/plantmanagement/api.js"></script>
+    <script src="~/js/plantmanagement/action.js"></script>
+    <script>
+
+        
+
+        let qrcode = new QRCode("qrcode");
+
+    </script>
+

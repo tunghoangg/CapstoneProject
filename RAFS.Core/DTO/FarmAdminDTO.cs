@@ -77,4 +77,16 @@ namespace RAFS.Core.DTO
         public List<int>? FunctionIds { get; set; }
     }
 
+    public class ImagesFarmDTO { 
+        public int ImageId { get; set; }
+        public string? ImageURL { get; set; }
+        public int FarmId { get; set; }
+    }
+
+    public class UpdateImagesFarmnDTO
+    {
+        public int ImageId { get; set; }
+        public IFormFile ImageFile { get; set; }
+    }
+
 }

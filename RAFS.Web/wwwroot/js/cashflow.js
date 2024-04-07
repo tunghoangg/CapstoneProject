@@ -23,8 +23,6 @@ $(document).ready(function () {
 });
 
 function LoadCashData(typeId) {
-	console.log(userId);
-	console.log(farmId);
 
 	resetUpdateCash();
 	resetCreateCash();
@@ -67,6 +65,10 @@ function LoadCashData(typeId) {
 				"targets": [0],
 				"visible": false,
 				"searchable": false
+			},
+			{
+				"targets": [3], // index của cột "Loại"
+				"orderable": false // Không cho phép sắp xếp
 			}
 		],
 		"oLanguage": {
@@ -83,7 +85,57 @@ function LoadCashData(typeId) {
 		"columns": [
 			{ "data": "id", "name": "Id", "autoWidth": true },
 			{ "data": "code", "name": "Mã", "autoWidth": true },
-			{ "data": "value", "name": "Giá trị", "autoWidth": true },
+			{
+				"data": "value",
+				"name": "Giá trị",
+				"autoWidth": true,
+				"render": function (data, type, row, meta) {
+					// Check if data is null or undefined
+					if (data === null || data === undefined) {
+						return "";
+					} else {
+						// Append " triệu VNĐ" after the value and return
+						return data + " triệu VNĐ";
+					}
+				}
+			},
+			{
+				"data": "typeId",
+				"name": "Loại",
+				"autoWidth": true,
+				"render": function (data, type, row, meta) {
+					switch (data) {
+						case 1:
+							return "Chi thuốc bảo vệ thực vật";
+						case 2:
+							return "Chi phân hóa học";
+						case 3:
+							return "Chi máy móc";
+						case 4:
+							return "Chi công cụ";
+						case 5:
+							return "Chi bán hàng";
+						case 6:
+							return "Chi nhân công";
+						case 7:
+							return "Chi đầu tư";
+						case 8:
+							return "Chi phát sinh khác";
+						case 9:
+							return "Thu sản phẩm";
+						case 10:
+							return "Thu hồi tài sản";
+						case 11:
+							return "Thu đầu tư";
+						case 12:
+							return "Thu sản phẩm sinh học";
+						case 13:
+							return "Thu khác";
+						default:
+							return "";
+					}
+				}
+			},
 			{
 				"data": "createdTime",
 				"name": "Ngày tạo",
@@ -235,7 +287,6 @@ function UpdateCash() {
 				"description": description,
 				"typeId": type
 			};
-			console.log(data);
 
 
 			$.ajax({
@@ -266,11 +317,10 @@ function DeleteCashFlow() {
 		//var data = $('#data-table-cash-flow').DataTable().row($(this).closest('tr')).data();
 		let typeSelect = $('#filter-cash-by-type').val();
 		let cashId = $(this).data('cash-delete');
-		
-		console.log(cashId);
+
 		$('#confirm-delete-cash-flow').off('click').on('click', function (event) {
 			event.stopPropagation();
-			console.log(cashId);
+
 			$.ajax({
 				url: baseUrl + `FundDiary/DeleteSofftCash/${cashId}`,
 				type: "DELETE",
@@ -318,7 +368,7 @@ function DetailCash() {
 	$(document).on('click', '#btn-detail-cash', function () {
 		var data = $('#data-table-cash-flow').DataTable().row($(this).closest('tr')).data();
 		$('#detail-cash-code').text(data.code);
-		$('#detail-cash-value').text(data.value);
+		$('#detail-cash-value').text(data.value + " triệu VNĐ");
 		switch (data.typeId) {
 			case 1:
 				$('#detail-cash-type').text(" Chi thuốc bảo vệ thực vật");

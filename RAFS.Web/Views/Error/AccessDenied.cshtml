@@ -2,7 +2,7 @@
 
 @{
     Layout = "_LoginLayout";
-    ViewBag.Title = "Reset Password";
+    ViewBag.Title = "RAFS";
 }
 
 <style>
@@ -11,7 +11,7 @@
 
 <head>
     <link rel="icon" type="image/png" href="~/Assets/HomePage/img/core-img/rafs.ico">
-    <title>Xác nhận thành công</title>
+    <title>Truy cập thất bại</title>
 </head>
 
 <div class="container-scroller">
@@ -25,10 +25,10 @@
                                 <img src="~/Assets/HomePage/img/core-img/rafs-logo.png" alt="logo">
                             </a>
                         </div>
-                        <h4>Thành công!</h4>
+                        <h4 style="color:red">Tài khoản của bạn không có quyền truy cập!</h4>
                         <p>
-                            Tài khoản đã được xác minh thành công. <br />
-                            <a asp-action="Login" asp-controller="Authentication">Bấm vào đây để đăng nhập.</a>
+                            <a asp-action="Index" asp-controller="Home">Vui lòng bấm vào đây để trở về trang chủ.</a><br />
+                            <p>Nếu bạn nghĩ có sai sót, xin vui lòng liên hệ admin hoặc chủ trang trại để được hỗ trợ.</p>
                         </p>
                     </div>
                 </div>

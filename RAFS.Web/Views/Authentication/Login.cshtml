@@ -5,7 +5,7 @@
 @inject SignInManager<AspUser> SignInManager
 @{
     Layout = "_LoginLayout";
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Đăng nhập";
     var ExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 }
 
@@ -15,6 +15,7 @@
 
 <head>
     <link rel="icon" type="image/png" href="~/Assets/HomePage/img/core-img/rafs.ico">
+    <title>Đăng nhập</title>
 </head>
 
 <div class="container-scroller">
@@ -37,7 +38,7 @@
                             
                             @if (ViewBag.checkEmail != null)
                             {
-                                <div class="alert alert-success">
+                                <div class="text-success">
                                     @ViewBag.checkEmail
                                 </div>
                             }

@@ -10,8 +10,10 @@ namespace RAFS.Core.DTO
     {
         public int FarmId { get; set; }
         public string? FarmName { get; set; }
-        public double FarmArea { get; set;}
+        public double FarmArea { get; set; }
         public string? FarmLogo { get; set; }
+        //Tổng diện tích
+        public double TotalArea { get; set; }
         //Tổng thu
         public double TotalIn { get; set; }
         //Tổng chi
@@ -30,6 +32,8 @@ namespace RAFS.Core.DTO
         public double[]? CashFlowDetailOut { get; set; }
         //Giá trị
         public double[]? ItemValue { get; set; }
+        //Top 3 name
+        public string[]? TopThreeName { get; set; }
         //Phần trăm top 3 loại
         public double[]? TopThreeValue { get; set; }
     }
@@ -59,7 +63,10 @@ namespace RAFS.Core.DTO
         public double TotalMaterialValue { get; set; }
         //Giá trị
         public double[]? ItemValue { get; set; }
+        //Top 3 name
+        public string[]? TopThreeName { get; set; }
         //Phần trăm top 3 loại
         public double[]? TopThreeValue { get; set; }
     }
+
 }

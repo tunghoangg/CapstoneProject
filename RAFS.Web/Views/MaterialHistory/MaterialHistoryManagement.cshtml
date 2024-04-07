@@ -1,11 +1,8 @@
 ﻿@{
     Layout = "_DashboardLayout";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>CodePen - II just another Css tabs (:checked)</title>
+
+ 
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
     <link rel="stylesheet" href="./css/MaterialHistoryCss.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
@@ -49,14 +46,26 @@
             transform-origin: center right;
             transition-delay: .1s;
         }
+
+        .notifications {
+            z-index: 10040;
+        }
+
+        * {
+            font-family: "Nunito", sans-serif;
+        }
    </style>
     <script src="~/js/javascrip.js"></script>
-</head>
-<body>
-    
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div style="margin-top: 50px" class="notifications">
+    </div>
                 
     <!-- partial:index.partial.html -->
-    <section>
+                    <section style="    min-height: fit-content;">
         <input type="radio" id="profile" value="1" name="tractor" checked='checked' />
         <input type="radio" id="settings" value="2" name="tractor" />
         <input type="radio" id="posts" value="3" name="tractor" />
@@ -64,38 +73,51 @@
 
         <nav>
             <div class="row">
-                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-4">
                     <label for="profile" id="profile2" class='fa fa-plus'></label>
                 </div>
-                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-4">
                     <label for="settings" id="settings2" class='fa  fa-flask'></label>
                 </div>
-                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-4">
                     <label for="posts" id="posts2" class='fa  fa-truck'></label>
                 </div>
             </div>
 
         </nav>
         <input id="checkload" value="0"/>
-        <article class='uno'>
+                        <article class='uno' style="min-height: inherit;">
             <div style="display:grid">
-                <a href="#popup" style="display: inline-block;">
-                    <button id="createbtn" class="button3 pure2">Tạo mới</button>
-                </a>
-                <h2 style="display: inline-block; vertical-align: middle;">
-                    <img alt='' src='https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png' />
-                </h2>
+                <div>
+                    <a href="#popup" class="backbtn" style="display: inline-block;width: 16%;">
+                                        <button class="button3 pure2" style="    min-width: 174px; background-color: lightskyblue;">
+                            Trở về trang quản lý cây
+                        </button>
+                    </a>
+                <h2>Danh sách sử dụng phân bón của cây </h2>
+                </div>
+                <div style=" display: flex;">
+
+                                    <a href="#popup" style="display: inline-block;     width: 10%;">
+
+                        <button id="createbtn" class="button3 pure2">Tạo mới</button>
+                            </a>
+                        <h2 style="display: inline-block;vertical-align: middle;margin-left: 36%;">
+                        <img alt="" src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png">
+                    </h2>
+                </div>
+
             </div>
-            <div class="table-responsive">
+                            <div class="table-responsive" style="min-height: 400px;">
                 <table id="table1" class="table table-hover">
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>InventoryName</th>
-                            <th>PlantName</th>
-                            <th>Quality</th>
-                            <th>LastUpdate</th>
-                            <th>Action</th>
+                            <th>Tên vật phẩm</th>
+                            <th>Tên cây</th>
+                            <th>Số lượng</th>
+                            <th>Thời điểm cập nhật </th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -114,43 +136,70 @@
                 </ul>
             </footer> *@
         </article>
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">Bạn có chắc muốn xóa nhóm này không?</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <table>
+
+                            <tbody id="plantlist">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="display:flex;">
+                        <div></div>
+                        <div class="modal-footer">
+                            <button style="background-color:red;" type="button" class="btn btn-default" id="deletebtn" data-dismiss="modal">Xóa</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <div class="popup" id="popup2">
             <div class="popup__content">
                 <div>
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Tạo nhóm mới</h4>
+                            <h4 class="card-title">Tạo bản ghi mới</h4>
 
                             <form class="forms-sample">
+                                
+                                        <input type="number" id="Id2" class="form-control" id="Id2" placeholder="Tên nhóm" hidden>
+                                    
                                 <div class="form-group row">
-                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Id</label>
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Tên vật phẩm</label>
                                     <div class="col-sm-9">
-                                        <input type="number" id="Id2" class="form-control" id="Id2" placeholder="Tên nhóm">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Inventory Name</label>
-                                    <div class="col-sm-9">
-                                        <select id="InventoryId2">
+                                        <select id="InventoryId2" onchange="validateInput('InventoryId2')">
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Plant Name</label>
-                                    <div class="col-sm-9">
-                                        <select id="PlantId2">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Quality</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" id="Quality2" class="form-control" id="Quality" placeholder="Tên nhóm">
+                                        <div id="InventoryId2-toast" style="color: red; font-size: 12px;"></div>
+
                                     </div>
                                 </div>
 
-                                <button type="submit" id="update" style="background-color:greenyellow" class="btn btn-primary mr-2">Save</button>
-                                <a href="#" class="btn btn-light">Cancel</a>
+                                <input type="number" id="PlantId2" class="form-control" placeholder="Tên nhóm" hidden>
+
+                                <div class="form-group row">
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Số lượng</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" id="Quality2" class="form-control" id="Quality" placeholder="Số lượng" onchange="validateInput('Quality2')">
+                                        <div id="Quality2-toast" style="color: red; font-size: 12px;"></div>
+                                    </div>
+                                </div>
+
+                                                <label id="update" style=" word-wrap: normal; max-width: 7%;min-width: 75px;background-color:greenyellow" class="btn btn-primary mr-2">Lưu</label>
+                                <a href="#" class="btn btn-light">Thoát</a>
                             </form>
                         </div>
                     </div>
@@ -164,33 +213,30 @@
                 <div>
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Tạo nhóm mới</h4>
+                            <h4 class="card-title">Sửa bản ghi </h4>
 
                             <form class="forms-sample">
                                 
                                 <div class="form-group row">
-                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Inventory Name</label>
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Tên vật phẩm</label>
                                     <div class="col-sm-9">
-                                        <select id="InventoryId">
+                                        <select id="InventoryId" onchange="validateInput('InventoryId')">
                                         </select>
+                                        <div id="InventoryId-toast" style="color: red; font-size: 12px;"></div>
                                     </div>
                                 </div>
+                                <input type="text" id="PlantId" class="form-control" placeholder="Tên nhóm" hidden>
+
                                 <div class="form-group row">
-                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Plant Name</label>
+                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Số lượng</label>
                                     <div class="col-sm-9">
-                                        <select id="PlantId">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="exampleInputMobile" style="color:black;" class="col-sm-3 col-form-label">Quality</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" id="Quality" class="form-control" id="Quality" placeholder="Tên nhóm">
+                                        <input type="number" id="Quality" class="form-control" id="Quality" placeholder="Số lượng" onchange="validateInput('Quality')">
+                                        <div id="Quality-toast" style="color: red; font-size: 12px;"></div>
                                     </div>
                                 </div>
 
-                                <button type="submit" id="add" style="background-color:greenyellow" class="btn btn-primary mr-2">Add</button>
-                                <a href="#" class="btn btn-light">Cancel</a>
+                                                <label id="add" style=" word-wrap: normal; max-width: 7%;min-width: 75px; background-color:greenyellow" class="btn btn-primary mr-2">Thêm</label>
+                                <a href="#" class="btn btn-light">Thoát</a>
                             </form>
                         </div>
                     </div>
@@ -199,23 +245,37 @@
                 </div>
             </div>
         </div>
-        <article class='dos fa fa-wrench'>
-            <a href="#popup" style="display: inline-block;">
-                <button id="createbtn2" class="button3 pure2">Tạo mới</button>
-            </a>
-            <h2>
-                <img alt='' src='https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png' />
-            </h2>
-            <div class="table-responsive">
+                        <article class='dos fa fa-wrench' style="min-height: inherit;">
+            <div style="display:grid">
+                <div>
+                    <a href="#popup" class="backbtn" style="display: inline-block;width: 16%;">
+                                        <button class="button3 pure2" style="    min-width: 174px; background-color: lightskyblue;">
+                            Trở về trang quản lý cây
+                        </button>
+                    </a>
+                <h2>Danh sách sử dụng các loại thuốc của cây </h2>
+                </div>
+                <div style=" display: flex;">
+
+                    <a href="#popup" style="display: inline-block;     width: 10%;">
+                        <button id="createbtn2" class="button3 pure2">Tạo mới</button>
+                    </a>
+                    <h2 style="display: inline-block;vertical-align: middle;margin-left: 36%;">
+                        <img alt="" src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png">
+                    </h2>
+                </div>
+
+            </div>
+                            <div class="table-responsive" style="min-height: 400px;">
                 <table id="table2" class="table table-hover">
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>InventoryName</th>
-                            <th>PlantName</th>
-                            <th>Quality</th>
-                            <th>LastUpdate</th>
-                            <th>Action</th>
+                            <th>Tên vật phẩm</th>
+                            <th>Tên cây</th>
+                            <th>Số lượng</th>
+                            <th>Thời điểm cập nhật </th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -235,24 +295,37 @@
             </footer> *@
         </article>
 
-        <article class='tres fa fa-beer'>
-            <a href="#popup" style="display: inline-block;">
-                <button id="createbtn3" class="button3 pure2">Tạo mới</button>
-            </a>
-            <h2>
-                <img alt='' src='https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png' />
+                        <article class='tres fa fa-beer' style="min-height:inherit;">
+            <div style="display:grid">
+                <div>
+                    <a href="#popup" class="backbtn" style="display: inline-block;width: 16%;">
+                                        <button class="button3 pure2" style="    min-width: 174px; background-color: lightskyblue;">
+                            Trở về trang quản lý cây
+                        </button>
+                    </a>
+                <h2>Danh sách báo cáo thu hoạch của cây </h2>
+                </div>
+                <div style=" display: flex;">
 
-            </h2>
-            <div class="table-responsive">
+                    <a href="#popup" style="display: inline-block;     width: 10%;">
+                        <button id="createbtn3" class="button3 pure2">Tạo mới</button>
+                    </a>
+                    <h2 style="display: inline-block;vertical-align: middle;margin-left: 36%;">
+                        <img alt="" src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/plant.png">
+                    </h2>
+                </div>
+
+            </div>
+                            <div class="table-responsive" style="min-height: 400px;">
                 <table id="table3" class="table table-hover">
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>InventoryName</th>
-                            <th>PlantName</th>
-                            <th>Quality</th>
-                            <th>LastUpdate</th>
-                            <th>Action</th>
+                            <th>Tên vật phẩm</th>
+                            <th>Tên cây</th>
+                            <th>Số lượng</th>
+                            <th>Thời điểm cập nhật </th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -272,13 +345,20 @@
             </footer> *@
         </article>
        
-    </section> 
-    <div style="margin-top: 10px">
-        <nav aria-label="Page navigation example">
-            <ul id="pagi-pages" class="pagination">
-            </ul>
-        </nav>
+    </section>
+                    <div style="margin-top: 10px">
+                        <nav aria-label="Page navigation example">
+                            <ul id="pagi-pages" class="pagination">
+                            </ul>
+                        </nav>
+                    </div>
+   
     </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
     <!-- partial -->
     <script src="./js/MaterialHistory.js"></script>
     <script src="~/js/javascrip.js"></script>
@@ -288,7 +368,7 @@
 
          baseUrlClient = "";
          baseUrl = "https://localhost:7043/api/";
-         farmid = 1;
+        
         let typeid = 0;
         //const userId = "8f06393e-e93f-4e99-af51-aac0182350e3";//Tạo
          userId = "8f06393e-e93f-4e99-af51-aac0182350e4";//Không được tạo
@@ -301,6 +381,5 @@
         var totalPages2 = 0;
         var totalPages3 = 0;
     </script>
-</body>
-</html>
+
 

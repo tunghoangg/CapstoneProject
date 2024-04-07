@@ -73,7 +73,6 @@
                                     <div class="logout">
                                         <a>
                                         <form id="logoutForm" asp-controller="Authentication" asp-action="Logout" method="post">
-                                            @Html.AntiForgeryToken()
                                             <button type="submit" class="logoutbtn">
                                                 Đăng xuất
                                             </button>
@@ -106,7 +105,7 @@
                     <nav class="classy-navbar justify-content-between" id="alazeaNav">
 
                         <!-- Nav Brand -->
-                        <a href="index.html" class="nav-brand"><img src="~/Assets/HomePage/img/core-img/rafs-logo.png" style="width: 90%; height:auto;" alt=""></a>
+                        <a href="/Home" class="nav-brand"><img src="~/Assets/HomePage/img/core-img/rafs-logo.png" style="width: 90%; height:auto;" alt=""></a>
 
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
@@ -161,11 +160,11 @@
                     <div class="col-12 col-sm-6 col-lg-3">
                         <div class="single-footer-widget">
                             <div class="footer-logo mb-30">
-                                <a href="#"><img src="~/Assets/HomePage/img/core-img/rafs-logo.png" alt=""></a>
+                                <a href="/Home"><img src="~/Assets/HomePage/img/core-img/rafs-logo.png" alt=""></a>
                             </div>
                             <p>Theo dõi chúng tôi trên nền tảng mạng xã hội để nhận tin tức mới nhất</p>
                             <div class="social-info">
-                                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                <a href="https://www.facebook.com/profile.php?id=61557088825732"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                             </div>
                         </div>
                     </div>
@@ -209,8 +208,7 @@
                                     <li><a href="/Home">Trang chủ</a></li>
                                     <li><a href="/Home/AboutUs">Về chúng tôi</a></li>
                                     <li><a href="/Home/Farm">Trang trại</a></li>
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">Liên hệ</a></li>
+                                    <li><a href="/Home/Blog">Blog</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -222,6 +220,9 @@
     <!-- ##### Footer Area End ##### -->
     <!-- ##### All Javascript Files ##### -->
     <!-- jQuery-2.2.4 js -->
+    <script>
+        const baseUrl = "https://localhost:7043/api/";
+    </script>
     <script src="~/Assets/HomePage/js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->
     <script src="~/Assets/HomePage/js/bootstrap/popper.min.js"></script>

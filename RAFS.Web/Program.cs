@@ -86,18 +86,18 @@ builder.Services.Configure<IdentityOptions>(options => {
 
 builder.Services.ConfigureApplicationCookie(options => {
     //Cookie settings   
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(120);
     
     options.LoginPath = "/Login";
     options.LogoutPath = "/Logout";
-    options.AccessDeniedPath = "/";
+    options.AccessDeniedPath = "/AccessDenied";
     options.SlidingExpiration = true;
 });
 
 //Token settings
 //Token lifetime
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
-   opt.TokenLifespan = TimeSpan.FromMinutes(15));
+   opt.TokenLifespan = TimeSpan.FromMinutes(60));
 
 
 //Dependency Injection
@@ -138,6 +138,29 @@ else
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.Use(async (ctx, next) =>
+{
+    await next();
+
+    if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+    {
+        //Re-execute the request so the user gets the error page
+        string originalPath = ctx.Request.Path.Value;
+        ctx.Items["originalPath"] = originalPath;
+        ctx.Request.Path = "/Error404";
+        await next();
+    }
+
+    if (ctx.Response.StatusCode == 500 && !ctx.Response.HasStarted)
+    {
+        //Re-execute the request so the user gets the error page
+        string originalPath = ctx.Request.Path.Value;
+        ctx.Items["originalPath"] = originalPath;
+        ctx.Request.Path = "/Error500";
+        await next();
+    }
+});
 
 app.UseCors("CORSPolicy");
 

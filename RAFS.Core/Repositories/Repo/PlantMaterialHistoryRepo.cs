@@ -127,7 +127,8 @@ namespace RAFS.Core.Repositories.Repo
            
             List<Item> items = _context.Inventories.Where(x => x.TypeId == typeid).ToList();
             List<Plant> plants = _context.Plants.ToList();
-          
+            List<Unit> units = _context.Units.ToList();
+           
             List<TakeAndSendMaterialDTO> takeAndSendMaterialDTOs = new List<TakeAndSendMaterialDTO>();
 
             foreach (var item in items)
@@ -138,13 +139,15 @@ namespace RAFS.Core.Repositories.Repo
                 {
                     foreach (var diary in diaries)
                     {
+                        Item item1 = items.FirstOrDefault(x => x.Id == diary.InventoryId);
                         TakeAndSendMaterialDTO takeAndSendMaterialDTO = new TakeAndSendMaterialDTO();
                         takeAndSendMaterialDTO.Id = diary.Id;
                         takeAndSendMaterialDTO.InventoryId = diary.InventoryId;
                         takeAndSendMaterialDTO.PlantId = diary.PlantId;
-                        takeAndSendMaterialDTO.InventoryName = items.FirstOrDefault(x => x.Id == diary.InventoryId).ItemName;
+                        takeAndSendMaterialDTO.InventoryName = item1.ItemName;
                         takeAndSendMaterialDTO.PlantName = plants.FirstOrDefault(x => x.Id == diary.PlantId).Name;
                         takeAndSendMaterialDTO.TypeId = items.FirstOrDefault(x => x.Id == diary.InventoryId).TypeId;
+                        takeAndSendMaterialDTO.Unit = units.FirstOrDefault(x => x.Id == item1.UnitId).Name;
                         takeAndSendMaterialDTO.Quality = diary.Quality;
                         takeAndSendMaterialDTO.LastUpdate = diary.LastUpdate;
                         takeAndSendMaterialDTO.Status = diary.Status;

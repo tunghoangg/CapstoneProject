@@ -92,13 +92,94 @@
     </div>
 </div>
 
+<!--Hình ảnh trang trại-->
+<div class="modal fade updateFarmImageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-2 pl-3" style="max-width:600px">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px 26px">
+                <h5 class="modal-title" id="exampleModalLabel">Hình ảnh trang trại</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="padding:10px 26px">
+                <div class="row mt-3">
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <img id="selected-imgaes-farm-1" src="https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik" style="width: 80px; height: 80px; object-fit: cover;" alt=" Chưa có hình ảnh. Hãy thêm mới " />
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <label class="form-label m-1" for="file-images-farm-1">
+                            <i class="mdi mdi-file-image" style=""></i>
+                            Thay ảnh 1
+                        </label>
+                        <input type="file" class="form-control d-none" id="file-images-farm-1" accept=".png, .jpg" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <img id="selected-imgaes-farm-2" src="https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik" style="width: 80px; height: 80px; object-fit: cover;" alt=" Chưa có hình ảnh. Hãy thêm mới " />
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <label class="form-label m-1" for="file-images-farm-2">
+                            <i class="mdi mdi-file-image" style=""></i>
+                            Thay ảnh 2
+                        </label>
+                        <input type="file" class="form-control d-none" id="file-images-farm-2" accept=".png, .jpg" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <img id="selected-imgaes-farm-3" src="https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik" style="width: 80px; height: 80px; object-fit: cover;" alt=" Chưa có hình ảnh. Hãy thêm mới " />
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <label class="form-label m-1" for="file-images-farm-3">
+                            <i class="mdi mdi-file-image" style=""></i>
+                            Thay ảnh 3
+                        </label>
+                        <input type="file" class="form-control d-none" id="file-images-farm-3" accept=".png, .jpg" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <img id="selected-imgaes-farm-4" src="https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik" style="width: 80px; height: 80px; object-fit: cover;" alt=" Chưa có hình ảnh. Hãy thêm mới " />
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <label class="form-label m-1" for="file-images-farm-4">
+                            <i class="mdi mdi-file-image" style=""></i>
+                            Thay ảnh 4
+                        </label>
+                        <input type="file" class="form-control d-none" id="file-images-farm-4" accept=".png, .jpg" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <img id="selected-imgaes-farm-5" src="https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik" style="width: 80px; height: 80px; object-fit: cover;" alt=" Chưa có hình ảnh. Hãy thêm mới " />
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-center align-items-center">
+                        <label class="form-label m-1" for="file-images-farm-5">
+                            <i class="mdi mdi-file-image" style=""></i>
+                            Thay ảnh 5
+                        </label>
+                        <input type="file" class="form-control d-none" id="file-images-farm-5" accept=".png, .jpg" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:10px 26px">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                @* <button type="button" class="btn btn-primary" id="btn-images-farm">Tạo</button> *@
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--Thêm trang trại-->
 <div class="modal fade createFarmModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg mt-2 pl-3">
         <div class="modal-content">
             <div class="modal-header" style="padding:10px 26px">
                 <h5 class="modal-title" id="exampleModalLabel">Tạo mới trang trại</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close btn-close-rest-farm" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
 
@@ -172,7 +253,7 @@
             </div>
             <div class="modal-footer" style="padding:10px 26px">
                 <div id="message-btn-create-new-farm"></div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ẩn</button>
+                <button type="button" class="btn btn-secondary btn-close-rest-farm" data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" id="btn-create-new-farm">Tạo</button>
             </div>
         </div>
@@ -185,7 +266,7 @@
             <div class="modal-header" style="padding:10px 26px">
                 @* - ${e.code} *@
                 <h5 class="modal-title" id="exampleModalLabel">Cập nhật</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close btn-close-rest-farm" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -257,7 +338,7 @@
             </div>
             <div class="modal-footer" style="padding:10px 26px">
                 <div id="message-btn-update-farm-admin"></div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary btn-close-rest-farm" data-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-primary" id="btn-update-farm-admin">Cập nhật</button>
             </div>
         </div>

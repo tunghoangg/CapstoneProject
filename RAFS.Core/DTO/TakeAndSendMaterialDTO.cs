@@ -12,7 +12,10 @@ namespace RAFS.Core.DTO
         public int Id { get; set; }
         public int InventoryId{ get; set; }
         public string InventoryName { get; set; }
+        public string Unit { get; set; }
+
         public int TypeId { get; set; }
+        
         public int PlantId { get; set; }
         public string PlantName { get; set; }
         public string Quality { get; set; }

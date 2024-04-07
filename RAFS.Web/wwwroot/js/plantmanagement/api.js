@@ -189,14 +189,17 @@ function handleChange(select) {
     const selectedValue = selectedOption.value;
     const selectedText = selectedOption.textContent.trim();
     if (selectedValue == 1) {
+        $('.viessss').remove();
         loadPlantMaterialHistory(inputValue, 4);
         document.getElementById("titlereport").innerHTML = "Số liệu hoạt động chăm sóc cây theo ngày";
     }
     if (selectedValue == 2) {
+        $('.viessss').remove();
         loadPlantMaterialHistory(inputValue, 5);
         document.getElementById("titlereport").innerHTML = "Số liệu hoạt động chăm sóc cây theo tuần";
     }
     if (selectedValue == 3) {
+        $('.viessss').remove();
         loadPlantMaterialHistory(inputValue, 6);
         document.getElementById("titlereport").innerHTML = "Số liệu hoạt động chăm sóc cây theo tháng";
     }
@@ -211,18 +214,18 @@ function searchStringInArray(str, strArray) {
 }
 
 function loadPlantMaterialHistory(plantid, type) {
-
+    $('.preloader').remove();
     var obj = "";
     var typeid = 0;
     var id = "#fold-table";
     var rows = "";
-
+    $('.viessss').remove();
 
     if (type == 1) {
-        typeid = 10;
+        typeid = 12;
     }
     if (type == 2) {
-        typeid = 12;
+        typeid = 10;
     }
     if (type == 3) {
         typeid = 18;
@@ -240,9 +243,9 @@ function loadPlantMaterialHistory(plantid, type) {
     if (type == 6 | type == 5 | type == 4) {
         serviceUrl = baseUrl + "Diary/GetPlantDiaryListByType?plantid=" + plantid + "&type=" + typeid;
     }
-
+    console.log(serviceUrl);
     window.Manager.GetAPI(serviceUrl, onSuccess, onFailed);
-    $('.viessss').remove();
+    
     $(id).append(`            <div class='preloader'>
                                                                                     <svg style='margin-left: 35%;' class="ip" viewBox="0 0 256 128" width="256px" height="128px" xmlns="http://www.w3.org/2000/svg">
                                                                         <defs>
@@ -273,6 +276,7 @@ function loadPlantMaterialHistory(plantid, type) {
                                                                 </div>`);
     function onSuccess(jsonData) {
         let listDate = [];
+       
 
         obj = jsonData;
         var rows = "";
@@ -307,11 +311,11 @@ function loadPlantMaterialHistory(plantid, type) {
                         "<table class='small-friendly'>" +
                         "<thead>" +
                         "<tr>" +
-                        "<th><span class='visible-small' title='Company name'>Comp. name</span><span class='visible-big'>Record Id</span></th>" +
-                        "<th><span class='visible-small' title='Customer number'>Cust.#</span><span class='visible-big'>Title</span></th>" +
-                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Body</span></th>" +
-                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Image</span></th>" +
-                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>LastUpdate</span></th>" +
+                        "<th><span class='visible-small' title='Company name'>Comp. name</span><span class='visible-big'>Id</span></th>" +
+                        "<th><span class='visible-small' title='Customer number'>Cust.#</span><span class='visible-big'>Tiêu đề</span></th>" +
+                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Nội dung</span></th>" +
+                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Ảnh</span></th>" +
+                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Thời điểm cập nhật</span></th>" +
 
                         "</tr>" +
                         "</thead>" +
@@ -341,10 +345,11 @@ function loadPlantMaterialHistory(plantid, type) {
                         "<table class='small-friendly'>" +
                         "<thead>" +
                         "<tr>" +
-                        "<th><span class='visible-small' title='Company name'>Comp. name</span><span class='visible-big'>Record Id</span></th>" +
-                        "<th><span class='visible-small' title='Customer number'>Cust.#</span><span class='visible-big'>Item Name</span></th>" +
-                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Quality</span></th>" +
-                        "<th><span class='visible-small' title='Insurance number'>Ins.#</span><span class='visible-big'>LastUpdate</span></th>" +
+                        "<th><span class='visible-small' title='Company name'>Comp. name</span><span class='visible-big'> Id</span></th>" +
+                        "<th><span class='visible-small' title='Customer number'>Cust.#</span><span class='visible-big'>Tên vật phẩm</span></th>" +
+                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Số lượng </span></th>" +
+                        "<th><span class='visible-small' title='Customer name'>Cust. name</span><span class='visible-big'>Đơn vị </span></th>" +
+                        "<th><span class='visible-small' title='Insurance number'>Ins.#</span><span class='visible-big'>Thời điểm cập nhật </span></th>" +
 
                         "</tr>" +
                         "</thead>" +
@@ -353,6 +358,7 @@ function loadPlantMaterialHistory(plantid, type) {
                         "<td data-th='Company name'>" + item.id + "</td>" +
                         "<td data-th='Customer no'>" + item.inventoryName + "</td>" +
                         "<td data-th='Customer name'>" + item.quality + "</td>" +
+                        "<td data-th='Customer name'>" + item.unit + "</td>" +
                         "<td data-th='Insurance no'>" + texttime + "</td>" +
                         "</tr>" +
                         "</tbody>" +
@@ -362,6 +368,7 @@ function loadPlantMaterialHistory(plantid, type) {
                         "</td>" +
                         "</tr>";
                 }
+                $('.viessss').remove();
                 $(id).append(rows);
 
             } else {
@@ -370,7 +377,7 @@ function loadPlantMaterialHistory(plantid, type) {
                         "<td data-th='Company name'>" + item.id + "</td>" +
                         "<td data-th='Customer no'>" + item.title + "</td>" +
                         "<td data-th='Customer no'>" + item.body + "</td>" +
-                        "<td data-th='Customer name'> <img src='" + item.image + "' alt='Girl in a jacket'></td>" +
+                        "<td data-th='Customer name'> <img style='width:100%;'  src='" + item.image + "' alt='Girl in a jacket'></td>" +
                         "<td data-th='Insurance no'>" + texttime + "</td>" +
                         "</tr>";
 
@@ -378,8 +385,10 @@ function loadPlantMaterialHistory(plantid, type) {
                     rows =
                         "<tr>" +
                         "<td data-th='Company name'>" + item.id + "</td>" +
-                        "<td data-th='Customer no'>" + item.inventoryName + "</td>" +
-                        "<td data-th='Customer name'>" + item.quality + "</td>" +
+                    "<td data-th='Customer no'>" + item.inventoryName + "</td>" +
+                    
+                    "<td data-th='Customer name'>" + item.quality + "</td>" +
+                    "<td data-th='Customer name'>" + item.unit + "</td>" +
                         "<td data-th='Insurance no'>" + texttime + "</td>" +
                         "</tr>";
                 }
@@ -454,44 +463,143 @@ const updateLogoFarm = (fileLogo) => {
 };
 
 function Update() {
+    var name = document.getElementById("name2").value;
+    var type = document.getElementById("type2").value;
+    var area = document.getElementById("area2").value;
+    var plantingMethod = document.getElementById("plantingMethod2").value;
+    var numofPassField = 0;
+    if (name == null || name.length === 0) {
+        //     createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Tên của cây không được để trống');
+        document.getElementById("name2-toast").innerHTML = 'Tên của cây không được để trống';
+    } else if (name.length < 6) {
+        document.getElementById("name2-toast").innerHTML = 'Tên của cây không được ít hơn 5 kí tự ';
 
-    var xhttp = new XMLHttpRequest();
+    } else {
+        numofPassField++;
+    }
+    if (type === null || type.length === 0) {
+        // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Loại cây không được để trống');
+        document.getElementById("type2-toast").innerHTML = 'Loại cây không được để trống';
+    } else {
+        numofPassField++;
+    }
+    if (area === null || area.length === 0) {
+        // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích trồng cây không được để trống');
+        document.getElementById("area2-toast").innerHTML = 'Diện tích trồng cây không được để trống';
+    } else if (parseFloat(area) <= 0) {
+        //createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích không được nhỏ hơn hoặc bằng 0');
+        document.getElementById("area2-toast").innerHTML = 'Diện tích không được nhỏ hơn hoặc bằng 0';
+    } else {
+        numofPassField++;
+    }
+    if (plantingMethod === null || plantingMethod.length === 0) {
+        // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Phương thức trồng của cây không được để trống');
+        document.getElementById("plantingMethod2-toast").innerHTML = 'Phương thức trồng của cây không được để trống';
+    } else {
+        numofPassField++;
+    }
 
-    xhttp.open("PUT", baseUrl + "Plant/UpdatePlant", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    var obj = {
-        id: document.getElementById("id2").value,
-        name: document.getElementById("name2").value,
-        milestoneId: document.getElementById("milestoneId2").value,
-        type: document.getElementById("type2").value,
-        description: document.getElementById("description2").value,
-        area: document.getElementById("area2").value,
-        areaUnit: document.getElementById("areaUnit2").value,
-        healthCondition: document.getElementById("healthCondition2").value,
-        plantingMethod: document.getElementById("plantingMethod2").value
+    if (numofPassField == 4) {
+        var xhttp = new XMLHttpRequest();
 
-    };
-    xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-            var response = JSON.parse(xhttp.responseText);
-            if (xhttp.status === 200) {
-                createToast('success', 'fa-solid fa-circle-check', 'Success', 'Sửa thành công');
+        xhttp.open("PUT", baseUrl + "Plant/UpdatePlant", true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        var obj = {
+            id: document.getElementById("id2").value,
+            name: document.getElementById("name2").value,
+            milestoneId: document.getElementById("milestoneId2").value,
+            type: document.getElementById("type2").value,
+            description: document.getElementById("description2").value,
+            area: document.getElementById("area2").value,
+            areaUnit: document.getElementById("areaUnit2").value,
+            healthCondition: document.getElementById("healthCondition2").value,
+            plantingMethod: document.getElementById("plantingMethod2").value
 
-                window.location = "/plant?#";
-                Manager.GetAllProduct();
+        };
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4) {
+                var response = JSON.parse(xhttp.responseText);
+                if (xhttp.status === 200) {
+                    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Sửa thành công');
+
+                    window.location = "/plant?#";
+                    Manager.GetAllProduct();
 
 
-            } else {
-                createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Chưa cập nhật thành công');
+                } else {
+                   
+                    var errorMessage;
+                    if (response && response.message) {
+                        errorMessage = response.message;
+                    } else {
+                        errorMessage = "Unknown error occurred.";
+                    }
+                    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', errorMessage);
 
+                }
             }
         }
+        xhttp.send(JSON.stringify(obj));
+
+
+        pauseExecution(100);
     }
-    xhttp.send(JSON.stringify(obj));
+}
+function validateInput(inputId) {
+    var value = document.getElementById(inputId).value;
+    var toastId = inputId + "-toast";
+    if (inputId == "name2" || inputId == "name") {
+        if (value == null || value.length === 0) {
+            //     createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Tên của cây không được để trống');
+            document.getElementById("name2-toast").innerHTML = 'Tên của cây không được để trống';
+            document.getElementById("name-toast").innerHTML = 'Tên của cây không được để trống';
 
+        } else if (value.length < 6) {
+            document.getElementById("name2-toast").innerHTML = 'Tên của cây không được ít hơn 5 kí tự ';
+            document.getElementById("name-toast").innerHTML = 'Tên của cây không được ít hơn 5 kí tự ';
 
-    pauseExecution(100);
+        } else {
+            document.getElementById("name2-toast").innerHTML = "";
+            document.getElementById("name-toast").innerHTML ="";
+        }
+    }
+    if (inputId == "type2" || inputId == "type") {
+        if (value === null || value.length === 0) {
+            // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Loại cây không được để trống');
+            document.getElementById("type2-toast").innerHTML = 'Loại cây không được để trống';
+            document.getElementById("type-toast").innerHTML = 'Loại cây không được để trống';
 
+        } else {
+            document.getElementById("type2-toast").innerHTML = "";
+            document.getElementById("type-toast").innerHTML = "";
+        }
+    }
+    if (inputId == "area2" || inputId == "area") {
+        if (value === null || value.length === 0) {
+            // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích trồng cây không được để trống');
+            document.getElementById("area2-toast").innerHTML = 'Diện tích trồng cây không được để trống';
+            document.getElementById("area-toast").innerHTML = 'Diện tích trồng cây không được để trống';
+        } else if (parseFloat(value) <= 0) {
+            //createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích không được nhỏ hơn hoặc bằng 0');
+            document.getElementById("area2-toast").innerHTML = 'Diện tích không được nhỏ hơn hoặc bằng 0';
+            document.getElementById("area-toast").innerHTML = 'Diện tích không được nhỏ hơn hoặc bằng 0';
+
+        } else {
+            document.getElementById("area2-toast").innerHTML = "";
+            document.getElementById("area-toast").innerHTML = "";
+        }
+    }
+    if (inputId == "plantingMethod2" || inputId == "plantingMethod") {
+        if (value === null || value.length === 0) {
+            // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Phương thức trồng của cây không được để trống');
+            document.getElementById("plantingMethod2-toast").innerHTML = 'Phương thức trồng của cây không được để trống';
+            document.getElementById("plantingMethod-toast").innerHTML = 'Phương thức trồng của cây không được để trống';
+
+        } else {
+            document.getElementById("plantingMethod2-toast").innerHTML = "";
+            document.getElementById("plantingMethod-toast").innerHTML = "";
+        }
+    }
 }
 function Delete(resId) {
     $.ajax({
@@ -512,39 +620,99 @@ function Delete(resId) {
 
 }
 function Create() {
-    const fileInput = document.getElementById("image");
+    var name = document.getElementById("name").value;
+   
+    var type = document.getElementById("type").value;
+    var area = document.getElementById("area").value;
+    var plantingMethod = document.getElementById("plantingMethod").value;
+   
+    var numofPassField = 0;
+    
+    if (name == null || name.length === 0 ) {
+   //     createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Tên của cây không được để trống');
+        document.getElementById("name-toast").innerHTML = 'Tên của cây không được để trống';
+    } else if ( name.length < 6) {
+        document.getElementById("name-toast").innerHTML = 'Tên của cây không được ít hơn 5 kí tự ';
 
-    if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-
-
-
-        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        numofPassField++;
+    }
+    if (type === null || type.length === 0) {
+       // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Loại cây không được để trống');
+        document.getElementById("type-toast").innerHTML = 'Loại cây không được để trống';
+    } else {
+        numofPassField++;
+    }
+    if (area === null || area.length === 0) {
+       // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích trồng cây không được để trống');
+        document.getElementById("area-toast").innerHTML = 'Diện tích trồng cây không được để trống';
+    } else if (parseFloat(area) <= 0) {
+        //createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích không được nhỏ hơn hoặc bằng 0');
+        document.getElementById("area-toast").innerHTML = 'Diện tích không được nhỏ hơn hoặc bằng 0';
+    } else {
+        numofPassField++;
+    }
+    if (plantingMethod === null || plantingMethod.length === 0) {
+       // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Phương thức trồng của cây không được để trống');
+        document.getElementById("plantingMethod-toast").innerHTML = 'Phương thức trồng của cây không được để trống';
+    } else {
+        numofPassField++;
     }
 
-    const elementIds = ["name", "milestoneId", "type", "description", "area", "areaUnit", "healthCondition", "plantingMethod"];
+    var image = document.getElementById("image");
+    var imageFile = image.files[0]; // Get the first selected file, if any
 
-    const formData = new FormData();
+    if (imageFile === undefined) {
+        // No file selected
+       // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Cây cần có ảnh');
+        document.getElementById("image-toast").innerHTML = 'Cây cần có ảnh';
 
-    elementIds.forEach(id => {
-        formData.append(id.replace(/2$/, ''), document.getElementById(id).value);
-    });
-    formData.append('Image', fileInput.files[0]);
-    $.ajax({
-        url: baseUrl + "Plant/CreatePlant",
-        type: "POST",
-        contentType: false,
-        processData: false,
-        data: formData,
-        success: function (response) {
-            createToast('success', 'fa-solid fa-circle-check', 'Success', 'Tạo thành công');
-            window.location = "/plant?#";
-            Manager.GetAllProduct();
-        },
-        error: function (xhr, status, error) {
-            createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Chưa tạo thành công lỗi: ' + error);
+    } else {
+        // File selected
+        numofPassField++;
+    }
+    if (numofPassField == 5) { 
+        var description = document.getElementById("description").value;
+        if (description == null || description.length === 0) {
+            //     createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Tên của cây không được để trống');
+            $('#description').val("không có mô tả");
         }
-    });
+        const fileInput = document.getElementById("image");
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+
+        const elementIds = ["name", "milestoneId", "type", "description", "area", "areaUnit", "healthCondition", "plantingMethod"];
+
+        const formData = new FormData();
+
+        elementIds.forEach(id => {
+            formData.append(id.replace(/2$/, ''), document.getElementById(id).value);
+        });
+        formData.append('Image', fileInput.files[0]);
+        $.ajax({
+            url: baseUrl + "Plant/CreatePlant",
+            type: "POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                createToast('success', 'fa-solid fa-circle-check', 'Success', 'Tạo thành công');
+                window.location = "/plant?#";
+                Manager.GetAllProduct();
+            },
+            error: function (xhr, status, error) {
+                var errorMessage;
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else {
+                    errorMessage = "Unknown error occurred.";
+                }
+                createToast('error', 'fa-solid fa-circle-exclamation', 'Error', errorMessage);
+            }
+        });
+    }
 };
 
 // helpers
@@ -554,7 +722,7 @@ function addColumn(name, id) {
             <div class="col-sm-6 col-md-4 col-xl-3" id='milestone${id}'>
             <div class="card bg-light">
                 <div class="card-body">
-                        <h6 class="card-title text-uppercase text-truncate py-2">${name}</h6>
+                       <a href="/milestone?milestoneid=${id}"> <h6 style="color: blue;" class="card-title text-uppercase text-truncate py-2">${name}</h6></a>
                         <div id='listplant${id}' class="items border border-light">
                     </div>
                   <div class="dropzone rounded" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="clearDrop(event)"> &nbsp; </div>
@@ -592,8 +760,9 @@ function unwrap(node) {
 }
 var Manager = {
     GetAllProduct: function () {
+        let listType = [];
         var obj = "";
-        var serviceUrl = baseUrl + "Plant/GetMilestoneList?farmid=" + farmid;
+        var serviceUrl = baseUrl + "Plant/GetMilestoneList?farmid=" + farmId;
         window.Manager.GetAPI(serviceUrl, onSuccess, onFailed);
 
         function onSuccess(jsonData) {
@@ -618,9 +787,9 @@ var Manager = {
         }
 
         setTimeout(function () {
-            serviceUrl = baseUrl + "Plant/GetPlantList?farmid=" + farmid;
+            serviceUrl = baseUrl + "Plant/GetPlantList?farmid=" + farmId;
             window.Manager.GetAPI(serviceUrl, onSuccess2, onFailed2);
-
+           
             function onSuccess2(jsonData) {
                 obj = jsonData;
                 var rows = "";
@@ -640,7 +809,7 @@ var Manager = {
                     <div class="card-body p-2">
                         <div class="card-title">
                             <img src="//via.placeholder.com/30" class="rounded-circle float-right">
-                            <a href="" class="lead font-weight-light">${item.name}</a>
+                            <a href="#" style="color:black;" class="lead font-weight-light">${item.name}</a>
                         </div>
                             <p>
                               <strong>Tình trạng sức khỏe: </strong> ${health}
@@ -648,27 +817,41 @@ var Manager = {
                             <p>
                                <strong>Phương pháp trồng: </strong> ${item.plantingMethod}
                             </p>
-                            <div class="row" >
-                            <div class="col-md-4 col-sm-4 ">
-                            <button id="detailButton" style="padding: 10% 10% ; " type="button" class="btn btn-primary detail-option" data-toggle="modal"data-target="#staticBackdrop">Xem chi tiết</button>
+                            <div class="row" style="width :100%;">
+                            <div class="col-lg-5 col-md-5 col-sm-5 ">
+                            <button id="detailButton" style=" padding: inherit; margin-bottom: 5px;    margin-top: 5px;  height: 100%; width: 100%;max-width: 120px;min-width: 67px;" type="button" class="btn btn-primary detail-option" data-toggle="modal"data-target="#staticBackdrop">Xem chi tiết</button>
                              </div>
-                            <div class="col-md-4 col-sm-4">
-                            <button id="plantid${item.id}" style="padding: 10% 10% ; background-color: gray; border-color: gray;" class=" pure2 btn btn-primary btn-sm update-option">Chỉnh sửa </button>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <button id="plantid${item.id}" style="padding: inherit;   margin-bottom: 5px;    margin-top: 5px;  height: 100%; background-color: gray; border-color: gray;  width: 100%;max-width: 120px;min-width: 67px;" class=" pure2 btn btn-primary btn-sm update-option">Chỉnh sửa </button>
                              </div>
-                            <div class="col-md-4 col-sm-4">
-                            <button style="padding: 10% 10% ; background-color: red; border-color: red;" id="plandeltid${item.id}" class=" pure2 btn btn-primary btn-sm delete-option">Xóa </button>    
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                            <button style="padding: inherit; background-color: red;  margin-bottom: 5px;   margin-top: 5px;   height: 100%; border-color: red; width: 100%;max-width: 120px;min-width: 55px;" id="plandeltid${item.id}" class=" pure2 btn btn-primary btn-sm delete-option">Xóa </button>    
                              </div>
                             </div>
                     </div>
                 </div>
                 <div class="dropzone rounded" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="clearDrop(event)">&nbsp;</div>`;
 
+                    var indexof = searchStringInArray(item.plantingMethod, listType);
+                   
+                    if (indexof === -1) {
+                        listType.push(item.plantingMethod);
+                    }
+                   
                     var id = "#listplant" + item.milestoneId;
                     $(id).append(rows);
 
                     rows = "";
 
                 });
+                
+                $.each(listType, function (index, option) {
+                    $('#typeFilter').append($('<option>', {
+                        value: option,
+                        text: option
+                    }));
+                });
+
                 const select = document.getElementById("selecttype");
                 select.style.display = "none";
                 $(".delete-option").on("click", function (e) {
@@ -687,13 +870,13 @@ var Manager = {
                     $('#plantlist').empty().append(rows);
                 });
                 $(".update-option").on("click", function (e) {
-                    window.location = "/plant?#popup2";
+                    
                     var resId = $(this).attr("id");
                     resId = resId.slice(7);
 
                     resId = resId.replace(/\D/g, '');
                     resId = parseInt(resId);
-
+                   
                     $.ajax({
                         url: baseUrl + "Plant/GetPlantById?id=" + resId,
                         type: "get",
@@ -708,6 +891,9 @@ var Manager = {
                             $("#areaUnit2").val(result["areaUnit"]);
                             $("#healthCondition2").val(result["healthCondition"]);
                             $("#plantingMethod2").val(result["plantingMethod"]);
+                            pauseExecution(200);
+                            window.location = "/plant#popup2";
+                            
                         }
                     });
                     
@@ -734,6 +920,7 @@ var Manager = {
                             $("#image3").attr("src", result["image"]);
 
                             loadPlantMaterialHistory(result["id"], 1);
+                            $('.viessss').remove();
                             Manager.GetAllRecord();   
                         }
                     });
@@ -752,6 +939,7 @@ var Manager = {
 
         return obj;
     }, GetAllRecord: function () {
+        
         var obj = "";
         var inputValue = document.getElementById('id3').value;
         var serviceUrl = baseUrl + "QR/GetPlantRecord?plantid=" + inputValue;

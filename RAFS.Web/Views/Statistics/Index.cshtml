@@ -1,4 +1,9 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using RAFS.Core.Models
+@inject SignInManager<AspUser> SignInManager
+@inject UserManager<AspUser> UserManager
+
+@{
     Layout = "_DashboardLayout";
 }
 
@@ -7,7 +12,7 @@
         <div class="col-md-12 grid-margin">
             <div class="row">
                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                    <h3 class="font-weight-bold">Xin chào! Aamir</h3>
+                    <h3 class="font-weight-bold">Xin chào! @User?.Identity?.Name</h3>
                     <h6 class="font-weight-normal mb-0">Dưới đây là thống kê trang trại của bạn </h6>
                     @* <span class="text-primary">3 unread alerts!</span> *@
                 </div>
@@ -15,7 +20,7 @@
                     <div class="justify-content-end d-flex">
                         <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
                             <select id="farmStatisticSelect" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                <option value="0" selected>--------Tất cả--------</option>
+                                <option value="0" selected>--------TỔNG HỢP--------</option>
                             </select>
                         </div>
                         <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
@@ -34,15 +39,16 @@
         <div class="col-md-6 grid-margin stretch-card">
             <div class="card tale-bg">
                 <div class="card-people mt-auto">
-                    <img src="~/Assets/Dashboard/images/dashboard/people.svg" alt="people">
+                    <img id="statistic-logo-farm" src="~/Assets/Dashboard/images/dashboard/people.svg" alt="people">
                     <div class="weather-info">
                         <div class="d-flex">
-                            <div>
-                                <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
-                            </div>
-                            <div class="ml-2">
-                                <h4 class="location font-weight-normal">Bangalore</h4>
-                                <h6 class="font-weight-normal">India</h6>
+                            @* <div>
+                                <h4  class="mb-0 font-weight-normal"></h4>
+                            </div> *@
+                            @* `<i class="mdi mdi-chart-areaspline mr-2"></i><sup>ha</sup>`*@
+                            <div class="ml-2" >
+                                <h2 id="statistic-farm-name" class="location"></h2>
+                                <h6 id="statistic-farm-area" class="font-weight-normal" style="margin-top:5px; font-size:14px; margin-left:2px"></h6>
                             </div>
                         </div>
                     </div>
@@ -54,18 +60,18 @@
                 <div class="col-md-6 mb-4 stretch-card transparent">
                     <div class="card card-tale">
                         <div class="card-body">
-                            <p class="mb-4">Tổng thu</p>
-                            <p class="fs-30 mb-2">4006</p>
-                            @* <p>10.00% (30 days)</p> *@
+                            <p class="mb-4">TỔNG THU</p>
+                            <p id="statistic-sum-in" class="fs-30 mb-2"></p>
+                            <p>triệu VNĐ</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 mb-4 stretch-card transparent">
                     <div class="card card-dark-blue">
                         <div class="card-body">
-                            <p class="mb-4">Tổng chi</p>
-                            <p class="fs-30 mb-2">61344</p>
-                            @* <p>22.00% (30 days)</p> *@
+                            <p class="mb-4">TỔNG CHI</p>
+                            <p id="statistic-sum-out" class="fs-30 mb-2"></p>
+                            <p>triệu VNĐ</p>
                         </div>
                     </div>
                 </div>
@@ -74,18 +80,18 @@
                 <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                     <div class="card card-light-blue">
                         <div class="card-body">
-                            <p class="mb-4">Số sản phẩm</p>
-                            <p class="fs-30 mb-2">34040</p>
-                            @* <p>2.00% (30 days)</p> *@
+                            <p class="mb-4">SỐ SẢN PHẨM</p>
+                            <p id="statistic-sum-item" class="fs-30 mb-2"></p>
+                            <p>sản phẩm</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 stretch-card transparent">
                     <div class="card card-light-danger">
                         <div class="card-body">
-                            <p class="mb-4">Tổng giá trị</p>
-                            <p class="fs-30 mb-2">47033</p>
-                            @* <p>0.22% (30 days)</p> *@
+                            <p class="mb-4">TỔNG GIÁ TRỊ</p>
+                            <p id="statistic-sum-item-value" class="fs-30 mb-2"></p>
+                            <p>triệu VNĐ</p>
                         </div>
                     </div>
                 </div>
@@ -97,7 +103,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
-                        <p class="card-title">Thống kê dòng tiền</p>
+                        <p class="card-title">THỐNG KÊ DÒNG TIỀN</p>
                         @* <a href="#" class="text-info">View all</a> *@
                     </div>
                     <p class="font-weight-500">Các khoản thu chi của trang trại này trong năm</p>
@@ -113,7 +119,7 @@
         <div class="col-lg-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Dòng tiền chi</h4>
+                    <h4 class="card-title">DÒNG TIỀN CHI (%)</h4>
                     <canvas id="doughnutChart-cash-out"></canvas>
                 </div>
             </div>
@@ -121,7 +127,7 @@
         <div class="col-lg-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Dòng tiền thu</h4>
+                    <h4 class="card-title">DÒNG TIỀN THU (%)</h4>
                     <canvas id="doughnutChart-cash-in"></canvas>
                 </div>
             </div>
@@ -137,10 +143,10 @@
                                 <div class="row">
                                     <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
                                         <div class="ml-xl-4 mt-3">
-                                            <p class="card-title">Sản phẩm trang trại</p>
-                                            <h1 class="text-primary">$34040</h1>
+                                            <p class="card-title">THỐNG KÊ SẢN PHẨM</p>
+                                            <h1 id="statistic-total-item" class="text-primary"></h1>
                                             <h3 class="font-weight-500 mb-xl-4 text-primary">triệu VNĐ</h3>
-                                            <p class="mb-2 mb-xl-0">Tổng giá trị sản phẩm</p>
+                                            <p class="mb-2 mb-xl-0">Tổng giá trị các sản phẩm</p>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-xl-9">
@@ -150,57 +156,57 @@
                                                     <table class="table table-borderless report-table">
                                                         <tr>
                                                             <td class="text-muted">Thuốc hóa học</td>
-                                                            <td class="w-100 px-0">
+                                                            @* <td class="w-100 px-0">
                                                                 <div class="progress progress-md mx-4">
-                                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div id="statistic-item-10-1" class="progress-bar bg-primary" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                            </td>
-                                                            <td><h5 class="font-weight-bold mb-0">500</h5></td>
+                                                            </td> *@
+                                                            <td><h5 id="statistic-item-10-2" class="font-weight-bold mb-0"></h5></td>
                                                         </tr>
                                                         <tr>
                                                             <td class="text-muted">Phân bón hóa học</td>
-                                                            <td class="w-100 px-0">
+                                                            @* <td class="w-100 px-0">
                                                                 <div class="progress progress-md mx-4">
-                                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div id="statistic-item-12-1" class="progress-bar bg-warning" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                            </td>
-                                                            <td><h5 class="font-weight-bold mb-0">583</h5></td>
+                                                            </td> *@
+                                                            <td><h5 id="statistic-item-12-2" class="font-weight-bold mb-0"></h5></td>
                                                         </tr>
                                                         <tr>
                                                             <td class="text-muted">Máy móc</td>
-                                                            <td class="w-100 px-0">
+                                                            @* <td class="w-100 px-0">
                                                                 <div class="progress progress-md mx-4">
-                                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div id="statistic-item-15-1" class="progress-bar bg-danger" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                            </td>
-                                                            <td><h5 class="font-weight-bold mb-0">924</h5></td>
+                                                            </td> *@
+                                                            <td><h5 id="statistic-item-15-2" class="font-weight-bold mb-0"></h5></td>
                                                         </tr>
                                                         <tr>
                                                             <td class="text-muted">Công cụ</td>
-                                                            <td class="w-100 px-0">
+                                                            @* <td class="w-100 px-0">
                                                                 <div class="progress progress-md mx-4">
-                                                                    <div class="progress-bar bg-info" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div id="statistic-item-16-1" class="progress-bar bg-info" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                            </td>
-                                                            <td><h5 class="font-weight-bold mb-0">664</h5></td>
+                                                            </td> *@
+                                                            <td><h5 id="statistic-item-16-2" class="font-weight-bold mb-0"></h5></td>
                                                         </tr>
                                                         <tr>
                                                             <td class="text-muted">Chế phẩm sinh học</td>
-                                                            <td class="w-100 px-0">
+                                                            @* <td class="w-100 px-0">
                                                                 <div class="progress progress-md mx-4">
-                                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div id="statistic-item-17-1" class="progress-bar bg-primary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                            </td>
-                                                            <td><h5 class="font-weight-bold mb-0">560</h5></td>
+                                                            </td> *@
+                                                            <td><h5 id="statistic-item-17-2" class="font-weight-bold mb-0"></h5></td>
                                                         </tr>
                                                         <tr>
                                                             <td class="text-muted">Sản phẩm nông sản</td>
-                                                            <td class="w-100 px-0">
+                                                            @* <td class="w-100 px-0">
                                                                 <div class="progress progress-md mx-4">
-                                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div id="statistic-item-18-1" class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                            </td>
-                                                            <td><h5 class="font-weight-bold mb-0">793</h5></td>
+                                                            </td> *@
+                                                            <td><h5 id="statistic-item-18-2" class="font-weight-bold mb-0"></h5></td>
                                                         </tr>
                                                     </table>
                                                 </div>

@@ -28,7 +28,7 @@ namespace RAFS.Core.DTO
         public string AreaUnit { get; set; }
         public int HealthCondition { get; set; }
         public string PlantingMethod { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public string? QRCode { get; set; }
         public DateTime LastUpdate { get; set; }
         public bool Status { get; set; }

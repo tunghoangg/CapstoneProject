@@ -37,6 +37,21 @@ namespace RAFS.Core.Services.Service
             List<Farm> listFarm = await _uow.farmAdminRepo.GetFarmAdminDTOsAsync(userId);
             var listFarmDTO = _mapper.Map<List<FarmAdminDTO>>(listFarm);
             List<int> dtos = listFarmDTO.Select(x => x.Id).ToList();
+            List<double> listArea = listFarmDTO.Select(x => x.Area).ToList();
+            double sumArea = 0;
+            if (listArea.Count >= 1)
+            {
+                foreach (var item in listArea)
+                {
+                    sumArea += item;
+                }
+                model.TotalArea = sumArea;
+            }
+            else
+            {
+                model.TotalArea = 0;
+            }
+
 
             StatisticCashFlowDTO itemCashFlow = await _uow.cashFlowRepo.StatisticCashFlowAsync(dtos, farmId, yearStatistic);
             StatisticItemDTO itemItem = await _uow.itemRepo.StatisticItemAsync(dtos, farmId, yearStatistic);
@@ -67,6 +82,7 @@ namespace RAFS.Core.Services.Service
 
                 model.ItemValue = itemItem.ItemValue;
                 model.TopThreeValue = itemItem.TopThreeValue;
+                model.TopThreeName = itemItem.TopThreeName;
             }
             
 

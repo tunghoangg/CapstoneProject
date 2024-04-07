@@ -137,7 +137,7 @@
             const fetchForms = (page) => {
                 var sort = $('#filterForm').val();
                 $.ajax({
-                    url: `https://localhost:7043/api/Guest/GetFormList/${page}`,
+                    url: baseUrl + `Guest/GetFormList/${page}`,
                     method: 'GET',
                     data: {
                         sort: sort
@@ -263,7 +263,7 @@
 
             // Gửi AJAX request để lấy dữ liệu dựa trên formid
             $.ajax({
-                url: `https://localhost:7043/api/Guest/GetQuestionContent/${formid}`,
+                url: baseUrl + `Guest/GetQuestionContent/${formid}`,
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -330,7 +330,7 @@
 
             // Gửi AJAX request để cập nhật dữ liệu dựa trên formid
             $.ajax({
-                url: `https://localhost:7043/api/Guest/UpdateStatus/${formid}`,
+                url: baseUrl + `Guest/UpdateStatus/${formid}`,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(formStatus),
@@ -353,9 +353,11 @@
                     }, 5000); // 5000 milliseconds = 5 giây
                 },
                 error: function (xhr, status, error) {
-                    console.log("error");
-                    console.log(formid);
-                    console.log(formStatus);
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-check';
+                    let title = 'Cập nhật không thành công';
+                    let text = 'Có lỗi trong quá trình cập nhật';
+                    createToast(type, icon, title, text);
                 }
             });
         });

@@ -1,19 +1,68 @@
 ﻿$(document).ready(function () {
+
+    var searchName = "";
+    var selectValue = 0;
+    var odByNum = 0;
     var page = 1;
     var totalPages = 0;
+    var milestoneId = checkParameter()
+    $("table").on("click", "tr", function (e) {
 
+        var resId = e.target.closest("tr").id;
+        resId = resId.slice(9);
+
+        resId = resId.replace(/\D/g, '');
+        resId = parseInt(resId);
+        var checkload = false;
+        $.ajax({
+            url: baseUrl + "Plant/GetMilestoneById?id=" + resId,
+            type: "get",
+            contentType: "application/json",
+            success: function (result, status, xhr) {
+
+                $("#name").val(result["name"]);
+                $("#id").val(result["id"]);
+                $("#description").val(result["description"]);
+                checkload = true;
+                if (checkload) {
+                    window.location = "/milestone#popup2";
+                }
+                
+
+            }
+        });
+
+
+    });
     $('#sortBtn').click(function () {
-        var page = 1;
-        var totalPages = 0;
-        console.log($('#filterForm').val());
+        searchName = document.getElementById("searchName").value;
+        selectValue = document.getElementById("filterForm").value;
+        
         fetchForms(page);
     });
-    const fetchForms = (page) => {
+    var fetchForms = (page) => {
 
         var sort = $('#filterForm').val();
+        var apiurl = "";
+        apiurl = baseUrl + `Plant/GetListAllFarmMilestones?farmid=${farmid}&page=${page}`;
 
+        if (searchName.trim().length > 0 && selectValue == 0) {
+            apiurl = baseUrl + `Plant/GetSearchMilestone?farmid=${farmid}&search=${searchName}`;
+        } else if (searchName.trim().length > 0 && selectValue == 1) {
+            apiurl = baseUrl + `Plant/GetSearchDateMilestone?farmid=${farmid}&search=${searchName}`;
+        } else if (searchName.trim().length > 0 && selectValue == 2) {
+            apiurl = baseUrl + `Plant/GetSearchNumMilestone?farmid=${farmid}&search=${searchName}`;
+        } else if (searchName.trim().length > 0) {
+            apiurl = baseUrl + `Plant/GetSearchMilestone?farmid=${farmid}&search=${searchName}`;
+        } else if (selectValue == 0) {
+            apiurl = baseUrl + `Plant/GetListAllFarmMilestones?farmid=${farmid}&page=${page}`;
+        } else if (selectValue == 1) {
+            apiurl = baseUrl + `Plant/GetMilestoneOdByLastUpdate?farmid=${farmid}`;
+        } else if (selectValue == 2) {
+            apiurl = baseUrl + `Plant/GetMilestoneOdByNumberOfPlant?farmid=${farmid}`;
+        }
         $.ajax({
-            url: baseUrl + `Plant/GetAllFarmMilestones?farmid=${farmid}&page=${page}`,
+            url: apiurl,
             method: 'GET',
             data: {
                 sort: sort
@@ -28,7 +77,7 @@
                     });
                     updatePaginationButtons(page);
                 } else {
-                    $('#content-form').html('<h1>Không tìm được câu hỏi</h1>');
+                    $('#content-form').html('<h2>Chưa có nhóm nào được tạo trong trang trại này</h2>');
                     $('#pagi-pages').html('');
                 }
             },
@@ -166,26 +215,25 @@
         });
 
     });
-    $("table").on("click", "tr", function (e) {
+   
+    if (milestoneId != 0) {
 
-        var resId = e.target.closest("tr").id;
-        resId = resId.slice(9);
-
-        resId = resId.replace(/\D/g, '');
-        resId = parseInt(resId);
-        window.location = "/milestone?#popup2";
+        console.log(baseUrl + "Plant/GetMilestoneById?id=" + milestoneId);
         $.ajax({
-            url: baseUrl + "Plant/GetMilestoneById?id=" + resId,
+            url: baseUrl + "Plant/GetMilestoneById?id=" + milestoneId,
             type: "get",
             contentType: "application/json",
             success: function (result, status, xhr) {
-
+                console.log(baseUrl + "Plant/GetMilestoneById?id=" + milestoneId);
                 $("#name").val(result["name"]);
                 $("#id").val(result["id"]);
                 $("#description").val(result["description"]);
+                pauseExecution(500);
+                window.location = "/milestone?milestoneid=" + milestoneId + "#popup2";
             }
         });
 
-
-    });
+    } else {
+        window.location = "/milestone#";
+    }
 });

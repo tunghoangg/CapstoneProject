@@ -18,13 +18,8 @@ namespace RAFS.Core.Repositories.Generics
         IPlantRepo plantRepo { get; }
         IDiaryRepo diaryRepo { get; }
         IPlantMaterialHistoryRepo plantMaterialHistoryRepo { get; }
-
         IQuestionFormRepo questionFormRepo { get; }
-
-        void Save();
-        
         IBlogRepo blogRepo { get; }
-
         ITagRepo tagRepo { get; }
         IBlogTagRepo blogTagRepo { get; }
         public IBlogImageRepo blogImageRepo { get; }
@@ -33,6 +28,8 @@ namespace RAFS.Core.Repositories.Generics
         IAspUserRepo aspUserRepo { get; }
         ICashFlowRepo cashFlowRepo { get; }
         IItemRepo itemRepo { get; }
+        IImageRepo imageRepo { get; }
+        void Save();
         Task SaveAsync();
     }
 }

@@ -346,7 +346,7 @@
         $(document).ready(function () {
 
             $.ajax({
-                url: `https://localhost:7043/api/HomePage/GetFilteredBlog/1`,
+                url: baseUrl + `HomePage/GetFilteredBlog/1`,
                 method: 'GET',
                 data: {
                     sort: "asc",
@@ -469,7 +469,7 @@
             
             const fetchFarms = (farms) => {
                 $.ajax({
-                    url: `https://localhost:7043/api/HomePage/GetNewestFarm`,
+                    url: baseUrl + `HomePage/GetNewestFarm`,
                     method: 'GET',
                     contentType: 'application/json',
                     success: (data) => {
@@ -559,7 +559,7 @@
                 }
 
                 $.ajax({
-                    url: 'https://localhost:7043/api/Guest/SendQuestionForm',
+                    url: baseUrl + 'Guest/SendQuestionForm',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({

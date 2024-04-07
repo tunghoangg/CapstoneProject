@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RAFS.Core.Repositories.Generics;
 using RAFS.Core.Services.IService;
 using RAFS.Core.Services.Service;
@@ -7,6 +8,7 @@ namespace RAFS.Web.Controllers
 {
     public class BlogController : Controller
     {
+        
         private readonly IWebHostEnvironment _env;
         IBlogService _blog;
         DriveAPIController _drive;
@@ -16,6 +18,7 @@ namespace RAFS.Web.Controllers
           _env = env;
           _drive = drive;
         }
+        [Authorize(Roles = "Owner,Staff")]
         public IActionResult BlogList()
         {
             ViewData["blogList"] = _blog.GetAllBlog();

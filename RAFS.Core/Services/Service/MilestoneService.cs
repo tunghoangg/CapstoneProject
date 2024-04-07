@@ -58,6 +58,12 @@ namespace RAFS.Core.Services.Service
             }
         }
 
+        public List<MilestoneDTOVer2> GetAllFarmFilteredMilestones(int farmid)
+        {
+            List<MilestoneDTOVer2> milestones = _uow.milestonRepo.GetFarmMilestones(farmid);
+            return milestones;
+        }
+
         public List<MilestoneDTOVer2> GetAllFarmMilestones(int farmid, int page)
         {
             List<MilestoneDTOVer2> milestones = _uow.milestonRepo.GetMilestones(farmid,page);

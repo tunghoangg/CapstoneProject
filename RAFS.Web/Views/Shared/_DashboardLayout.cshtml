@@ -49,8 +49,8 @@
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-                <a class="navbar-brand brand-logo mr-5" href="index.html"><img src="/Assets/Dashboard/images/demo2.png" class="mr-2" alt="logo" /></a>
-                <a class="navbar-brand brand-logo-mini" href="index.html"><img src="/Assets/Dashboard/images/RAFSIcon.png" alt="logo" /></a>
+                <a class="navbar-brand brand-logo mr-5" asp-action="Index" asp-controller="Home"><img src="/Assets/Dashboard/images/demo2.png" class="mr-2" alt="logo" /></a>
+                <a class="navbar-brand brand-logo-mini" asp-action="Index" asp-controller="Home"><img src="/Assets/Dashboard/images/RAFSIcon.png" alt="logo" /></a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -59,7 +59,7 @@
                 <ul class="navbar-nav mr-lg-2">
                 </ul>
                 <ul class="navbar-nav navbar-nav-right">
-                    <li class="nav-item dropdown">
+                    @* <li class="nav-item dropdown">
                         <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
                             <i class="icon-bell mx-0"></i>
                             <span class="count"></span>
@@ -106,18 +106,22 @@
                                 </div>
                             </a>
                         </div>
-                    </li>
+                    </li> *@
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                            <img src="~/Assets/Dashboard/images/faces/face28.jpg" id="smallAvatar" alt="profile" />
+                            <img src="~/Assets/Images/RAFSIcon.png" id="smallAvatar" />
+                            
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Home">
+                                <i class="ti-home text-primary"></i>
+                                Trang chủ
+                            </a>
                             <a class="dropdown-item" asp-action="ViewProfile" asp-controller="Profile">
-                                <i class="ti-settings text-primary"></i>
+                                <i class="ti-user text-primary"></i>
                                 Thông tin cá nhân
                             </a>
                             <form id="logoutForm" asp-controller="Authentication" asp-action="Logout" method="post">
-                                @Html.AntiForgeryToken()
                                 <a class="dropdown-item">
                                     <i class="ti-power-off text-primary"></i>
                                     <button type="submit" class="logoutbtn">
@@ -166,15 +170,15 @@
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "Statistics")">
-                            <i class="mdi mdi-chart-areaspline menu-icon"></i>
-                            <span class="menu-title">Thống kê</span>
-                        </a>
-                    </li>
+                    
                     @if (User.IsInRole("Owner"))
                     {
-                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Statistics")">
+                                <i class="mdi mdi-chart-areaspline menu-icon"></i>
+                                <span class="menu-title">Thống kê</span>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Index", "Farm")">
                                 <i class="mdi mdi-leaf menu-icon menu-icon"></i>
@@ -208,19 +212,19 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link" href="pages/documentation/documentation.html">
+                            <a class="nav-link" href="@Url.Action("UserManagement", "Admin")">
                                 <i class="mdi mdi-shape-plus menu-icon"></i>
                                 <span class="menu-title">Người dùng</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages/documentation/documentation.html">
+                        @* <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("BlogList", "Blog")">
                                 <i class="mdi mdi-shape-plus menu-icon"></i>
                                 <span class="menu-title">Truy cập</span>
                             </a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
-                            <a class="nav-link" href="pages/documentation/documentation.html">
+                            <a class="nav-link" href="@Url.Action("StaffManagement", "Admin")">
                                 <i class="mdi mdi-shape-plus menu-icon"></i>
                                 <span class="menu-title">Nhân viên</span>
                             </a>
@@ -229,29 +233,27 @@
 
                     @if (User.IsInRole("Technician"))
                     {
-                        @* for (int i = 0; i < length; i++)
-                        {
-                            
-                        } *@
-                        <li class="nav-item">
+                        
+                        <li class="nav-item" id="PlantFunction" hidden>
                             <a class="nav-link" href="@Url.Action("Index", "Plant")">
                                 <i class="mdi mdi-timetable menu-icon"></i>
                                 <span class="menu-title">Sổ nhật ký</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="MilestoneFunction" hidden>
                             <a class="nav-link" href="@Url.Action("Index", "Milestone")">
                                 <i class="mdi mdi-timetable menu-icon"></i>
                                 <span class="menu-title">Quản lý các nhóm</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+
+                        <li class="nav-item" id="FundDiaryFunction" hidden>
                             <a class="nav-link" href="@Url.Action("Index", "FundDiary")">
                                 <i class="mdi mdi-cash-multiple menu-icon"></i>
                                 <span class="menu-title">Nhật ký quỹ</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="MaterialsFunction" hidden>
                             <a class="nav-link" href="@Url.Action("Index", "Materials")">
                                 <i class="mdi mdi-cube-send menu-icon"></i>
                                 <span class="menu-title">Kho chứa</span>
@@ -321,8 +323,7 @@
         const baseUrl = "https://localhost:7043/api/";
         let userId = getCurrentUserId();
         let farmId = getCurrentUserFarmId();
-        let userRoles;
-        let userFuncs;
+        // let userRoles;
         let avatarLink;
         
         function getCurrentUserId() {
@@ -336,7 +337,7 @@
                     id = txtBack;
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error fetching user ID:', error);
+                    //console.error('Error fetching user ID:', error);
                 }
             });
 
@@ -354,38 +355,57 @@
                     id = txtBack;
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error fetching user ID:', error);
+                   //console.error('Error fetching user ID:', error);
                 }
             });
 
             return id;
         }
 
-        async function getUserRoles() {
-            try {
-                const response = await fetch(baseUrl + 'Authentication/GetUserRoles');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user roles');
-                }
-                userRoles = await response.json();
-            } catch (error) {
-                console.error('Error fetching user roles:', error);
-            }
-        }
+        // async function getUserRoles() {
+        //     try {
+        //         const response = await fetch(baseUrl + 'Authentication/GetUserRoles');
+        //         if (!response.ok) {
+        //             console.log('Failed to fetch user roles');
+        //         }
+        //         userRoles = await response.json();
+        //     } catch (error) {
+        //         console.error('Error fetching user roles:', error);
+        //     }
+        // }
 
         async function getUserFuncs() {
             try {
-                console.log('Fetching user funcs...');
                 const response = await fetch(baseUrl + 'Authentication/GetUserFuncs');
                 if (!response.ok) {
-                    throw new Error('Failed to fetch user funcs');
+                    console.log('Failed to fetch user funcs');
                 }
-                userFuncs = await response.json();
+                const userFuncs = await response.json();
                 console.log('User roles:', userFuncs);
+
+                // Define a map of function IDs to their respective HTML IDs
+                const funcIdToHtmlId = {
+                    2: 'PlantFunction',
+                    3: 'FundDiaryFunction',
+                    4: 'MaterialsFunction',
+                    5: 'MilestoneFunction'
+                };
+
+                // Show elements based on user's access
+                userFuncs.forEach(funcId => {
+                    const htmlId = funcIdToHtmlId[funcId];
+                    if (htmlId) {
+                        const element = document.getElementById(htmlId);
+                        if (element) {
+                            element.removeAttribute('hidden');
+                        }
+                    }
+                });
             } catch (error) {
-                console.error('Error fetching user funcs:', error);
+                //console.error('Error fetching user funcs:', error);
             }
         }
+
 
         async function getUserAvatar() {
             try {
@@ -397,22 +417,21 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch avatar');
+                    console.log('Failed to fetch avatar');
                 }
 
                 avatarLink = await response.text();
             } catch (error) {
-                console.error('Error fetching avatar:', error);
+                //console.error('Error fetching avatar:', error);
             }
         }
 
         window.onload = async function () {
-            await getUserAvatar();
-            await getUserRoles();
             await getUserFuncs();
-
+            await getUserAvatar();
             // Update the image src after all data is fetched
             document.getElementById('smallAvatar').src = avatarLink;
+
         };
 
         

@@ -1,5 +1,5 @@
 ﻿@using RAFS.Core.DTO
-@model RegistrationDTO
+@model ExternalRegistrationDTO
 @{
     Layout = "_RegisterLayout";
     
@@ -16,8 +16,16 @@
     input[type="number"] {
         -moz-appearance: textfield; /* Firefox */
     }
-</style>
 
+    .required-field::after {
+        content: "*";
+        color: red;
+        margin-left: 2px
+    }
+</style>
+<head>
+    <title>Thông tin tài khoản</title>
+</head>
 <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
         <div class="content-wrapper d-flex align-items-center auth px-0">
@@ -37,22 +45,17 @@
                         <form class="pt-3" method="post" asp-action="ExternalRegister" asp-controller="Authentication">
 
                             <div class="form-group">
+                                <label asp-for="UserName" class="control-label required-field">Tên người dùng:</label>
                                 <input type="text" asp-for="UserName" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="Tên người dùng" value="@ViewBag.UserName">
                                 @*  <span asp-validation-for="UserName" class="text-danger"></span> *@
                             </div>
                             <div class="form-group">
+                                <label asp-for="Email" class="control-label required-field">Email:</label>
                                 <input type="email" asp-for="Email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email" value="@ViewBag.Email" readonly>
                                 @* <span asp-validation-for="Email" class="text-danger"></span> *@
                             </div>
                             <div class="form-group">
-                                <input type="password" asp-for="Password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Mật khẩu">
-                                @* <span asp-validation-for="Password" class="text-danger"></span> *@
-                            </div>
-                            <div class="form-group">
-                                <input type="password" asp-for="ConfirmPassword" class="form-control form-control-lg" id="exampleInputPassword2" placeholder="Nhập lại mật khẩu">
-                                @* <span asp-validation-for="ConfirmPassword" class="text-danger"></span> *@
-                            </div>
-                            <div class="form-group">
+                                <label asp-for="PhoneNumber" class="control-label required-field">Số điện thoại:</label>
                                 <input type="number" asp-for="PhoneNumber" class="form-control form-control-lg" id="exampleInputPhone" placeholder="Số điện thoại">
                                 @* <span asp-validation-for="PhoneNumber" class="text-danger"></span> *@
                             </div>

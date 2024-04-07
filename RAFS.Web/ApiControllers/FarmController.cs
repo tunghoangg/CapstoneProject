@@ -95,18 +95,14 @@ namespace RAFS.Web.ApiControllers
                 {
                     data.ImageFile.CopyTo(stream);
                 }
-                //string logoLink = await _farmAdminService.GetLogoLinkByFarmId(data.FarmId);
-                //if (logoLink.Equals("https://lh3.googleusercontent.com/d/1xrH_6tJsC9SNeCbO0frMlhhdPJfUKEFw=s220"))
-                //{
-                //    string saveLogoLink = await _drive.CreateDriveFile(serverPath);
-                //    await _farmAdminService.UpdateLogoLink(data.FarmId, saveLogoLink);
-
-                //    return Ok();
-                //}
-
-                //await _drive.UpdateDriveFile(logoLink, serverPath);
-
+                string logoLink = await _farmAdminService.GetLogoLinkByFarmId(data.FarmId);
                 string saveLogoLink = await _drive.CreateDriveFile(serverPath);
+                if (!logoLink.Equals("https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik"))
+                {
+                    await _drive.DeleteDriveFile(logoLink);
+                }
+
+                
                 await _farmAdminService.UpdateLogoLink(data.FarmId, saveLogoLink);
                 return Ok();
 
@@ -176,5 +172,54 @@ namespace RAFS.Web.ApiControllers
                 return BadRequest("Message: " + ex);
             }
         }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet("GetImagesByFarmId/{farmImageId}")]
+        public async Task<IActionResult> GetImagesByFarmId(int farmImageId)
+        {
+            try
+            {
+                if (farmImageId.ToString() == string.Empty)
+                {
+                    return NotFound("Farm not found!");
+                }
+                return Ok(await _farmAdminService.GetImagesFarmDTO(farmImageId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Message: " + ex);
+            }
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPut("UpdateImagesFarm")]
+        public async Task<IActionResult> UpdateImagesFarm(UpdateImagesFarmnDTO data)
+        {
+            try
+            {
+                string serverPath = Path.GetTempFileName();
+                using (var stream = new FileStream(serverPath, FileMode.Create))
+                {
+                    data.ImageFile.CopyTo(stream);
+                }
+                string imageURL = await _farmAdminService.GetImageURLByImageId(data.ImageId);
+                string saveImageURL = await _drive.CreateDriveFile(serverPath);
+                if (!imageURL.Equals("https://lh3.googleusercontent.com/d/1-cD42GWStpz0_4kJDCSSHOgFOwcDX3ik"))
+                {
+                    await _drive.DeleteDriveFile(imageURL);
+                }
+
+
+                await _farmAdminService.UpdateImagesFarm(data.ImageId, saveImageURL);
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Message: " + ex);
+            }
+        }
+
+
     }
 }

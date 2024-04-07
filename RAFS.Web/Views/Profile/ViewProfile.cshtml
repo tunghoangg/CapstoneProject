@@ -3,13 +3,13 @@
 @{
     Layout = "_DashboardLayout";
     var profile = (AspUser)ViewBag.Profile;
-    var farms = (List<Farm>)ViewBag.Farms;
 }
 @model ChangePasswordModel
 
 <html>
 
 <head>
+    <title>Thông tin cá nhân</title>
     <script src="~/js/javascrip.js"></script>
     <style>
         input[type="file"] {
@@ -17,10 +17,11 @@
         }
 
         #avatar-img {
-            width: 100%;
-            max-width: 300px;
-            height: 100%;
-            max-height: 300px;
+            width: 300px; /* Set fixed width */
+            height: 300px; /* Set fixed height */
+            object-fit: cover;
+            object-position: center; /* Center the image */
+            overflow: hidden; /* Hide overflowing parts */
         }
 
     </style>
@@ -116,6 +117,7 @@
             z-index: 1;
         }
 
+
 </style>
 <body>
     <div class="content-wrapper">
@@ -163,7 +165,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Ghi chú:</td>
+                                            <td>Mô tả:</td>
                                             <td>@profile.Description</td>
                                         </tr>
                                         <tr>
@@ -202,59 +204,10 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            Danh sách trang trại
-                        </h4>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Code</th>
-                                        <th>Tên trang trại</th>
-                                        <th>Địa chỉ</th>
-                                        <th>SĐT</th>
-                                        <th>Diện tích</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Ngày khánh thành</th>
-                                        <th>Trạng thái</th>
-                                        <th>Mô tả</th>
-                                        <th>Cập nhật</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var farm in farms)
-                                    {
-                                        <tr>
-                                            <td>@farm.Code</td>
-                                            <td>@farm.Name</td>
-                                            <td>@farm.Address</td>
-                                            <td>@farm.Phone</td>
-                                            <td>@farm.Area</td>
-                                            <td>@farm.CreatedDate</td>
-                                            <td>@farm.EstablishedDate</td>
-                                            <td>@farm.Status</td>
-                                            <td>@farm.Description</td>
-                                            <td>@farm.LastUpdate</td>
-                                            <td>
-                                                <button class="btn btn-info btn-sm">Xem chi tiết</button>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
-    <!--Thay đổi trạng thái trang trại-->
+    
     <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm mt-7 pl-3" style="max-width:500px">
             <form id="form">
@@ -295,7 +248,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        <button type="button" id="btnChangePasswordConfirm" class="btn btn-primary confirm-change-status-farm">Đổi mật khẩu</button>
+                        <button type="button" id="btnChangePasswordConfirm" class="btn btn-primary">Đổi mật khẩu</button>
                     </div>
                 </div>
             </form>
@@ -317,8 +270,8 @@
                         <span class="text-danger" id="UpdateInfo_ErrMsg"> </span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" id="btnUpdateInfoConfirm" class="btn btn-primary confirm-change-status-farm">Cập nhật</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" id="btnUpdateInfoConfirm" class="btn btn-primary">Cập nhật</button>
                     </div>
                 </form>
             </div>
@@ -340,7 +293,7 @@
                         <span class="text-danger" id="addPasswordMsg"> </span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                         <button type="button" id="btnAddPasswordConfirm" class="btn btn-primary confirm-change-status-farm">Cập nhật</button>
                     </div>
                 </form>
@@ -352,6 +305,39 @@
 
     <script>
         $(document).ready(function () {
+            var originalValues = {}; // Object to store original values
+
+            // Store the original values of the inputs when the modal is shown
+            $('#updateInfoModal').on('show.bs.modal', function (event) {
+                var inputs = $(this).find('input'); // Get all input elements
+                inputs.each(function () {
+                    var id = $(this).attr('id'); // Get the id attribute of the input
+                    originalValues[id] = $(this).val(); // Store the original value in the object
+                });
+            });
+
+            // Reset the inputs to their original values when the modal is hidden
+            $('#updateInfoModal').on('hidden.bs.modal', function (event) {
+                var inputs = $(this).find('input'); // Get all input elements
+                inputs.each(function () {
+                    var id = $(this).attr('id'); // Get the id attribute of the input
+                    $(this).val(originalValues[id]); // Reset the value to the original value
+                });
+
+                $('#UpdateInfo_ErrMsg').html("");
+            });
+
+            $('#changePasswordModal').on('show.bs.modal', function (event) {
+                $(this).find('input[type="password"]').val(''); // Clear password input fields
+                $('#ChangePassword_ErrMsg').html(''); // Clear error message
+            });
+
+            $('#addPasswordModal').on('show.bs.modal', function (event) {
+                $(this).find('input[type="password"]').val(''); // Clear password input fields
+                $('#addPasswordMsg').html(''); // Clear error message
+            });
+
+
             $('#btnChangePasswordConfirm').click(function () {
                 var userId = $('#userId').val();
                 var currentPassword = $('#currentPassword').val();
@@ -370,7 +356,7 @@
 
                 // Make an AJAX call
                 $.ajax({
-                    url: "https://localhost:7043/api/Profile/ChangePassword/", // Replace with your API
+                    url: baseUrl + 'Profile/ChangePassword',
 
                     type: 'POST',
                     contentType: 'application/json',
@@ -390,7 +376,9 @@
                         var errorMessage = '';
                         for (var key in errors) {
                             if (errors[key].description == null) {
-                                errorMessage += errors[key] + '<br>';
+                                for (var err in errors[key]) {
+                                    errorMessage += errors[key][err] + '<br>';
+                                }
                             } else {
                                 errorMessage += errors[key].description + '<br>';
                             }
@@ -423,7 +411,7 @@
 
                 // Make an AJAX call
                 $.ajax({
-                    url: "https://localhost:7043/api/Profile/UpdateInfo", // Replace with your API endpoint
+                    url: baseUrl + 'Profile/UpdateInfo', // Replace with your API endpoint
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
@@ -443,7 +431,9 @@
                         var errorMessage = '';
                         for (var key in errors) {
                             if (errors[key].description == null) {
-                                errorMessage += errors[key] + '<br>';
+                                for (var err in errors[key]) {
+                                    errorMessage += errors[key][err] + '<br>';
+                                }
                             } else {
                                 errorMessage += errors[key].description + '<br>';
                             }
@@ -470,7 +460,7 @@
 
                 // Make an AJAX call
                 $.ajax({
-                    url: "https://localhost:7043/api/Profile/AddPassword/", // Replace with your API
+                    url: baseUrl + 'Profile/AddPassword/', // Replace with your API
 
                     type: 'POST',
                     contentType: 'application/json',
@@ -491,7 +481,9 @@
                         var errorMessage = '';
                         for (var key in errors) {
                             if (errors[key].description == null) {
-                                errorMessage += errors[key] + '<br>';
+                                for (var err in errors[key]) {
+                                    errorMessage += errors[key][err] + '<br>';
+                                }
                             } else {
                                 errorMessage += errors[key].description + '<br>';
                             }
@@ -501,6 +493,8 @@
                     }
                 });
             });
+
+
 
         });
     </script>

@@ -1,0 +1,295 @@
+﻿@using RAFS.Core.Models
+@{
+    Layout = "_DashboardLayout";
+}
+
+<head>
+    <style>
+        .img {
+            width: 50px; /* Set fixed width */
+            height: 50px; /* Set fixed height */
+            object-fit: cover;
+            object-position: center; /* Center the image */
+            overflow: hidden; /* Hide overflowing parts */
+        }
+
+        .form-group {
+            margin-right: 5px; /* Adjust the margin as needed */
+        }
+    </style>
+</head>
+<body>
+    <script src="~/js/javascrip.js"></script>
+</body>
+
+<body>
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Tìm kiếm</h4>
+                        <div class="search-container">
+                            <div class="form-group">
+                                <label for="usernameInput">Tên người dùng:</label>
+                                <input type="text" class="form-control rounded" id="usernameInput" placeholder="Nhập tên người dùng">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailInput">Email:</label>
+                                <input type="text" class="form-control rounded" id="emailInput" placeholder="Nhập email">
+                            </div>
+                            <div class="form-group">
+                                <label for="statusInput">Trạng thái tài khoản:</label>
+                                <select id="statusInput" class="form-control rounded">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="true" class="text-success">Đang hoạt động</option>
+                                    <option value="false" class="text-danger">Ngưng hoạt động</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button id="searchButton" class="btn btn-primary">Tìm kiếm</button>
+                                <button id="resetButton" class="btn btn-primary">Bỏ lọc</button>
+                            </div>
+                        </div>
+
+
+                        <h4 class="card-title">Danh sách người dùng</h4>
+                        <div class="table-responsive">
+                            <table id="userTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Avatar</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Email</th>
+                                        <th>Trạng thái</th>
+                                        <th>Cập nhật</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div id="pagination" class="text-right mt-3">
+                                <button id="page1Button" class="btn btn-primary btn-sm">1</button>
+                                <button id="page2Button" class="btn btn-primary btn-sm">2</button>
+                                <button id="page3Button" class="btn btn-primary btn-sm">3</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            var userDataPromise = loadUserData();
+            var currentPage = 1;
+            var pageSize = 8;
+            var userData; // Declaring userData as a global variable
+            var filteredUserData; // Declaring filteredUserData
+            var totalUsers;
+            var totalPages;
+
+            function loadUserData() {
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: 'https://localhost:7043/api/Admin/GetAllUserAccount',
+                        type: 'GET',
+                        success: resolve,
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching user data:', error);
+                            reject(error);
+                        }
+                    });
+                });
+            }
+
+            function populateTable() {
+                if (!userData || !filteredUserData) return; // Check data
+                var tableBody = $('#userTable tbody');
+                tableBody.empty();
+
+                var startIndex = (currentPage - 1) * pageSize;
+                var endIndex = Math.min(startIndex + pageSize, filteredUserData.length);
+
+                for (var i = startIndex; i < endIndex; i++) {
+                    var user = filteredUserData[i]; // Use filteredUserData
+                    var statusText = user.status ? 'Đang hoạt động' : 'Ngưng hoạt động';
+                    var statusClass = user.status ? 'text-success' : 'text-danger';
+                    var buttonLabel = user.status ? 'Vô hiệu hoá' : 'Kích hoạt';
+                    var buttonClass = user.status ? 'btn-danger' : 'btn-success';
+
+                    var row = `<tr>
+                                            <td hidden>${user.id}</td>
+                                            <td><img src="${user.avatar}" class="img"></td>
+                                            <td>${user.userName}</td>
+                                            <td>${user.email}</td>
+                                            <td><span class="user-status ${statusClass}" data-status="${user.status}">${statusText}</span></td>
+                                            <td>${user.lastUpdated}</td>
+                                            <td><button class="btn btn-sm ${buttonClass}" data-id="${user.id}" data-status="${user.status}">${buttonLabel}</button></td>
+                                        </tr>`;
+
+                    tableBody.append(row);
+                }
+            }
+
+            function updatePagination() {
+                if (!filteredUserData) return; // Check data
+
+                $('#pagination button').removeClass('active');
+                $('#page' + currentPage + 'Button').addClass('active');
+
+
+                var totalPages = Math.ceil(filteredUserData.length / pageSize);
+
+            }
+
+            function paginateTable() {
+                if (!filteredUserData) return; // Check data
+
+                totalUsers = filteredUserData.length;
+                totalPages = Math.ceil(totalUsers / pageSize);
+
+                $('#pagination').empty();
+
+                // Append pagination buttons
+                for (var i = 1; i <= totalPages; i++) {
+                    $('#pagination').append(`<button id="page${i}Button" class="btn btn-primary btn-sm">${i}</button>`);
+                }
+
+                // Hide all pagination buttons initially
+                $('#pagination button').hide();
+
+                // Show only three pagination buttons at a time
+                var startPage = Math.max(1, currentPage - 1);
+                var endPage = Math.min(totalPages, startPage + 2);
+
+                for (var i = startPage; i <= endPage; i++) {
+                    $(`#page${i}Button`).show();
+                }
+
+                // Update pagination based on current page
+                updatePagination();
+            }
+
+            function performSearch() {
+                var username = $('#usernameInput').val().trim().toLowerCase();
+                var email = $('#emailInput').val().trim().toLowerCase();
+                var status = $('#statusInput').val();
+
+                filteredUserData = userData.filter(function (user) {
+                    var matchesUsername = username === '' || user.userName.toLowerCase().includes(username);
+                    var matchesEmail = email === '' || user.email.toLowerCase().includes(email);
+                    var matchesStatus = status === '' || String(user.status) === status;
+
+                    return matchesUsername && matchesEmail && matchesStatus;
+                });
+
+                if (filteredUserData.length === 0) {
+                    $('#userTable tbody').html('<tr><td colspan="6" class="text-center">Không có kết quả phù hợp</td></tr>');
+                    $('#pagination').empty();
+                    return;
+                }
+
+                currentPage = 1; // Reset current page after search
+                populateTable();
+                paginateTable(); // Update pagination after search
+            }
+
+
+            $('#userTable').on('click', 'button', function () {
+                var button = $(this);
+                var userId = button.data('id');
+                var currentStatus = button.data('status');
+                var newStatus = !currentStatus;
+                var statusText = newStatus ? 'Đang hoạt động' : 'Ngưng hoạt động';
+                var statusClass = newStatus ? 'text-success' : 'text-danger';
+                var buttonLabel = newStatus ? 'Vô hiệu hoá' : 'Kích hoạt';
+                var buttonClass = newStatus ? 'btn-danger' : 'btn-success';
+
+                $.ajax({
+                    url: 'https://localhost:7043/api/Admin/UpdateAccountStatus',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ userId: userId, status: newStatus }),
+                    success: function () {
+                        button.text(buttonLabel).removeClass('btn-success btn-danger').addClass(buttonClass);
+                        button.data('status', newStatus);
+                        button.closest('tr').find('td:eq(4)').text(statusText).removeClass('text-success text-danger').addClass(statusClass);
+
+                        // Update filteredUserData with the new status
+                        var updatedUser = filteredUserData.find(user => user.id === userId);
+                        if (updatedUser) {
+                            updatedUser.status = newStatus;
+                        }
+                        // Re-run the search function after status update
+                        performSearch();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error updating user status:', error);
+                    }
+                });
+            });
+
+            $('#searchButton').click(function () {
+                performSearch();
+            });
+
+            $('#resetButton').click(function () {
+                $('#usernameInput').val('');
+                $('#emailInput').val('');
+                $('#statusInput').val('');
+                performSearch();
+            });
+
+            $('#pagination').on('click', 'button', function () {
+                var page = parseInt($(this).text());
+                if (!isNaN(page)) {
+                    currentPage = page;
+
+
+                    $('#pagination button').hide();
+                    if (currentPage == 1) {
+                        $(`#page${currentPage}Button`).show();
+                        $(`#page${currentPage + 1}Button`).show();
+                        $(`#page${currentPage + 2}Button`).show();
+                    }
+
+                    if (currentPage > 1) {
+                        $(`#page${currentPage - 1}Button`).show();
+                        $(`#page${currentPage}Button`).show();
+                        $(`#page${currentPage + 1}Button`).show();
+                    }
+
+                    if (currentPage == totalPages) {
+                        $(`#page${currentPage - 2}Button`).show();
+                        $(`#page${currentPage - 1}Button`).show();
+                        $(`#page${currentPage}Button`).show();
+                    }
+
+                    populateTable();
+                    updatePagination();
+                }
+            });
+
+            userDataPromise.then(function (data) {
+                userData = data; // Assigning userData from the resolved promise
+                filteredUserData = userData; // Initialize filteredUserData with userData
+                paginateTable();
+                populateTable();
+            }).catch(function (error) {
+                console.error('Error loading user data:', error);
+            });
+        });
+
+    </script>
+
+
+
+
+
+
+</body>

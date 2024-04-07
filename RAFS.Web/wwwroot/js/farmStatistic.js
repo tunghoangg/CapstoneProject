@@ -4,29 +4,82 @@ $(document).ready(function () {
     SelectFarmStatistic();
     var selectedFarmId = $("#farmStatisticSelect").val();
     var selectedYear = $("#yearSelect").val();
+    StatisticFarm(selectedFarmId, selectedYear);
 
     $("#farmStatisticSelect").change(function () {
         selectedFarmId = $(this).val();
         //console.log("Selected year:", selectedYear);
         //console.log("Selected farm ID:", selectedFarmId);
+        StatisticFarm(selectedFarmId, selectedYear);
     });
 
     $("#yearSelect").change(function () {
         selectedYear = $(this).val();
         //console.log("Selected year:", selectedYear);
         //console.log("Selected farm ID:", selectedFarmId);
+        StatisticFarm(selectedFarmId, selectedYear);
     });
 
 
 
-    DisplayCashChart();
-    DisplayCashIn();
-    DisplayCashOut();
-    DisplayMaterialChart();
+    
+    
 });
 
-function TotalStatistic(farmIdSelected, yearSelected) {
+function StatisticFarm(farmIdSelected, yearSelected) {
+    //console.log(userId, farmIdSelected, yearSelected);
+    $.ajax({
+        url: baseUrl + `Statistics/StatisticFarmAdmin/${userId}/${farmIdSelected}/${yearSelected}`,
+        method: 'GET',
+        contentType: 'application/json',
+        success: (data) => {
+            //console.log(data);
+            DisplayStatistic(data);
+            DisplayCashChart(data);
+            DisplayCashIn(data);
+            DisplayCashOut(data);
+            DisplayMaterialChart(data);
+        },
+        complete: (data) => {
+        },
+        error: (data) => {
 
+        }
+    });
+};
+
+function DisplayStatistic(data) {
+    // Hiển thị tổng thu
+    $("#statistic-sum-in").text(data.totalIn.toLocaleString()); // Sử dụng toLocaleString() để định dạng số
+    // Hiển thị tổng chi
+    $("#statistic-sum-out").text(data.totalOut.toLocaleString());
+    // Hiển thị số sản phẩm
+    $("#statistic-sum-item").text(data.totalMaterial.toLocaleString());
+    // Hiển thị tổng giá trị
+    $("#statistic-sum-item-value").text(data.totalMaterialValue.toLocaleString());
+    
+
+    //if (data.farmId == 0) {
+    //    $("#statistic-logo-farm").attr("src", "~/Assets/Dashboard/images/dashboard/new-image.svg");
+    //} else {
+    //    $("#statistic-logo-farm").attr("src", `${data.farmLogo}`);
+    //}
+
+    if (data.farmId == 0) {
+        $("#statistic-farm-name").text("TỔNG HỢP");
+        $("#statistic-farm-area").text("Tổng diện tích: " + data.totalArea.toLocaleString() + " ha");
+    } else {
+        $("#statistic-farm-name").text("TRANG TRẠI: " + data.farmName);
+        $("#statistic-farm-area").html("Diện tích: " + data.farmArea.toLocaleString() + " ha");
+    }
+
+    if (data.farmId == 0) {
+        
+    } else {
+        
+    }
+    
+    
 };
 
 function SelectFarmStatistic() {
@@ -37,7 +90,7 @@ function SelectFarmStatistic() {
         method: 'GET',
         contentType: 'application/json',
         success: (data) => {
-            $('#farm-list').html('');
+            //$('#farm-list').html('');
             dataFarmLength = data.length;
             
             if (dataFarmLength > 0) {
@@ -78,18 +131,21 @@ function GetFiveYearLast() {
     }
 };
 
-function DisplayMaterialChart() { 
+function DisplayMaterialChart(dataChart) {
+    let percentOfTopItem = dataChart.topThreeValue.reduce(function (acc, val) {
+        return acc + val;
+    }, 0);
+
     if ($("#materials-chart").length) {
         var areaData = {
-            labels: ["Jan", "Feb", "Mar"],
+            labels: dataChart.topThreeName,
             datasets: [{
-                data: [0, 0, 0],
+                data: dataChart.topThreeValue,
                 backgroundColor: [
                     "#4B49AC", "#FFC100", "#248AFD",
                 ],
                 borderColor: "rgba(0,0,0,0)"
-            }
-            ]
+            }]
         };
         var areaOptions = {
             responsive: true,
@@ -110,14 +166,14 @@ function DisplayMaterialChart() {
             legendCallback: function (chart) {
                 var text = [];
                 text.push('<div class="report-chart">');
-                text.push('<div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: ' + chart.data.datasets[0].backgroundColor[0] + '"></div><p class="mb-0">Offline sales</p></div>');
-                text.push('<p class="mb-0">88333</p>');
+                text.push(`<div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: ` + chart.data.datasets[0].backgroundColor[0] + `"></div><p class="mb-0">${dataChart.topThreeName[0]}</p></div>`);
+                text.push(`<p class="mb-0">${dataChart.topThreeValue[0]}%</p>`);
                 text.push('</div>');
-                text.push('<div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: ' + chart.data.datasets[0].backgroundColor[1] + '"></div><p class="mb-0">Online sales</p></div>');
-                text.push('<p class="mb-0">66093</p>');
+                text.push(`<div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: ` + chart.data.datasets[0].backgroundColor[1] + `"></div><p class="mb-0">${dataChart.topThreeName[1]}</p></div>`);
+                text.push(`<p class="mb-0">${dataChart.topThreeValue[1]}%</p>`);
                 text.push('</div>');
-                text.push('<div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: ' + chart.data.datasets[0].backgroundColor[2] + '"></div><p class="mb-0">Returns</p></div>');
-                text.push('<p class="mb-0">39836</p>');
+                text.push(`<div class="d-flex justify-content-between mx-4 mx-xl-5 mt-3"><div class="d-flex align-items-center"><div class="mr-3" style="width:20px; height:20px; border-radius: 50%; background-color: ` + chart.data.datasets[0].backgroundColor[2] + `"></div><p class="mb-0">${dataChart.topThreeName[2]}</p></div>`);
+                text.push(`<p class="mb-0">${dataChart.topThreeValue[2]}%</p>`);
                 text.push('</div>');
                 text.push('</div>');
                 return text.join("");
@@ -135,7 +191,7 @@ function DisplayMaterialChart() {
                 ctx.textBaseline = "middle";
                 ctx.fillStyle = "#13381B";
 
-                var text = "95",
+                var text = `${Math.round(percentOfTopItem)}`,
                     textX = Math.round((width - ctx.measureText(text).width) / 2),
                     textY = height / 2;
 
@@ -144,22 +200,37 @@ function DisplayMaterialChart() {
             }
         }
         var materialChartCanvas = $("#materials-chart").get(0).getContext("2d");
-        var materialChart = new Chart(materialChartCanvas, {
+
+        // Destroy current chart (if exists)
+        if (window.MaterialChart !== undefined) {
+            window.MaterialChart.destroy();
+        }
+
+        window.MaterialChart = new Chart(materialChartCanvas, {
             type: 'doughnut',
             data: areaData,
             options: areaOptions,
             plugins: materialChartPlugins
         });
+
         //doughnut
-        document.getElementById('materials-legend').innerHTML = materialChart.generateLegend();
+        document.getElementById('materials-legend').innerHTML = MaterialChart.generateLegend();
     }
+
+    $("#statistic-total-item").text(dataChart.totalMaterialValue.toLocaleString());
+    $("#statistic-item-10-2").text(dataChart.itemValue[0].toLocaleString());
+    $("#statistic-item-12-2").text(dataChart.itemValue[1].toLocaleString());
+    $("#statistic-item-15-2").text(dataChart.itemValue[2].toLocaleString());
+    $("#statistic-item-16-2").text(dataChart.itemValue[3].toLocaleString());
+    $("#statistic-item-17-2").text(dataChart.itemValue[4].toLocaleString());
+    $("#statistic-item-18-2").text(dataChart.itemValue[5].toLocaleString());
 };
 
-function DisplayCashIn() {
 
+function DisplayCashIn(dataChart) {
     var doughnutPieData = {
         datasets: [{
-            data: [30, 40, 30, 500, 400],
+            data: dataChart.cashFlowDetailIn,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.5)',
                 'rgba(54, 162, 235, 0.5)',
@@ -198,21 +269,24 @@ function DisplayCashIn() {
 
     if ($("#doughnutChart-cash-in").length) {
         var doughnutChartCanvasIn = $("#doughnutChart-cash-in").get(0).getContext("2d");
-        var doughnutChartIn = new Chart(doughnutChartCanvasIn, {
+
+        // Destroy current chart (if exists)
+        if (window.DoughnutChartIn !== undefined) {
+            window.DoughnutChartIn.destroy();
+        }
+
+        window.DoughnutChartIn = new Chart(doughnutChartCanvasIn, {
             type: 'doughnut',
             data: doughnutPieData,
             options: doughnutPieOptions
         });
     }
+}
 
-    
-};
-
-function DisplayCashOut() {
-
+function DisplayCashOut(dataChart) {
     var doughnutPieData = {
         datasets: [{
-            data: [0, 0, 0, 0, 0, 0, 0, 0],
+            data: dataChart.cashFlowDetailOut,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.5)',
                 'rgba(54, 162, 235, 0.5)',
@@ -254,7 +328,13 @@ function DisplayCashOut() {
 
     if ($("#doughnutChart-cash-out").length) {
         var doughnutChartCanvasOut = $("#doughnutChart-cash-out").get(0).getContext("2d");
-        var doughnutChartOut = new Chart(doughnutChartCanvasOut, {
+
+        // Destroy current chart (if exists)
+        if (window.DoughnutChartOut !== undefined) {
+            window.DoughnutChartOut.destroy();
+        }
+
+        window.DoughnutChartOut = new Chart(doughnutChartCanvasOut, {
             type: 'doughnut',
             data: doughnutPieData,
             options: doughnutPieOptions
@@ -263,22 +343,36 @@ function DisplayCashOut() {
 };
 
 
+function DisplayCashChart(dataChart) {
+    let valueMax = 0;
+    
 
-function DisplayCashChart() {
+    if (dataChart.totalIn == 0 && dataChart.totalOut == 0) {
+        valueMax = 100;
+    } else {
+        valueMax = Math.round(dataChart.totalIn + dataChart.totalOut);
+    }
+
     if ($("#cash-flow-chart").length) {
         var CashChartCanvas = $("#cash-flow-chart").get(0).getContext("2d");
-        var CashChart = new Chart(CashChartCanvas, {
+
+        // Destroy current chart (if exists)
+        if (window.CashChart !== undefined) {
+            window.CashChart.destroy();
+        }
+
+        window.CashChart = new Chart(CashChartCanvas, {
             type: 'bar',
             data: {
                 labels: ["Quý 1", "Quý 2", "Quý 3", "Quý 4"],
                 datasets: [{
                     label: 'Tổng thu',
-                    data: [0, 0, 0, 0],
+                    data: dataChart.cashFlowIn,
                     backgroundColor: '#98BDFF'
                 },
                 {
                     label: 'Tổng chi',
-                    data: [0, 0, 0, 0],
+                    data: dataChart.cashFlowOut,
                     backgroundColor: '#4B49AC'
                 }
                 ]
@@ -306,9 +400,9 @@ function DisplayCashChart() {
                         ticks: {
                             display: true,
                             min: 0,
-                            max: 1000,
+                            max: valueMax,
                             callback: function (value, index, values) {
-                                return value + ' triệu đồng';
+                                return value + ' triệu VNĐ';
                             },
                             autoSkip: true,
                             maxTicksLimit: 10,
@@ -340,5 +434,9 @@ function DisplayCashChart() {
         });
         document.getElementById('cash-flow-legend').innerHTML = CashChart.generateLegend();
     }
+};
+
+function ResetChart() {
+
 };
 

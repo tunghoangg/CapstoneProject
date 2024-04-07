@@ -3,14 +3,10 @@
 
 $(document).ready(function () {
 
-
-    console.log(userId);
-    console.log(farmId);
-
     //Lấy danh sách trang trại
     getFarms();
     //$('#buttonAddFarm').show();
-
+    
 
     $('#farm-list').on('click', 'tr', function () {
         // Lấy mã trang trại từ cột đầu tiên tron-ng được click
@@ -19,6 +15,7 @@ $(document).ready(function () {
         // Gọi hàm để lấy chi tiết trang trại và hiển thị
         getFarmDetail(farmAdminId);
         getUserList(farmAdminId);
+        loadListImagesFarm(farmAdminId);
     });
     callApiAddress();
     callApiAddress2();
@@ -99,6 +96,11 @@ $(document).ready(function () {
         }
     }
 
+    //$(document).on('click', '.btn-close-rest-farm', function () {
+    //    resetUpdateFarm();
+    //    resetCreateFarm();
+    //});
+
 });
 
 //Lấy danh sách trang trại 
@@ -123,6 +125,7 @@ function getFarms() {
             if (dataFarmLength > 0) {
                 //Hiển thị farm đầu tiên
                 displayFarmDetail(data[0]);
+                loadListImagesFarm(data[0].id);
 
                 getUserList(data[0].id);
 
@@ -220,6 +223,7 @@ const displayFarmDetail = (e) => {
 </h4>
 <input style="display:none" type="number" id="farm-id-read" value="${e.id}" readonly>
 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".updateFarmModel" style="border:none">Cập nhật</button>
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".updateFarmImageModal" style="border:none">Hình ảnh</button>
 <div class="row">
     <div class="col-md-5 mb-3" style="padding: 18px 0px 0px 22px">
         <div style="position: relative; display: inline-block;">
@@ -231,7 +235,7 @@ const displayFarmDetail = (e) => {
                 <i class="mdi mdi-file-image" style="display: block; opacity: 0.2;"></i>
             </label>
 
-            <input type="file" class="form-control d-none" id="file-logo-farm" onchange="displaySelectedImage(event, 'selected-logo-farm', ${e.id})" />
+            <input type="file" class="form-control d-none" id="file-logo-farm" accept=".png, .jpg" onchange="displaySelectedImage(event, 'selected-logo-farm', ${e.id})" />
         </div>
     </div>
     <div class="col-md-7" style="padding-left:25px">
@@ -350,7 +354,7 @@ const getFarmDetail = (farmAdminId) => {
 
 // Hàm để lấy techinician của trang trại dựa trên mã trang trại
 const getUserList = (farmIdGetUsserList) => {
-    console.log(farmIdGetUsserList, userId);
+    //console.log(farmIdGetUsserList, userId);
     $.ajax({
         url: baseUrl + `Farm/ListUFFAdminitrator/${userId}/${farmIdGetUsserList}`,
         method: 'GET',
@@ -360,7 +364,7 @@ const getUserList = (farmIdGetUsserList) => {
             $('#user-list').html('');
             if (data.length > 0) {
                 generateHtmlUserList(data);
-                console.log(data);
+                //console.log(data);
             }
         },
         error: (data) => {
@@ -756,12 +760,6 @@ function changeStatusUser(userIdStatus) {
 
 };
 
-
-//const generateUserDetail = (e) => {
-//    $('#test-user').html(
-//        `${e.fullName}`
-//    );
-//};
 
 function displaySelectedImage(event, elementId, farmIdImage) {
     const selectedImage = document.getElementById(elementId);
@@ -1161,12 +1159,12 @@ function setDropdownValue(dropdownId, value) {
 
 
 function resetUpdateFarm() {
-    document.getElementById("update-farm-name").value = null;
-    document.getElementById("update-farm-establishedDate").value = null;
-    document.getElementById("update-farm-area").value = null;
-    document.getElementById("update-farm-phone").value = null;
-    document.getElementById("update-farm-website").value = null;
-    document.getElementById("update-farm-description").value = null;
+    $("#update-farm-name").val(null);
+    $("#update-farm-establishedDate").val(null);
+    $("#update-farm-area").val(null);
+    $("#update-farm-phone").val(null);
+    $("#update-farm-website").val(null);
+    $("#update-farm-description").val(null);
     $("#update-farm-name").removeClass("is-valid");
     $("#update-farm-establishedDate").removeClass("is-valid");
     $("#update-farm-area").removeClass("is-valid");
@@ -1176,12 +1174,12 @@ function resetUpdateFarm() {
 }
 
 function resetCreateFarm() {
-    document.getElementById("addFarmName").value = null;
-    document.getElementById("addFarmEstablishDate").value = null;
-    document.getElementById("addFarmArea").value = null;
-    document.getElementById("addFarmPhone").value = null;
-    document.getElementById("addFarmWebsite").value = null;
-    document.getElementById("addFarmDescription").value = null;
+    $("#addFarmName").val(null);
+    $("#addFarmEstablishDate").val(null);
+    $("#addFarmArea").val(null);
+    $("#addFarmPhone").val(null);
+    $("#addFarmWebsite").val(null);
+    $("#addFarmDescription").val(null);
     $("#addFarmName").removeClass("is-valid");
     $("#addFarmEstablishDate").removeClass("is-valid");
     $("#addFarmArea").removeClass("is-valid");
@@ -1303,3 +1301,75 @@ function callApiAddress2() {
         };
     }
 };
+
+const loadListImagesFarm = (farmAdminId) => {
+
+    $.ajax({
+        url: baseUrl + `Farm/GetImagesByFarmId/${farmAdminId}`,
+        method: 'GET',
+        contentType: 'application/json',
+        success: (data) => {
+            if (data.length >= 5) {
+                $('#selected-imgaes-farm-1').attr('src', data[0].imageURL);
+                $('#selected-imgaes-farm-1').attr('src', data[0].imageURL);
+                $('#selected-imgaes-farm-2').attr('src', data[1].imageURL);
+                $('#selected-imgaes-farm-3').attr('src', data[2].imageURL);
+                $('#selected-imgaes-farm-4').attr('src', data[3].imageURL);
+                $('#selected-imgaes-farm-5').attr('src', data[4].imageURL);
+
+                $('#file-images-farm-1').attr('onchange', `displaySelectedImagesFarm(event, 'selected-imgaes-farm-1', ${data[0].imageId})`);
+                $('#file-images-farm-2').attr('onchange', `displaySelectedImagesFarm(event, 'selected-imgaes-farm-2', ${data[1].imageId})`);
+                $('#file-images-farm-3').attr('onchange', `displaySelectedImagesFarm(event, 'selected-imgaes-farm-3', ${data[2].imageId})`);
+                $('#file-images-farm-4').attr('onchange', `displaySelectedImagesFarm(event, 'selected-imgaes-farm-4', ${data[3].imageId})`);
+                $('#file-images-farm-5').attr('onchange', `displaySelectedImagesFarm(event, 'selected-imgaes-farm-5', ${data[4].imageId})`);
+                //onchange="displaySelectedImage(event, 'selected-logo-farm', ${e.id})"
+            }
+        },
+        complete: (data) => {
+        },
+        error: (data) => {
+            createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Không có dữ liệu phù hợp.');
+        }
+    });
+};
+
+function displaySelectedImagesFarm(event, elementId, imageId) {
+    let selectedImage = document.getElementById(elementId);
+    let fileInput = event.target;
+
+    if (fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+
+        reader.onload = function (e) {
+            selectedImage.src = e.target.result;
+        };
+
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+
+    updateImageFarm(fileInput.files[0], imageId);
+};
+
+const updateImageFarm = (fileImage, imageId) => {
+    var formData = new FormData();
+    formData.append('ImageFile', fileImage);
+    formData.append('ImageId', imageId);
+    $.ajax({
+        url: baseUrl + "Farm/UpdateImagesFarm",
+        type: "PUT",
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            //getFarmDetail(farmIdImage);
+            createToast('success', 'fa-solid fa-circle-check', 'Success', 'Thay đổi thành công.');
+            //location.reload();
+        },
+        error: function (xhr, status, error) {
+            createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Thay đổi thất bại.');
+        }
+    });
+
+};
+
+

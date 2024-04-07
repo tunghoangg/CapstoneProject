@@ -17,7 +17,6 @@
 
 
 function detail11(event) {
-    Manager.GetAllItems();
 
     setTimeout(function () {
         var redId = 0;
@@ -29,7 +28,7 @@ function detail11(event) {
             success: function (result, status, xhr) {
                 $("#Id2").val(result["id"]);
                 $("#InventoryId2").val(result["inventoryId"]);
-                $("#PlantId2").val(result["plantId"]);
+                $("#PlantId2").val(checkParameter());
                 $("#Quality2").val(result["quality"]);
             }
         });
@@ -37,11 +36,10 @@ function detail11(event) {
     }, 200);
     setTimeout(function () {
 
-        Manager.HideOption(4);
+        Manager.GetAllItems(4);
     }, 200);
 }
 function detail22(event) {
-    Manager.GetAllItems();
     setTimeout(function () {
         var redId = 0;
         resId = event.target.closest("tr").id;
@@ -52,18 +50,18 @@ function detail22(event) {
             success: function (result, status, xhr) {
                 $("#Id2").val(result["id"]);
                 $("#InventoryId2").val(result["inventoryId"]);
-                $("#PlantId2").val(result["plantId"]);
+                $("#PlantId2").val(checkParameter());
                 $("#Quality2").val(result["quality"]);
             }
         });
     }, 200);
     setTimeout(function () {
 
-        Manager.HideOption(5);
+        Manager.GetAllItems(5);
     }, 200);
 }
 function detail33(event) {
-    Manager.GetAllItems();
+   
 
     setTimeout(function () {
         var redId = 0;
@@ -75,108 +73,196 @@ function detail33(event) {
             success: function (result, status, xhr) {
                 $("#Id2").val(result["id"]);
                 $("#InventoryId2").val(result["inventoryId"]);
-                $("#PlantId2").val(result["plantId"]);
+                $("#PlantId2").val(checkParameter());
                 $("#Quality2").val(result["quality"]);
             }
         });
     }, 200);
     setTimeout(function () {
 
-        Manager.HideOption(6);
+        Manager.GetAllItems(6);
     }, 200);
 }
 function Update() {
-
-    var xhttp = new XMLHttpRequest();
-
-    xhttp.open("PUT", baseUrl + "PlantMaterialHistory/UpdatePlantMaterialRecord", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    var obj = {
-        id: document.getElementById("Id2").value,
-        inventoryId: document.getElementById("InventoryId2").value,
-        plantId: document.getElementById("PlantId2").value,
-        quality: document.getElementById("Quality2").value
-
-    };
-
-
-    xhttp.send(JSON.stringify(obj));
-
-    xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-            var response = JSON.parse(xhttp.responseText);
-            if (xhttp.status === 200) {
-                alert("update success");
-                if (checkParameter() != 0) {
-
-
-                    window.location = "/materialhistory?plantid=" + checkParameter() + "&type=" + typeid;
-                } else {
-
-                    window.location = "/materialhistory#";
-                }
-
-
-
-                Manager.GetAllProduct();
-
-            }
-
-            else {
-                alert("update faild");
-
-            }
-        }
+    var name = document.getElementById("InventoryId2").value;
+    var Quality = document.getElementById("Quality2").value;
+    var numofPassField = 0;
+    if (name == 0) {
+        //     createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Tên của cây không được để trống');
+        document.getElementById("InventoryId2-toast").innerHTML = 'Hãy chọn vật phẩm';
+    } else {
+        numofPassField++;
     }
 
+    if (Quality === null || Quality.length === 0) {
+        // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích trồng cây không được để trống');
+        document.getElementById("Quality2-toast").innerHTML = 'Số lượng không được để trống';
+    } else if (parseFloat(Quality) <= 0) {
+        //createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích không được nhỏ hơn hoặc bằng 0');
+        document.getElementById("Quality2-toast").innerHTML = 'Số lượng không được nhỏ hơn hoặc bằng 0';
+    } else {
+        numofPassField++;
+    }
 
-    pauseExecution(1500);
+    if (numofPassField == 2) {
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.open("PUT", baseUrl + "PlantMaterialHistory/UpdatePlantMaterialRecord", true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        var obj = {
+            id: document.getElementById("Id2").value,
+            inventoryId: document.getElementById("InventoryId2").value,
+            plantId: document.getElementById("PlantId2").value,
+            quality: document.getElementById("Quality2").value
+
+        };
+
+
+        xhttp.send(JSON.stringify(obj));
+
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4) {
+                var response = JSON.parse(xhttp.responseText);
+                if (xhttp.status === 200) {
+                   
+                    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Sửa thành công');
+                    var id2 = '#table2 tbody';
+                    $(id2).empty();
+                    id2 = '#table1 tbody';
+                    $(id2).empty();
+                    id2 = '#table3 tbody';
+                    $(id2).empty();
+                    pauseExecution(1000);
+                    Manager.GetAllProduct();
+                    window.location = "/materialhistory?plantid=" + checkParameter() + "&type=" + checkParameterType()+"#";
+
+                }
+
+                else {
+                    var errorMessage;
+                    if (response && response.message) {
+                        errorMessage = response.message;
+                    } else {
+                        errorMessage = "Unknown error occurred.";
+                    }
+                    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', errorMessage);
+                    pauseExecution(1000);
+
+                }
+            }
+        }
+
+
+        pauseExecution(1500);
+    }
 }
 function chuanHoaChuoi(chuoi) {
     return chuoi.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
-function Create() {
-    var xhttp = new XMLHttpRequest();
+function validateInput(inputId) {
+    var value = document.getElementById(inputId).value;
+    if (inputId == "InventoryId" || inputId == "InventoryId2") {
+        if (value == null || value.length === 0) {
+            //     createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Tên của cây không được để trống');
+            document.getElementById("InventoryId-toast").innerHTML = 'Hãy chọn vật phẩm';
+            document.getElementById("InventoryId2-toast").innerHTML = 'Hãy chọn vật phẩm';
 
-
-    xhttp.open("POST", baseUrl + "PlantMaterialHistory/CreatePlantMaterialRecord", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    var obj = {
-        inventoryId: document.getElementById("InventoryId").value,
-        plantId: document.getElementById("PlantId").value,
-        quality: document.getElementById("Quality").value
-    };
-
-
-    xhttp.send(JSON.stringify(obj));
-
-    xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-            var response = JSON.parse(xhttp.responseText);
-            if (xhttp.status === 200) {
-                alert("add success");
-                if (checkParameter() != 0) {
-
-
-                    window.location = "/materialhistory?plantid=" + checkParameter() + "&type=" + typeid;
-                } else {
-
-                    window.location = "/materialhistory#";
-                }
-
-
-
-                Manager.GetAllProduct();
-
-            } else {
-                alert("add faild");
-
-            }
+        } else {
+            document.getElementById("InventoryId2-toast").innerHTML = "";
+            document.getElementById("InventoryId-toast").innerHTML = "";
         }
     }
+    if (inputId == "Quality" || inputId == "Quality2") {
+        if (value === null || value.length === 0) {
+            // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích trồng cây không được để trống');
+            document.getElementById("Quality-toast").innerHTML = 'Số lượng không được để trống';
+            document.getElementById("Quality2-toast").innerHTML = 'Số lượng không được để trống';
+        } else if (parseFloat(value) <= 0) {
+            //createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích không được nhỏ hơn hoặc bằng 0');
+            document.getElementById("Quality-toast").innerHTML = 'Số lượng không được nhỏ hơn hoặc bằng 0';
+            document.getElementById("Quality2-toast").innerHTML = 'Số lượng không được nhỏ hơn hoặc bằng 0';
+
+        } else {
+            document.getElementById("Quality-toast").innerHTML = '';
+            document.getElementById("Quality2-toast").innerHTML = '';
+        }
+    }
+}
+function Create() {
+    var name = document.getElementById("InventoryId").value;
+    var Quality = document.getElementById("Quality").value;
+    var numofPassField = 0;
+    if (name == 0) {
+        //     createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Tên của cây không được để trống');
+        document.getElementById("InventoryId-toast").innerHTML = 'Hãy chọn vật phẩm';
+    } else {
+        numofPassField++;
+    }
+
+    if (Quality === null || Quality.length === 0) {
+        // createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích trồng cây không được để trống');
+        document.getElementById("Quality-toast").innerHTML = 'Số lượng không được để trống';
+    } else if (parseFloat(Quality) <= 0) {
+        //createToast('warning', 'fa-solid fa-triangle-exclamation', 'Warning', 'Diện tích không được nhỏ hơn hoặc bằng 0');
+        document.getElementById("Quality-toast").innerHTML = 'Số lượng không được nhỏ hơn hoặc bằng 0';
+    } else {
+        numofPassField++;
+    }
+
+    if (numofPassField == 2) {
+        var xhttp = new XMLHttpRequest();
 
 
-    pauseExecution(1500);
+        xhttp.open("POST", baseUrl + "PlantMaterialHistory/CreatePlantMaterialRecord", true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        var obj = {
+            inventoryId: document.getElementById("InventoryId").value,
+            plantId: document.getElementById("PlantId").value,
+            quality: document.getElementById("Quality").value
+        };
+
+
+        xhttp.send(JSON.stringify(obj));
+
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4) {
+                var response = JSON.parse(xhttp.responseText);
+                if (xhttp.status === 200) {
+                   
+                    createToast('success', 'fa-solid fa-circle-check', 'Success', 'Tạo thành công');
+                    var id2 = '#table2 tbody';
+                    $(id2).empty();
+                    id2 = '#table1 tbody';
+                    $(id2).empty();
+                    id2 = '#table3 tbody';
+                    $(id2).empty();
+                    setTimeout(function () {
+                        
+                    }, 1000);
+                    Manager.GetAllProduct();
+                    window.location = "/materialhistory?plantid=" + checkParameter() + "&type=" + checkParameterType() + "#";
+                   
+
+
+
+                   
+
+                } else {
+                    var errorMessage;
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else {
+                        errorMessage = "Unknown error occurred.";
+                    }
+                    createToast('error', 'fa-solid fa-circle-exclamation', 'Error', errorMessage);
+
+                }
+            }
+        }
+
+
+        pauseExecution(1000);
+    }
 }
 function pauseExecution(milliseconds) {
     const startTime = Date.now();
@@ -217,7 +303,7 @@ const updatePaginationButtons = (currentPage, totalPage) => {
 var Manager = {
     GetAllProduct: function () {
         var obj = "";
-        var serviceUrl = baseUrl + "PlantMaterialHistory/GetAllFarmMaterialHistory?farmid=" + farmid;
+        var serviceUrl = baseUrl + "PlantMaterialHistory/GetAllFarmMaterialHistory?farmid=" + farmId;
 
         if (checkParameter() != 0) {
             serviceUrl = baseUrl + "PlantMaterialHistory/GetAllPlantMaterialHistory?plantid=" + checkParameter();
@@ -260,7 +346,6 @@ var Manager = {
                             "<td><a href='#' class='detail1 detail-option' onclick='detail11(event)'><label class='badge badge-info'>" + item.quality + "</label></a></td>" +
                             "<td><a href='#' class='detail1 detail-option' onclick='detail11(event)'>" + text + "</a></td>" +
                             "<td>" +
-                            "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size:48px;color:red'>delete</i> </button>" +
                             "</td>" +
                             "</tr>";
                         stringArray10.push(rows2);
@@ -275,7 +360,7 @@ var Manager = {
                             "<td><a href='#popup2' class='detail1 detail-option' onclick='detail11(event)'><label class='badge badge-info'>" + item.quality + "</label></a></td>" +
                             "<td><a href='#popup2' class='detail1 detail-option' onclick='detail11(event)'>" + text + "</a></td>" +
                             "<td>" +
-                            "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size:48px;color:red'>delete</i> </button>" +
+                        "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size: 28px;color: black;background-color: floralwhite;height: 25px; '>delete</i> </button>" +
                             "</td>" +
                             "</tr>";
                         stringArray10.push(rows2);
@@ -292,7 +377,6 @@ var Manager = {
                             "<td><a href='#' class='detail3 detail-option' onclick='detail33(event)'><label class='badge badge-info'>" + item.quality + "</label></a></td>" +
                             "<td><a href='#' class='detail3 detail-option' onclick='detail33(event)'>" + text + "</a></td>" +
                             "<td>" +
-                            "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size:48px;color:red'>delete</i> </button>" +
                             "</td>" +
                             "</tr>";
                         stringArray18.push(rows3);
@@ -305,7 +389,7 @@ var Manager = {
                             "<td><a href='#popup2' class='detail3 detail-option' onclick='detail33(event)'><label class='badge badge-info'>" + item.quality + "</label></a></td>" +
                             "<td><a href='#popup2' class='detail3 detail-option' onclick='detail33(event)'>" + text + "</a></td>" +
                             "<td>" +
-                            "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size:48px;color:red'>delete</i> </button>" +
+                            "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size: 28px;color: black;background-color: floralwhite;height: 25px; '>delete</i> </button>" +
                             "</td>" +
                             "</tr>";
                         stringArray18.push(rows3);
@@ -322,7 +406,6 @@ var Manager = {
                             "<td><a href='#' class='detail2 detail-option' onclick='detail22(event)'><label class='badge badge-info'>" + item.quality + "</label></a></td>" +
                             "<td><a href='#' class='detail2 detail-option' onclick='detail22(event)'>" + text + "</a></td>" +
                             "<td>" +
-                            "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size:48px;color:red'>delete</i> </button>" +
                             "</td>" +
                             "</tr>";
                         stringArray12.push(rows1);
@@ -335,7 +418,7 @@ var Manager = {
                             "<td><a href='#popup2' class='detail2 detail-option' onclick='detail22(event)'><label class='badge badge-info'>" + item.quality + "</label></a></td>" +
                             "<td><a href='#popup2' class='detail2 detail-option' onclick='detail22(event)'>" + text + "</a></td>" +
                             "<td>" +
-                            "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size:48px;color:red'>delete</i> </button>" +
+                            "<button style='border-style: none; background-color:white;'> <i id='" + item.id + "' class='material-icons deleteffff pure2' style='font-size: 28px;color: black;background-color: floralwhite;height: 25px; '>delete</i> </button>" +
                             "</td>" +
                             "</tr>";
                         stringArray12.push(rows1);
@@ -355,10 +438,10 @@ var Manager = {
                     $(id2).append(stringArray12[i]);
                 }
                 // If there are less than two elements, take the first one
-                  
+                totalPages2 = 0;
 
             } else if (stringArray12.length > 5) {
-                console.log(stringArray12.length);
+               
                 if (stringArray12.length % 5 == 0) {
                     totalPages2 = Math.round(stringArray12.length / 5);
                 } else {
@@ -386,7 +469,7 @@ var Manager = {
                     $(id3).append(stringArray18[i]);
                 }
                 // If there are less than two elements, take the first one
-
+                totalPages3 = 0;
 
             } else if (stringArray18.length > 5) {
              
@@ -413,7 +496,7 @@ var Manager = {
                     $(id).append(stringArray10[i]);
                 }
                 // If there are less than two elements, take the first one
-
+                totalPages1 = 0;
 
             } else if (stringArray10.length > 5) {
                 if (stringArray10.length % 5 == 0) {
@@ -434,13 +517,22 @@ var Manager = {
                 updatePaginationButtons(1, totalPages1);
             }
 
+            if (document.getElementById("settings").checked == true) {
+                updatePaginationButtons(1, totalPages2);
+            }
+
             if (document.getElementById("posts").checked == true) {
                 updatePaginationButtons(1, totalPages3);
             }
             // Check the settings id
-            if (document.getElementById("settings").checked == true) {
-                updatePaginationButtons(1, totalPages2);
-            }
+            
+            console.log(stringArray10.length);
+            console.log(stringArray12.length);
+            console.log(stringArray18.length);
+            console.log(totalPages1);
+            console.log(totalPages2);
+            console.log(totalPages3);
+           
 
         }
         function onFailed(error) {
@@ -448,8 +540,44 @@ var Manager = {
         }
         return obj;
     }, HideOption: function (type) {
+     
+
+    },
+    GetAllItems: function (type) {
+        var obj = "";
+        var flag = document.getElementById("checkload").value;
+        if (flag == 0) {
+            document.getElementById("checkload").value = 1;
+            var serviceUrl = baseUrl + "PlantMaterialHistory/GetInventoryItem?farmid=" + farmId;
+            window.Manager.GetAPI(serviceUrl, onSuccess, onFailed);
+            function onSuccess(jsonData) {
+                obj = jsonData;
+                var options = "<option value='0'> select some </option>";
+                $.each(jsonData, function (i, item) {
+                    if (item.typeId == 10) {
+                        options += "<option class='type10' value='" + item.id + "'>" + item.itemName + "</option>";
+                    }
+                    if (item.typeId == 12) {
+                        options += "<option class='type12' value='" + item.id + "'>" + item.itemName + "</option>";
+                    }
+                    if (item.typeId == 18) {
+                        options += "<option class='type18' value='" + item.id + "'>" + item.itemName + "</option>";
+                    }
+                });
+                $('#InventoryId').empty().append(options);
+                $('#InventoryId2').empty().append(options);
+
+            }
+            function onFailed(error) {
+                window.alert(error.statusText);
+            }
+          
+        }
+      
+
         if (type == 1) {
             var select = document.getElementById("InventoryId");
+            
             for (var i = 0; i < select.options.length; i++) {
                 if (select.options[i].classList.contains('type12')) {
                     select.options[i].hidden = false; // Hide the option
@@ -460,6 +588,7 @@ var Manager = {
 
                 }
             }
+
         }
         if (type == 2) {
             var select = document.getElementById("InventoryId");
@@ -528,52 +657,6 @@ var Manager = {
                     select.options[i].hidden = true; // Hide the option
 
                 }
-            }
-        }
-    },
-    GetAllItems: function () {
-        var obj = "";
-        var flag = document.getElementById("checkload").value;
-        if (flag == 0) {
-            document.getElementById("checkload").value = 1;
-            var serviceUrl = baseUrl + "PlantMaterialHistory/GetInventoryItem?farmid=" + farmid;
-            window.Manager.GetAPI(serviceUrl, onSuccess, onFailed);
-            function onSuccess(jsonData) {
-                obj = jsonData;
-                var options = "<option> select some </option>";
-                $.each(jsonData, function (i, item) {
-                    if (item.typeId == 10) {
-                        options += "<option class='type10' value='" + item.id + "'>" + item.itemName + "</option>";
-                    }
-                    if (item.typeId == 12) {
-                        options += "<option class='type12' value='" + item.id + "'>" + item.itemName + "</option>";
-                    }
-                    if (item.typeId == 18) {
-                        options += "<option class='type18' value='" + item.id + "'>" + item.itemName + "</option>";
-                    }
-                });
-                $('#InventoryId').empty().append(options);
-                $('#InventoryId2').empty().append(options);
-
-            }
-            function onFailed(error) {
-                window.alert(error.statusText);
-            }
-            serviceUrl = baseUrl + "Plant/GetPlantList?farmid=" + farmid;
-            window.Manager.GetAPI(serviceUrl, onSuccess2, onFailed2);
-            function onSuccess2(jsonData) {
-
-                obj = jsonData;
-                var options = "";
-                $.each(jsonData, function (i, item) {
-                    options += "<option value='" + item.id + "'>" + item.name + "</option>";
-                });
-
-                $('#PlantId').empty().append(options);
-                $('#PlantId2').empty().append(options);
-            }
-            function onFailed2(error) {
-                window.alert(error.statusText);
             }
         }
         return obj;

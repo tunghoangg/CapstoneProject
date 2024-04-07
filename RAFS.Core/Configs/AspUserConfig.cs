@@ -25,7 +25,7 @@ namespace RAFS.Core.Configs
             //Tự tạo
             builder.Property(x => x.LastUpdated).HasDefaultValue(DateTime.UtcNow);
             builder.Property(x => x.Status).IsRequired().HasDefaultValue(true);
-            builder.Property(x => x.Avatar).IsRequired(false).HasMaxLength(int.MaxValue).HasDefaultValue("https://lh3.googleusercontent.com/d/1xrH_6tJsC9SNeCbO0frMlhhdPJfUKEFw=s220").IsUnicode();
+            builder.Property(x => x.Avatar).IsRequired(false).HasMaxLength(int.MaxValue).HasDefaultValue("https://lh3.googleusercontent.com/d/1LtjBZGYa-Mn6n1D7n2WwXwLrRpeUIUkY").IsUnicode();
             builder.Property(x => x.FullName).IsRequired(false).HasMaxLength(255).IsUnicode();
             builder.Property(x => x.Address).IsRequired(false).HasMaxLength(255).IsUnicode();
             builder.Property(x => x.Description).IsRequired(false).HasMaxLength(int.MaxValue).IsUnicode(); 

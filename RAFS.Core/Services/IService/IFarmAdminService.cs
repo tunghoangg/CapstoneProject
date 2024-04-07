@@ -26,6 +26,9 @@ namespace RAFS.Core.Services.IService
 
         Task<Farm> GetFarmByUserId(string userId);
 
+        Task<List<ImagesFarmDTO>> GetImagesFarmDTO(int farmId);
+        Task UpdateImagesFarm(int imageId, string imageURL);
 
+        Task<string> GetImageURLByImageId(int imageId);
     }
 }

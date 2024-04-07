@@ -101,7 +101,7 @@
 
         $(document).ready(function () {
             $.ajax({
-                url: `https://localhost:7043/api/HomePage/GetFarmDetails/${id}`,
+                url: baseUrl + `HomePage/GetFarmDetails/${id}`,
                 method: 'GET',
                 contentType: 'application/json',
                 success: (data) => {
@@ -200,7 +200,7 @@
                                 <a href="shop-details.html"><img style="width: 250px; height: 320px; object-fit: cover;" src="${element.image}" alt=""></a>
 
                                 <div style="justify-content:center" class="product-meta d-flex">
-                                   <a href="https://localhost:7043/qr?plantid=${element.id}" class="add-to-cart-btn">Xem thêm</a>
+                                   <a href="/qr?plantid=${element.id}" class="add-to-cart-btn">Xem thêm</a>
                                 </div>
                             </div>
                             <!-- Product Info -->
